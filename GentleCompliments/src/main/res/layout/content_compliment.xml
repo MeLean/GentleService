@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:showIn="@layout/activity_complement" tools:context="com.meline.gentleservice.ComplimentActivity"
+    style="@style/customActivity">
+    <RelativeLayout
+        android:id="@+id/rlContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:paddingBottom="@dimen/activity_vertical_margin">
+    <TextView
+        android:id="@+id/twContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxWidth="@dimen/max_width_component"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:background="@drawable/show_compliment_background"
+        android:singleLine="false"
+        android:gravity="center_vertical|center_horizontal"
+        android:padding="@dimen/default_padding"
+        android:layout_marginTop="140dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <ImageView
+        android:id="@+id/imgLike"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:src="@drawable/like"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:contentDescription="@string/like_compliment_text"
+        android:layout_marginBottom="@dimen/middle_margin" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imgSMS"
+            android:src="@drawable/sms_pic"
+            android:layout_alignTop="@+id/imgLike"
+            android:layout_centerHorizontal="true"
+            android:contentDescription="@string/sms" />
+
+        <ImageView
+        android:id="@+id/imgDislike"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:contentDescription="@string/dislike_compliment_text"
+        android:clickable="true"
+        android:src="@drawable/dislike"
+            android:layout_marginBottom="@dimen/middle_margin" />
+
+    </RelativeLayout>
+</RelativeLayout>

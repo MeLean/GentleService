@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.meline.gentleservice.ui.activities.SmsActivity"
+    tools:showIn="@layout/activity_sms_activity">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        style="@style/customActivity"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/twSmsQuestion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/middle_margin"
+            android:gravity="center"
+            android:text="@string/send_sms_to_number"
+            style="@style/TextHeading"/>
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:padding="@dimen/padding_text_small"
+            android:weightSum="12">
+
+            <TextView
+                android:id="@+id/twSmsName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="4"
+                android:text="@string/name"
+                android:gravity="center"
+                style="@style/TextHeading"/>
+
+            <TextView
+                android:id="@+id/twNumber"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="4"
+                android:gravity="center"
+                android:hint="@string/chose_number"
+                style="@style/TextHeading"/>
+
+            <Button
+                android:id="@+id/btnChose"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="4"
+                android:text="@string/btn_chose_num_text"
+                style="@style/customButton" />
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/etSmsText"
+            style="@style/textStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_margin="@dimen/middle_margin"
+            android:background="@drawable/show_compliment_background"
+            android:padding="@dimen/padding_language" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/middle_margin"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnYes"
+                style="@style/customButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:text="@string/yes"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/btnNo"
+                style="@style/customButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/middle_margin"
+                android:clickable="true"
+                android:text="@string/no"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

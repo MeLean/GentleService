@@ -1,0 +1,12 @@
+<resources>
+
+
+
+    <string-array name="surprises">
+        <item>@string/surprise_option_every_day</item>
+        <item>@string/surprise_option_every_6_hours</item>
+        <item>@string/surprise_option_every_8_hours</item>
+        <item>@string/surprise_option_every_12_hours</item>
+        <item>@string/surprise_option_every_week</item>
+    </string-array>
+</resources>

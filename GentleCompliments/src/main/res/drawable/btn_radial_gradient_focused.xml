@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle"  >
+    <gradient
+        android:type="linear"
+        android:centerX="100%"
+        android:centerY="20%"
+        android:startColor="@color/btnNormalStartColor"
+        android:centerColor="@color/btnNormalCenterColor"
+        android:endColor="@color/btnNormalEndColor"
+        android:angle="90"
+        android:gradientRadius="50%">
+    </gradient>
+    <stroke
+        android:color="@color/colorTransparentWhite"
+        android:width="@dimen/thin_border">
+    </stroke>
+    <corners
+        android:radius="@dimen/btn_border_radius">
+    </corners>
+</shape>

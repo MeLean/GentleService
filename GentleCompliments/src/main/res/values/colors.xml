@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimaryDark">#FF4081</color>
+    <color name="colorPrimary">#FF40FF</color>
+    <color name="colorAccent">#BF5FFF</color>
+    <color name="colorGrey">#BEBEBE</color>
+    <color name="colorDarkGrey">#838383</color>
+    <color name="colorBlack">#000000</color>
+    <color name="colorWhite">#FFFFFF</color>
+    <color name="colorTransparentWhite">#99FFFFFF</color>
+    <!-- main view background gradients -->
+    <color name="mainBackgroundStartColor">#DDFF0DFF</color>
+    <color name="mainBackgroundCenterColor">#DDFFFFFF</color>
+    <color name="mainBackgroundEndColor">#DDFF40FF</color>
+    <!-- color buttons gradient -->
+    <color name="btnNormalStartColor">#BF5FFF</color>
+    <color name="btnNormalCenterColor">#DDFFFFFF</color>
+    <color name="btnNormalEndColor">#DDBF5FFF</color>
+
+    <color name="btnClickedStartColor">#800080</color>
+    <color name="btnClickedCenterColor">#DDFFFFFF</color>
+    <color name="btnClickedEndColor">#800080</color>
+</resources>
