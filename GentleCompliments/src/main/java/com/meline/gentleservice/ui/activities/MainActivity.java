@@ -56,6 +56,7 @@ public class MainActivity extends AppCompatActivity
         etTimeWait = new EditText(this);
         mSpinner = new Spinner(this);
         chbDontDisturb = (CheckBox) findViewById(R.id.chbDontDisturb);
+
         etFirstTime = (EditText) findViewById(R.id.etFirstTime);
         etSecondTime = (EditText) findViewById(R.id.etSecondTime);
         btnStartStop = (Button) findViewById(R.id.btnStartStop);
@@ -233,12 +234,6 @@ public class MainActivity extends AppCompatActivity
         spUtils.putBooleanInSharedPreferences(getString(R.string.sp_isScheduled), rbSchedule.isChecked());
         spUtils.putBooleanInSharedPreferences(getString(R.string.sp_isSurpriseMe), rbSurpriseMe.isChecked());
         addInputView(llAreaInput);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        spUtils = null;
     }
 
     private void addInputView(LinearLayout llAreaInput) {

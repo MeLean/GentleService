@@ -77,7 +77,7 @@ public class ComplimentActivity extends AppCompatActivity implements View.OnClic
                         CalendarUtils.checkIsBetween(startTimeInMilliseconds, currentHoursInMilliseconds, endTimeInMilliseconds);
 
                 if (isInDisturbPeriod) {
-                    showNotification(0);
+                    showNotification((int)System.currentTimeMillis()/1000);//every time will receive new notification
                     finish();
                     return;
                 }
