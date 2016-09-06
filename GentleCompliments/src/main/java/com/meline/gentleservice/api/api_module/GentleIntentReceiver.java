@@ -6,7 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
 
-import com.meline.gentleservice.ui.activities.GentleCompliments;
+import com.meline.gentleservice.ui.activities.MainActivity;
 import com.meline.gentleservice.R;
 import com.meline.gentleservice.utils.SharedPreferencesUtils;
 
@@ -16,7 +16,6 @@ public class GentleIntentReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         SharedPreferencesUtils spUtils = new SharedPreferencesUtils(context, context.getString(R.string.sp_name));
-        GentleIntentLauncher gentleIntentLauncher = GentleIntentLauncher.getInstance();
         String action = intent.getAction();
         boolean isServiceRunning;
         try {
@@ -26,17 +25,18 @@ public class GentleIntentReceiver extends BroadcastReceiver {
         }
 
         switch (action) {
-
             case SINGLE_SHOT_ALARM:
-                startMainActivityForSurpriseLoading(context);
+                startMainActivityJustForComplimenting(context);
                 break;
 
             case "android.intent.action.BOOT_COMPLETED":
                 if (isServiceRunning) {
-                    long waitingTimeLeft = spUtils.getLongFromSharedPreferences(context.getString(R.string.sp_fireNextInMilliseconds));
-                    String msg = String.format(context.getString(R.string.service_restarted), context.getString(R.string.app_name));
+                    String msg = String.format("%1$s %2$s",
+                            context.getString(R.string.app_name),
+                            context.getString(R.string.service_restarted));
+
                     Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
-                    gentleIntentLauncher.startSingleWait(context, waitingTimeLeft);
+                    startMainActivityJustForComplimenting(context);
                 }
                 break;
 
@@ -46,8 +46,8 @@ public class GentleIntentReceiver extends BroadcastReceiver {
         }
     }
 
-    private void startMainActivityForSurpriseLoading(Context context) {
-        Intent startActivityIntent = new Intent(context, GentleCompliments.class);
+    private void startMainActivityJustForComplimenting(Context context) {
+        Intent startActivityIntent = new Intent(context, MainActivity.class);
         startActivityIntent.putExtra("reloadComplimentingOnly", true);
         startActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(startActivityIntent);

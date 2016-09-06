@@ -31,12 +31,13 @@ import com.meline.gentleservice.ui.fragments.TimePickerFragment;
 
 import java.util.Date;
 
-public class GentleCompliments extends AppCompatActivity
+public class MainActivity extends AppCompatActivity
         implements View.OnClickListener, View.OnFocusChangeListener, RadioGroup.OnCheckedChangeListener {
     private EditText etFirstTime, etSecondTime;
     private LinearLayout llAreaInput;
     private Button btnStartStop;
     private CheckBox chbDontDisturb;
+
     private boolean isServiceRunning;
     private RadioButton rbSchedule;
     private RadioButton rbSurpriseMe;
@@ -48,6 +49,7 @@ public class GentleCompliments extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -134,8 +136,10 @@ public class GentleCompliments extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         //keeps  an eye on locale changes
-        LocaleManagementUtils localeManagementUtils = new LocaleManagementUtils(this);
-        localeManagementUtils.manageLocale(spUtils, spUtils);
+        if (spUtils != null) {
+            LocaleManagementUtils localeManagementUtils = new LocaleManagementUtils(this);
+            localeManagementUtils.manageLocale(spUtils, spUtils);
+        }
     }
 
     @Override
@@ -160,23 +164,14 @@ public class GentleCompliments extends AppCompatActivity
                 Intent likeHatedIntent = new Intent(this, LikeHatedActivity.class);
                 this.startActivity(likeHatedIntent);
                 break;
-           /* case R.id.get_next_load_date:
-                SharedPreferencesUtils spUtils = new SharedPreferencesUtils(this, getString(R.string.sp_name));
-                long DEFAULT_VALUE = 0;
-                long millisecondsFire = DEFAULT_VALUE;
-                try {
-                    millisecondsFire = spUtils.getLongFromSharedPreferences(getString(R.string.sp_fireNextInMilliseconds));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                Date date = new Date(millisecondsFire);
-                String msg = millisecondsFire == DEFAULT_VALUE ? "none" : CalendarUtils.stringifyDateInFormat(date);
-
-                Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
-                break;*/
-
+            case R.id.get_next_load_date:
+                String nextDate = CalendarUtils.stringifyDateInFormat(
+                        new Date(spUtils.getLongFromSharedPreferences(getString(R.string.sp_fireNextInMilliseconds)))
+                );
+                Toast.makeText(MainActivity.this, nextDate, Toast.LENGTH_LONG).show();
+                break;
             default:
-                Toast.makeText(GentleCompliments.this, R.string.i_do_not_know_what_to_do, Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, R.string.i_do_not_know_what_to_do, Toast.LENGTH_SHORT).show();
                 break;
         }
 
@@ -203,14 +198,14 @@ public class GentleCompliments extends AppCompatActivity
                 break;
 
             default:
-                Toast.makeText(GentleCompliments.this, R.string.i_do_not_know_what_to_do, Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, R.string.i_do_not_know_what_to_do, Toast.LENGTH_SHORT).show();
                 break;
         }
     }
 
     @Override
     public void onFocusChange(View view, boolean hasFocus) {
-        SharedPreferencesUtils spUtils = new SharedPreferencesUtils(GentleCompliments.this, getString(R.string.sp_name));
+        SharedPreferencesUtils spUtils = new SharedPreferencesUtils(MainActivity.this, getString(R.string.sp_name));
         boolean serviceDown = !(spUtils.getBooleanFromSharedPreferences(getString(R.string.sp_isServiceRunning)));
         switch (view.getId()) {
             case R.id.etFirstTime:
@@ -226,7 +221,7 @@ public class GentleCompliments extends AppCompatActivity
                 break;
 
             default:
-                Toast.makeText(GentleCompliments.this, R.string.i_do_not_know_what_to_do, Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, R.string.i_do_not_know_what_to_do, Toast.LENGTH_SHORT).show();
                 break;
         }
     }
@@ -238,6 +233,12 @@ public class GentleCompliments extends AppCompatActivity
         spUtils.putBooleanInSharedPreferences(getString(R.string.sp_isScheduled), rbSchedule.isChecked());
         spUtils.putBooleanInSharedPreferences(getString(R.string.sp_isSurpriseMe), rbSurpriseMe.isChecked());
         addInputView(llAreaInput);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        spUtils = null;
     }
 
     private void addInputView(LinearLayout llAreaInput) {
@@ -309,7 +310,7 @@ public class GentleCompliments extends AppCompatActivity
         boolean isServiceRunning = spUtils.getBooleanFromSharedPreferences(getString(R.string.sp_isServiceRunning));
         long waitingTime;
         if (!isServiceRunning) {
-            long MINIMUM_WAITING_TIME = 2 * 60 * 60 * 1000; // two hours is a minimum time
+            long MINIMUM_WAITING_TIME = 60 * 1000; //todo make 2 * 60 * 60 * 1000; // two hours is a minimum time
             try {
                 int inputNum = Integer.parseInt(String.valueOf(etTimeWait.getText()));
                 waitingTime = CalendarUtils.minutesToMilliseconds(inputNum);
@@ -322,10 +323,10 @@ public class GentleCompliments extends AppCompatActivity
                     throw new FormatException("Input is smaller then minimum waiting time!");
                 }
             } catch (NumberFormatException e) {
-                Toast.makeText(GentleCompliments.this, R.string.invalid_number_text, Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this, R.string.invalid_number_text, Toast.LENGTH_LONG).show();
                 return;
             } catch (FormatException e) {
-                Toast.makeText(GentleCompliments.this,
+                Toast.makeText(MainActivity.this,
                         getString(R.string.minimum_waiting_time_text) + CalendarUtils.millisecondsToMinutes(MINIMUM_WAITING_TIME), Toast.LENGTH_LONG).show();
                 return;
             }
@@ -358,8 +359,10 @@ public class GentleCompliments extends AppCompatActivity
                 timeSurpriseWait = 8 * 60 * 60 * 1000; //hours * minutes * seconds * milliseconds
             } else if (spinValue.equals(getString(R.string.surprise_option_every_6_hours))) {
                 timeSurpriseWait = 6 * 60 * 60 * 1000; //hours * minutes * seconds * milliseconds
+            } else if (spinValue.equals(getString(R.string.surprise_option_every_day))) {
+                timeSurpriseWait = 2 * 60 * 1000; //todo 24 * 60 * 60 * 1000; //hours * minutes * seconds * milliseconds
             } else {
-                timeSurpriseWait = 24 * 60 * 60 * 1000; //default value is a day
+                throw new NullPointerException("Unimplemented option!");
             }
 
             spUtils.putLongInSharedPreferences(getString(R.string.sp_timeWaitingPeriod), timeSurpriseWait);

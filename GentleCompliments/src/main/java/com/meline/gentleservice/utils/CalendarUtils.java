@@ -15,9 +15,9 @@ public final class  CalendarUtils {
     private CalendarUtils() {
     }
 
-    /*public static String stringifyDateInFormat(Date date){
+    public static String stringifyDateInFormat(Date date){
         return DATE_FORMAT.format(date);
-    }*/
+    }
 
     public static long minutesToMilliseconds(long minutes){
         return minutes * 1000 * 60;

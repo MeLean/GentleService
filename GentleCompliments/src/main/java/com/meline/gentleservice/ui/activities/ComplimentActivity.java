@@ -38,22 +38,16 @@ public class ComplimentActivity extends AppCompatActivity implements View.OnClic
     private Vibrator mVibrator = null;
     private TextView twContainer;
     InterstitialAd ad;
-
+    SharedPreferencesUtils spUtils;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD |
                 WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
-                WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON |
-                WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
         super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
         boolean checkDisturbed = getIntent().getBooleanExtra(getString(R.string.sp_disturb_check), true);
         boolean isDoNotDisturb = false;
-        SharedPreferencesUtils spUtils = new SharedPreferencesUtils(this, getString(R.string.sp_name));
+        spUtils = new SharedPreferencesUtils(this, getString(R.string.sp_name));
         if (checkDisturbed) {
             try {
                 isDoNotDisturb = spUtils.getBooleanFromSharedPreferences(getString(R.string.sp_do_not_disturb));
@@ -90,13 +84,16 @@ public class ComplimentActivity extends AppCompatActivity implements View.OnClic
             }
         }
         setContentView(R.layout.activity_compliment);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+    }
 
-        if (!isDoNotDisturb) {
-            makeHeartBeatVibrate();
-        }
+    @Override
+    protected void onResume() {
+        super.onResume();
 
+        makeHeartBeatVibrate();
         ImageView imgLike = (ImageView) findViewById(R.id.imgLike);
         ImageView imgSMS = (ImageView) findViewById(R.id.imgSMS);
         ImageView imgDislike = (ImageView) findViewById(R.id.imgDislike);
@@ -267,9 +264,9 @@ public class ComplimentActivity extends AppCompatActivity implements View.OnClic
         PendingIntent resultPendingIntent =
                 PendingIntent.getActivity(
                         this,
-                        0,
+                        notificationId,
                         intentLoad,
-                        PendingIntent.FLAG_UPDATE_CURRENT
+                        PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_ONE_SHOT
                 );
 
         mBuilder.setContentIntent(resultPendingIntent);

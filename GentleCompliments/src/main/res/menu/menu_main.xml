@@ -9,8 +9,8 @@
         android:orderInCategory="1000" app:showAsAction="never" />
 
 
-    <!-- 
+
     <item android:id="@+id/get_next_load_date" android:title="Get Next Date"
         android:orderInCategory="122" app:showAsAction="never" />
-    -->
+
 </menu>
