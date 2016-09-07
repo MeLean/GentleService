@@ -2,6 +2,7 @@ package com.meline.gentleservice.ui.activities;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.internal.view.ContextThemeWrapper;
@@ -34,8 +35,13 @@ public class LikeHatedActivity extends AppCompatActivity implements AdapterView.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_like_hated);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        if(getSupportActionBar() != null){
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         DBHelper db = DBHelper.getInstance(this);
         ArrayList<Compliment> hatedCompliments = new ArrayList<>();
@@ -57,8 +63,7 @@ public class LikeHatedActivity extends AppCompatActivity implements AdapterView.
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_just_finish, menu);
+        getMenuInflater().inflate(R.menu.menu_empty, menu);
         return true;
     }
 
@@ -66,8 +71,8 @@ public class LikeHatedActivity extends AppCompatActivity implements AdapterView.
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch (id) {
-            case R.id.action_return:
-                finish();
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
                 break;
             default:
                 Toast.makeText(this, R.string.i_do_not_know_what_to_do, Toast.LENGTH_SHORT).show();
@@ -122,7 +127,6 @@ public class LikeHatedActivity extends AppCompatActivity implements AdapterView.
         }
 
         ArrayAdapter<String> adapter = new CustomAdapter(this, hatedComplimentsStr);
-        listView.setAdapter(adapter);
         listView.setAdapter(adapter);
     }
 

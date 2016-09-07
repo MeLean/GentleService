@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.meline.gentleservice.ui.activities.SmsActivity"
+    tools:context=".ui.activities.SmsActivity"
     tools:showIn="@layout/activity_sms_activity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -53,24 +53,8 @@
             android:id="@+id/llSendButtons">
 
             <ImageButton
-                android:id="@+id/btnViber"
-                android:src="@drawable/ic_viber"
-                android:contentDescription="@string/viber_icon"
-                android:layout_weight="3"
-                style="@style/imageButton"
-                />
-
-            <ImageButton
-                android:id="@+id/btnWhatsapp"
-                android:src="@drawable/ic_whatsapp"
-                android:contentDescription="@string/whatsapp_icon"
-                android:layout_weight="3"
-                style="@style/imageButton"
-                />
-
-            <ImageButton
                 android:id="@+id/btnSms"
-                android:src="@drawable/ic_sms"
+                android:src="@drawable/sms_pic"
                 android:contentDescription="@string/sms_icon"
                 android:layout_weight="3"
                 style="@style/imageButton"

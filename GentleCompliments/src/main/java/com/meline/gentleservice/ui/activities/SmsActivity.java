@@ -1,276 +1,74 @@
 package com.meline.gentleservice.ui.activities;
 
-import android.app.Activity;
-import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
-import android.content.ContentValues;
+import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.net.Uri;
+import android.content.pm.ResolveInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.ContactsContract;
-import android.support.v7.app.AlertDialog;
+import android.os.Parcelable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.telephony.SmsManager;
-import android.util.Log;
+import android.text.TextUtils;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.Toast;
+
 
 import com.meline.gentleservice.R;
-import com.meline.gentleservice.utils.SdCardWriter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class SmsActivity extends AppCompatActivity implements View.OnClickListener, View.OnKeyListener {
-    final private static int CONTACTS_REQUEST = 1;
-    final private static String TAG = "Debug";
     private EditText etSmsText;
 
-    private void hideSoftInput(View view) {
-        InputMethodManager manager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-        if (manager != null)
-            manager.hideSoftInputFromWindow(view.getWindowToken(), 0);
-    }
-
-    private boolean smsSendingIsAvailable() {
-        PackageManager pm = getPackageManager();
-        return (pm.hasSystemFeature(PackageManager.FEATURE_TELEPHONY) || pm.hasSystemFeature(PackageManager.FEATURE_TELEPHONY_CDMA));
-    }
-
-    private void sendSMS(String phoneNumber, String message) {
-        String SENT = "SMS_SENT";
-        String DELIVERED = "SMS_DELIVERED";
-
-        //---when the SMS has been sent---
-        registerReceiver(new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context arg0, Intent arg1) {
-
-                switch (getResultCode()) {
-                    case Activity.RESULT_OK:
-                        Log.d(TAG, "SMS sent");
-                        break;
-                    case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
-                        Log.d(TAG, "Generic failure");
-                        return;
-                    case SmsManager.RESULT_ERROR_NO_SERVICE:
-                        Log.d(TAG, "No Service");
-                        return;
-                    case SmsManager.RESULT_ERROR_NULL_PDU:
-                        Log.d(TAG, "Null PDU");
-                        return;
-                    case SmsManager.RESULT_ERROR_RADIO_OFF:
-                        Log.d(TAG, "Radio off");
-                        return;
-                    default:
-                        return;
-                }
-            }
-        }, new IntentFilter(SENT));
-
-        //---when the SMS has been delivered---
-        registerReceiver(new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context arg0, Intent arg1) {
-                switch (getResultCode()) {
-                    case Activity.RESULT_OK:
-                        Log.d(TAG, "SMS delivered");
-                        break;
-                    case Activity.RESULT_CANCELED:
-                        Log.d(TAG, "SMS NOT delivered");
-                        break;
-                }
-            }
-        }, new IntentFilter(DELIVERED));
-
-        SmsManager sms = SmsManager.getDefault();
-        ArrayList<String> partsSms = sms.divideMessage(message);
-        PendingIntent sentPI = PendingIntent.getBroadcast(this, 0, new Intent(SENT), 0);
-        PendingIntent deliveredPI = PendingIntent.getBroadcast(this, 0, new Intent(DELIVERED), 0);
-        ArrayList<PendingIntent> listSendPI = new ArrayList<>();
-        listSendPI.add(sentPI);
-        ArrayList<PendingIntent> listDeliveredPI = new ArrayList<>();
-        listDeliveredPI.add(deliveredPI);
-        sms.sendMultipartTextMessage(phoneNumber, null, partsSms, listSendPI, listDeliveredPI);
-
-        saveSmsInSentMessages(phoneNumber, message);
-    }
-
-    private void saveSmsInSentMessages(String phoneNumber, String message) {
-        try {
-            ContentValues values = new ContentValues();
-            values.put("address", phoneNumber); // phone number to send
-            values.put("date", String.valueOf(System.currentTimeMillis()));
-            values.put("read", "0"); // if you want to mark is as unread set to 0
-            values.put("type", "2"); // 2 means sent message
-            values.put("body", message);
-            Uri uri = Uri.parse("content://sms/");
-            //Uri rowUri =
-            getApplicationContext().getContentResolver().insert(uri, values);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Toast.makeText(SmsActivity.this, R.string.sms_did_not_save, Toast.LENGTH_SHORT).show();
-            SdCardWriter sdCardWriter = new SdCardWriter("GentleComplimentsLog.txt");
-            sdCardWriter.appendNewLine(e.getLocalizedMessage());
-            sdCardWriter.appendNewLine(this.getClass().getSimpleName() + " db.changeIsHatedStatus(complimentText, false);");
-        }
-    }
-
-    private void showDialog(String message) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(message)
-                .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        finish();
-                    }
-                })
-                .setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        //do nothing, the activity will stay open and wait to another reaction by the user
-                        dialog.dismiss();
-                    }
-                }).show();
-    }
-
-    private void startActivityForMessaging(String appUri) {
-        if (isNetworkAvailable()) {
-            if(isAppInstalled(appUri)) {
-                showDialog(getString(R.string.send_again));
-                Toast.makeText(SmsActivity.this, getString(R.string.chose_recipient), Toast.LENGTH_LONG).show();
-                Intent share = new Intent(Intent.ACTION_SEND);
-                share.setPackage(appUri);
-                share.setType("text/plain");
-                share.putExtra(Intent.EXTRA_TEXT, etSmsText.getText().toString());
-                this.startActivity(share);
-            }else{
-                Toast.makeText(SmsActivity.this, getString(R.string.app_not_installed), Toast.LENGTH_SHORT).show();
-            }
-        }else{
-            Toast.makeText(SmsActivity.this, getString(R.string.not_connected), Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-    }
-
-    private boolean isAppInstalled(String uri) {
-        PackageManager pm = getPackageManager();
-        boolean app_installed;
-        try {
-            pm.getPackageInfo(uri, PackageManager.GET_ACTIVITIES);
-            app_installed = true;
-        } catch (PackageManager.NameNotFoundException e) {
-            app_installed = false;
-        }
-        return app_installed;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sms_activity);
 
-            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-            setSupportActionBar(toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-            String smsText = getIntent().getStringExtra(getString(R.string.sp_sms_text));
-            etSmsText = (EditText) findViewById(R.id.etSmsText);
-            etSmsText.setText(smsText);
-            etSmsText.requestFocus();
+        /*if(getSupportActionBar() != null){
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }*/
 
-            etSmsText.setOnKeyListener(this);
+        String smsText = getIntent().getStringExtra(getString(R.string.sp_sms_text));
+        etSmsText = (EditText) findViewById(R.id.etSmsText);
+        etSmsText.setText(smsText);
+        etSmsText.requestFocus();
 
-            ImageButton btnViber = (ImageButton) findViewById(R.id.btnViber);
-            ImageButton btnWhatsapp = (ImageButton) findViewById(R.id.btnWhatsapp);
-            ImageButton btnSms = (ImageButton) findViewById(R.id.btnSms);
-            ImageButton btnCancel = (ImageButton) findViewById(R.id.btnCancel);
+        etSmsText.setOnKeyListener(this);
 
-            btnViber.setOnClickListener(this);
-            btnWhatsapp.setOnClickListener(this);
-            btnSms.setOnClickListener(this);
-            btnCancel.setOnClickListener(this);
-        }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == SmsActivity.CONTACTS_REQUEST) {
-            if (resultCode == RESULT_OK) {
-                Uri uri = data.getData();
-                Cursor cursor = getContentResolver().query(uri, null, null, null, null);
-                if (cursor != null) {
-                    cursor.moveToFirst();
-                    int numberIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
-                    String phoneNumberStr = String.valueOf(cursor.getString(numberIndex));
-                    //int nameIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME);
-                    //String nameStr = String.valueOf(cursor.getString(nameIndex)).trim();
-                    cursor.close();
+        ImageButton btnSms = (ImageButton) findViewById(R.id.btnSms);
+        ImageButton btnCancel = (ImageButton) findViewById(R.id.btnCancel);
 
-                    sendSMS(phoneNumberStr, etSmsText.getText().toString().trim());
-                }
-            }
-        }
+        btnSms.setOnClickListener(this);
+        btnCancel.setOnClickListener(this);
     }
+
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btnSms:
-                if (smsSendingIsAvailable()) {
-                    if (!etSmsText.getText().toString().trim().equals("")) {
-                        this.hideSoftInput(etSmsText);
-                        //todo translate string
-                        showDialog(getString(R.string.send_again));
-                        Toast.makeText(SmsActivity.this, getString(R.string.chose_recipient), Toast.LENGTH_LONG).show();
-                        //choosing an contact number from android people application
-                        Intent intent = new Intent(Intent.ACTION_PICK,
-                                ContactsContract.CommonDataKinds.Phone.CONTENT_URI);
-                        startActivityForResult(intent, SmsActivity.CONTACTS_REQUEST);
-                    } else {
-                        Toast.makeText(this, R.string.empty_input_values, Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                } else {
-                    Toast.makeText(SmsActivity.this, getString(R.string.could_not_messaging), Toast.LENGTH_SHORT).show();
-                }
-                break;
-
-            /*case R.id.btnChose:
-            Intent intent = new Intent(Intent.ACTION_PICK,
-            ContactsContract.CommonDataKinds.Phone.CONTENT_URI);
-                startActivityForResult(intent, SmsActivity.CONTACTS_REQUEST);
-                break;*/
-
-            case R.id.btnViber:
-                startActivityForMessaging("com.viber.voip");
-                break;
-            case R.id.btnWhatsapp:
-                startActivityForMessaging("com.whatsapp");
+                AsyncLoadMessagingApps asyncLoadMessagingApps = new AsyncLoadMessagingApps();
+                asyncLoadMessagingApps.doInBackground(etSmsText.getText().toString().trim());
                 break;
             case R.id.btnCancel:
-                //todo translate string
-                showDialog(getString(R.string.quit));
+                finish();
                 break;
             default:
-                break;
+                throw new UnsupportedOperationException("No action found fot id: " + view.getId());
         }
     }
 
@@ -281,5 +79,98 @@ public class SmsActivity extends AppCompatActivity implements View.OnClickListen
             return true;
         }
         return false;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_just_finish, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case R.id.action_return:
+                finish();
+                return true;
+
+            /*case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
+                break;*/
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void hideSoftInput(View view) {
+        InputMethodManager manager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        if (manager != null)
+            manager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+
+    private class AsyncLoadMessagingApps extends AsyncTask<String, Void, Void> {
+        private ProgressDialog mDialog;
+        private boolean mOperationStatusOK = false;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            Context context = getApplicationContext();
+            mDialog = new ProgressDialog(context);
+            mDialog.setMessage(context.getString(R.string.please_wait));
+            mDialog.setCancelable(true);
+            mDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            mDialog.setIndeterminate(true);
+            mDialog.setIndeterminateDrawable(ContextCompat.getDrawable(context, R.drawable.jumping_heart_cartoon));
+        }
+
+        @Override
+        protected Void doInBackground(String... params) {
+            String messageText = params[0];
+            List<Intent> targetedShareIntents = new ArrayList<>();
+            Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
+            shareIntent.setType("text/plain");
+            List<ResolveInfo> resInfo = getPackageManager().queryIntentActivities(shareIntent, 0);
+            if (!resInfo.isEmpty()) {
+                for (ResolveInfo resolveInfo : resInfo) {
+                    String packageName = resolveInfo.activityInfo.packageName;
+                    Intent targetedShareIntent = new Intent(android.content.Intent.ACTION_SEND);
+                    targetedShareIntent.setType("text/plain");
+
+                    //facebook has a better app for messaging and should not show as an option
+                    if (!TextUtils.equals(packageName, "com.facebook.katana")) {
+                        targetedShareIntent.putExtra(android.content.Intent.EXTRA_TEXT, messageText);
+                    } else {
+                        continue;
+                    }
+
+                    targetedShareIntent.setPackage(packageName);
+                    targetedShareIntent.setClassName(
+                            resolveInfo.activityInfo.packageName,
+                            resolveInfo.activityInfo.name);
+                    targetedShareIntents.add(targetedShareIntent);
+                }
+
+                Intent chooserIntent = Intent.createChooser(targetedShareIntents.remove(0), getString(R.string.chose_recipient));
+                chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, targetedShareIntents.toArray(new Parcelable[targetedShareIntents.size()]));
+                startActivity(chooserIntent);
+            }
+
+            mOperationStatusOK = true;
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            if (mOperationStatusOK) {
+                if (mDialog != null) {
+                    mDialog.dismiss();
+                    mDialog = null;
+                }
+            }
+        }
     }
 }

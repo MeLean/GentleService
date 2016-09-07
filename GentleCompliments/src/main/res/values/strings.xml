@@ -47,7 +47,7 @@
     <string name="add_compliment_hint">Enter compliment here!</string>
     <string name="add_compliment_btn_text">Enter compliment</string>
     <string name="title_activity_like_hated">hated compliments</string>
-    <string name="enter_compliment">Please enter komliment!</string>
+    <string name="enter_compliment">Please enter a compliment!</string>
     <string name="compliment_added">Your compliment was included!</string>
     <string name="no_hated_compliments_text">No hated compliments!</string>
     <string name="surprise_option_every_day">Once a day</string>

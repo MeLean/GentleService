@@ -1,9 +1,12 @@
 package com.meline.gentleservice.ui.activities;
 
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -24,8 +27,13 @@ public class AddNewComplimentActivity extends AppCompatActivity implements View.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_new_compliment);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        if(getSupportActionBar() != null){
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         etAddCompliment = (EditText)findViewById(R.id.etAddCompliment);
         etAddCompliment.setOnKeyListener(new View.OnKeyListener() {
@@ -39,10 +47,25 @@ public class AddNewComplimentActivity extends AppCompatActivity implements View.
         });
 
         Button btnAddCompliment = (Button) findViewById(R.id.btnAddCompliment);
-        Button btnBack = (Button) findViewById(R.id.btnBack);
 
-        btnBack.setOnClickListener(this);
         btnAddCompliment.setOnClickListener(this);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_empty, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -67,10 +90,6 @@ public class AddNewComplimentActivity extends AppCompatActivity implements View.
                     sdCardWriter.appendNewLine(e.getLocalizedMessage());
                     sdCardWriter.appendNewLine(this.getClass().getSimpleName() + " db.addComplement(enteredCompliment);");
                 }
-                break;
-
-            case R.id.btnBack:
-                finish();
                 break;
 
             default:

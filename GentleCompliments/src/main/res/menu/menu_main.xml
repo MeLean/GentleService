@@ -1,12 +1,26 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity">
-    <item android:id="@+id/action_add_new_compliment" android:title="@string/add_new_compliment"
-        android:orderInCategory="100" app:showAsAction="never" />
-    <item android:id="@+id/action_like_hated" android:title="@string/action_like_hated"
-        android:orderInCategory="110" app:showAsAction="never" />
-    <item android:id="@+id/action_exit" android:title="@string/exit_text"
-        android:orderInCategory="1000" app:showAsAction="never" />
+    <item android:id="@+id/action_add_new_compliment"
+        android:title="@string/add_new_compliment"
+        android:orderInCategory="100"
+        android:icon="@android:drawable/ic_menu_add"
+        app:showAsAction="ifRoom|withText"
+        />
+
+    <item android:id="@+id/action_like_hated"
+        android:title="@string/action_like_hated"
+        android:icon="@android:drawable/ic_menu_set_as"
+        android:orderInCategory="110"
+        app:showAsAction="ifRoom|withText"
+        />
+
+    <item android:id="@+id/action_exit"
+        android:title="@string/exit_text"
+        android:icon="@android:drawable/ic_delete"
+        android:orderInCategory="1000"
+        app:showAsAction="ifRoom|withText"
+        />
 
 
 

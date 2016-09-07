@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.nfc.FormatException;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.NavUtils;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
@@ -92,7 +94,7 @@ public class MainActivity extends AppCompatActivity
         }
 
         if (!isSchedule && !isSurpriseMe) {
-            isSchedule = true;//first load of program and isSchedule = true is default
+            isSurpriseMe = true;//first load of program and isSchedule = true is default
         }
 
         boolean willNotDisturb;
@@ -154,23 +156,26 @@ public class MainActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch (id) {
-            case R.id.action_exit:
-                finish();
-                break;
             case R.id.action_add_new_compliment:
-                Intent addComplimentIntent = new Intent(this, AddNewComplimentActivity.class);
-                this.startActivity(addComplimentIntent);
+                startActivity(new Intent(this, AddNewComplimentActivity.class));
                 break;
             case R.id.action_like_hated:
-                Intent likeHatedIntent = new Intent(this, LikeHatedActivity.class);
-                this.startActivity(likeHatedIntent);
+                startActivity(new Intent(this, LikeHatedActivity.class));
                 break;
+
+            //todo comment or remove me in xml too
             case R.id.get_next_load_date:
                 String nextDate = CalendarUtils.stringifyDateInFormat(
                         new Date(spUtils.getLongFromSharedPreferences(getString(R.string.sp_fireNextInMilliseconds)))
                 );
                 Toast.makeText(MainActivity.this, nextDate, Toast.LENGTH_LONG).show();
                 break;
+
+
+            case R.id.action_exit:
+                finish();
+                break;
+
             default:
                 Toast.makeText(MainActivity.this, R.string.i_do_not_know_what_to_do, Toast.LENGTH_SHORT).show();
                 break;

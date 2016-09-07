@@ -3,12 +3,12 @@ package com.meline.gentleservice.api.database;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.support.v4.content.ContextCompat;
 import android.widget.Toast;
 
 import java.sql.SQLException;
 
 import com.meline.gentleservice.R;
-import com.meline.gentleservice.ui.dialogs.JumpingHeartDialog;
 
 public class DatabaseAsyncManager extends AsyncTask<String, Void, Void> {
     private Context mContext;
@@ -22,7 +22,12 @@ public class DatabaseAsyncManager extends AsyncTask<String, Void, Void> {
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        mDialog = new JumpingHeartDialog(mContext);
+        mDialog = new ProgressDialog(mContext);
+        mDialog.setMessage(mContext.getString(R.string.please_wait));
+        mDialog.setCancelable(true);
+        mDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        mDialog.setIndeterminate(true);
+        mDialog.setIndeterminateDrawable(ContextCompat.getDrawable(mContext, R.drawable.jumping_heart_cartoon));
         mDialog.show();
     }
 
