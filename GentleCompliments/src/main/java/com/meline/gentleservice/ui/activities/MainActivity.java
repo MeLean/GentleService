@@ -262,7 +262,7 @@ public class MainActivity extends AppCompatActivity
             llAreaInput.addView(mSpinner);
 
         } else if (rbSchedule.isChecked()) {
-            //remove all views if there are any
+            //removes all views if there are any
             llAreaInput.removeAllViews();
             etTimeWait.setHint(getString(R.string.time_hint));
             etTimeWait.setGravity(Gravity.CENTER);
@@ -305,6 +305,7 @@ public class MainActivity extends AppCompatActivity
         boolean isServiceRunning = spUtils.getBooleanFromSharedPreferences(getString(R.string.sp_isServiceRunning));
         long waitingTime;
         if (!isServiceRunning) {
+            //runs only when app starts compliment for the first time
             long MINIMUM_WAITING_TIME = 60 * 1000; //todo make 2 * 60 * 60 * 1000; // two hours is a minimum time
             try {
                 int inputNum = Integer.parseInt(String.valueOf(etTimeWait.getText()));
@@ -331,9 +332,9 @@ public class MainActivity extends AppCompatActivity
             manageComponentsValues();
         }
 
+        //runs every time
         waitingTime = spUtils.getLongFromSharedPreferences(getString(R.string.sp_timeWaiting));
         spUtils.putLongInSharedPreferences(getString(R.string.sp_fireNextInMilliseconds), System.currentTimeMillis() + waitingTime);
-        waitingTime = spUtils.getLongFromSharedPreferences(getString(R.string.sp_timeWaiting));
         GentleIntentLauncher gentleIntentLauncher = GentleIntentLauncher.getInstance();
         gentleIntentLauncher.startComplimenting(getApplicationContext(), waitingTime);
         finish();
@@ -343,23 +344,26 @@ public class MainActivity extends AppCompatActivity
         SharedPreferencesUtils spUtils = new SharedPreferencesUtils(this, getString(R.string.sp_name));
         boolean isServiceRunning = spUtils.getBooleanFromSharedPreferences(getString(R.string.sp_isServiceRunning));
         if (!isServiceRunning) {
+            //runs only when app starts compliment for the first time
             long timeSurpriseWait;
             String spinValue = mSpinner.getSelectedItem().toString();
             spUtils.putStringInSharedPreferences(getString(R.string.sp_surprise_spinner_value), spinValue);//needed for activity next starts
-            if (spinValue.equals(getString(R.string.surprise_option_every_week))) {
-                timeSurpriseWait = 7 * 24 * 60 * 60 * 1000; //days * hours * minutes * seconds * milliseconds
+            if (spinValue.equals(getString(R.string.surprise_option_every_day))) {
+                timeSurpriseWait = 2 * 60 * 1000; //todo 24 * 60 * 60 * 1000; //hours * minutes * seconds * milliseconds
+
             } else if (spinValue.equals(getString(R.string.surprise_option_every_12_hours))) {
                 timeSurpriseWait = 12 * 60 * 60 * 1000; //hours * minutes * seconds * milliseconds
             } else if (spinValue.equals(getString(R.string.surprise_option_every_8_hours))) {
                 timeSurpriseWait = 8 * 60 * 60 * 1000; //hours * minutes * seconds * milliseconds
             } else if (spinValue.equals(getString(R.string.surprise_option_every_6_hours))) {
                 timeSurpriseWait = 6 * 60 * 60 * 1000; //hours * minutes * seconds * milliseconds
-            } else if (spinValue.equals(getString(R.string.surprise_option_every_day))) {
-                timeSurpriseWait = 2 * 60 * 1000; //todo 24 * 60 * 60 * 1000; //hours * minutes * seconds * milliseconds
+            } else if (spinValue.equals(getString(R.string.surprise_option_every_week))) {
+                timeSurpriseWait = 7 * 24 * 60 * 60 * 1000; //days * hours * minutes * seconds * milliseconds
             } else {
                 throw new NullPointerException("Unimplemented option!");
             }
 
+            //runs every time
             spUtils.putLongInSharedPreferences(getString(R.string.sp_timeWaitingPeriod), timeSurpriseWait);
             spUtils.putLongInSharedPreferences(getString(R.string.sp_timeEndPeriod), System.currentTimeMillis());
             spUtils.putBooleanInSharedPreferences(getString(R.string.sp_isServiceRunning), true);

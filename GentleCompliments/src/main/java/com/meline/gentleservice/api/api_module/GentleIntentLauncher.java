@@ -33,7 +33,7 @@ public class GentleIntentLauncher {
             waiting = CalendarUtils.manageWaitingTime(context);
         }
 
-        //insurance for all ready passed period
+        //insurance for passed period
         if(waiting > 0) {
             this.startSingleWait(context.getApplicationContext(), waiting);
             loadComplimentActivity(context.getApplicationContext());
