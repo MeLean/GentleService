@@ -311,7 +311,7 @@ public class MainActivity extends AppCompatActivity
         long waitingTime;
         if (!isServiceRunning) {
             //runs only when app starts compliment for the first time
-            long MINIMUM_WAITING_TIME = 60 * 1000; //todo make 2 * 60 * 60 * 1000; // two hours is a minimum time
+            long MINIMUM_WAITING_TIME = 2 * 60 * 60 * 1000; // two hours is a minimum time
             try {
                 int inputNum = Integer.parseInt(String.valueOf(etTimeWait.getText()));
                 waitingTime = CalendarUtils.minutesToMilliseconds(inputNum);
@@ -354,7 +354,7 @@ public class MainActivity extends AppCompatActivity
             String spinValue = mSpinner.getSelectedItem().toString();
             spUtils.putStringInSharedPreferences(getString(R.string.sp_surprise_spinner_value), spinValue);//needed for activity next starts
             if (spinValue.equals(getString(R.string.surprise_option_every_day))) {
-                timeSurpriseWait = 2 * 60 * 1000; //todo 24 * 60 * 60 * 1000; //hours * minutes * seconds * milliseconds
+                timeSurpriseWait = 24 * 60 * 60 * 1000; //hours * minutes * seconds * milliseconds
 
             } else if (spinValue.equals(getString(R.string.surprise_option_every_12_hours))) {
                 timeSurpriseWait = 12 * 60 * 60 * 1000; //hours * minutes * seconds * milliseconds

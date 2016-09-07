@@ -152,7 +152,7 @@ public class SmsActivity extends AppCompatActivity implements View.OnClickListen
                             resolveInfo.activityInfo.name);
                     targetedShareIntents.add(targetedShareIntent);
                 }
-
+                //todo change recipient text to "Chose app"
                 Intent chooserIntent = Intent.createChooser(targetedShareIntents.remove(0), getString(R.string.chose_recipient));
                 chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, targetedShareIntents.toArray(new Parcelable[targetedShareIntents.size()]));
                 startActivity(chooserIntent);
