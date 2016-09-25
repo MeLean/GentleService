@@ -20,13 +20,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.ArrayList;
 
 import com.meline.gentleservice.api.objects_model.Compliment;
 import com.meline.gentleservice.api.database.DBHelper;
 import com.meline.gentleservice.ui.adapters.CustomAdapter;
 import com.meline.gentleservice.R;
-import com.meline.gentleservice.utils.SdCardWriter;
 
 public class LikeHatedActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
     private ArrayList<String> mHatedComplimentsStr;
@@ -39,19 +39,21 @@ public class LikeHatedActivity extends AppCompatActivity implements AdapterView.
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        if(getSupportActionBar() != null){
+        if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
         DBHelper db = DBHelper.getInstance(this);
         ArrayList<Compliment> hatedCompliments = new ArrayList<>();
+
         try {
             hatedCompliments = db.getHeatedComplements();
-        } catch (Exception e) {
-            SdCardWriter sdCardWriter = new SdCardWriter("GentleComplimentsLog.txt");
-            sdCardWriter.appendNewLine(e.getLocalizedMessage());
-            sdCardWriter.appendNewLine(this.getClass().getSimpleName() + " hatedCompliments = db.getHeatedComplements();");
+        } catch (ParseException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+
 
         mHatedComplimentsStr = new ArrayList<>();
         for (Compliment compliment : hatedCompliments) {
@@ -142,12 +144,8 @@ public class LikeHatedActivity extends AppCompatActivity implements AdapterView.
             } else {
                 db.changeIsHatedStatus(complimentText, false);
             }
-
         } catch (SQLException e) {
-            Toast.makeText(LikeHatedActivity.this, getString(R.string.action_failed) + e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-            SdCardWriter sdCardWriter = new SdCardWriter("GentleComplimentsLog.txt");
-            sdCardWriter.appendNewLine(e.getLocalizedMessage());
-            sdCardWriter.appendNewLine(this.getClass().getSimpleName() + " db.changeIsHatedStatus(complimentText, false);");
+            e.printStackTrace();
         }
 
         String msg = isItForDelete ? getString(R.string.hated_was_deleted) : getString(R.string.hated_was_removed);

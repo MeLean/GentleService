@@ -1,6 +1,5 @@
 package com.meline.gentleservice.api.api_module;
 
-
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -8,9 +7,6 @@ import android.content.Intent;
 
 import com.meline.gentleservice.ui.activities.ComplimentActivity;
 import com.meline.gentleservice.utils.CalendarUtils;
-import com.meline.gentleservice.utils.SdCardWriter;
-
-import java.util.Date;
 
 public class GentleIntentLauncher {
     private static GentleIntentLauncher instance = new GentleIntentLauncher();

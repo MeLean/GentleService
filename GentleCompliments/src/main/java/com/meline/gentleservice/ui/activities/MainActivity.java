@@ -4,8 +4,6 @@ import android.content.Intent;
 import android.nfc.FormatException;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.NavUtils;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
@@ -27,11 +25,8 @@ import com.meline.gentleservice.R;
 import com.meline.gentleservice.api.api_module.GentleIntentLauncher;
 import com.meline.gentleservice.utils.CalendarUtils;
 import com.meline.gentleservice.utils.LocaleManagementUtils;
-import com.meline.gentleservice.utils.SdCardWriter;
 import com.meline.gentleservice.utils.SharedPreferencesUtils;
 import com.meline.gentleservice.ui.fragments.TimePickerFragment;
-
-import java.util.Date;
 
 public class MainActivity extends AppCompatActivity
         implements View.OnClickListener, View.OnFocusChangeListener, RadioGroup.OnCheckedChangeListener {
@@ -79,18 +74,14 @@ public class MainActivity extends AppCompatActivity
         try {
             isSchedule = spUtils.getBooleanFromSharedPreferences(getString(R.string.sp_isScheduled));
         } catch (RuntimeException e) {
-            SdCardWriter sdCardWriter = new SdCardWriter("GentleComplimentsLog.txt");
-            sdCardWriter.appendNewLine(e.getLocalizedMessage());
-            sdCardWriter.appendNewLine(this.getClass() + " isSchedule = spUtils.getBooleanFromSharedPreferences(getString(R.string.sp_isScheduled));");
+            e.printStackTrace();
         }
 
         boolean isSurpriseMe = false;
         try {
             isSurpriseMe = spUtils.getBooleanFromSharedPreferences(getString(R.string.sp_isSurpriseMe));
         } catch (RuntimeException e) {
-            SdCardWriter sdCardWriter = new SdCardWriter("GentleComplimentsLog.txt");
-            sdCardWriter.appendNewLine(e.getLocalizedMessage());
-            sdCardWriter.appendNewLine(this.getClass() + " isSurpriseMe = spUtils.getBooleanFromSharedPreferences(getString(R.string.sp_isSurpriseMe)");
+            e.printStackTrace();
         }
 
         if (!isSchedule && !isSurpriseMe) {
@@ -163,13 +154,12 @@ public class MainActivity extends AppCompatActivity
                 startActivity(new Intent(this, LikeHatedActivity.class));
                 break;
 
-            //todo comment or remove me in xml too
-            case R.id.get_next_load_date:
+            /*case R.id.get_next_load_date:
                 String nextDate = CalendarUtils.stringifyDateInFormat(
                         new Date(spUtils.getLongFromSharedPreferences(getString(R.string.sp_fireNextInMilliseconds)))
                 );
                 Toast.makeText(MainActivity.this, nextDate, Toast.LENGTH_LONG).show();
-                break;
+                break;*/
 
 
             case R.id.action_exit:

@@ -18,7 +18,6 @@ import java.sql.SQLException;
 import com.meline.gentleservice.api.objects_model.Compliment;
 import com.meline.gentleservice.api.database.DBHelper;
 import com.meline.gentleservice.R;
-import com.meline.gentleservice.utils.SdCardWriter;
 
 public class AddNewComplimentActivity extends AppCompatActivity implements View.OnClickListener{
     private EditText etAddCompliment;
@@ -81,15 +80,16 @@ public class AddNewComplimentActivity extends AppCompatActivity implements View.
                 Compliment enteredCompliment = new Compliment(String.valueOf(input.trim()));
                 enteredCompliment.setIsCustom(true); // it is a personal compliment not default
                 DBHelper db = DBHelper.getInstance(this);
+
                 try {
                     db.addComplement(enteredCompliment);
-                    etAddCompliment.setText("");
-                    Toast.makeText(this, R.string.compliment_added, Toast.LENGTH_LONG).show();
                 } catch (SQLException e) {
-                    SdCardWriter sdCardWriter = new SdCardWriter("GentleComplimentsLog.txt");
-                    sdCardWriter.appendNewLine(e.getLocalizedMessage());
-                    sdCardWriter.appendNewLine(this.getClass().getSimpleName() + " db.addComplement(enteredCompliment);");
+                    e.printStackTrace();
                 }
+
+                etAddCompliment.setText("");
+                    Toast.makeText(this, R.string.compliment_added, Toast.LENGTH_LONG).show();
+
                 break;
 
             default:

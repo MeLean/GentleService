@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Vibrator;
-import android.support.v4.app.NavUtils;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -21,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Random;
@@ -33,7 +33,6 @@ import com.meline.gentleservice.utils.CalendarUtils;
 import com.meline.gentleservice.api.objects_model.Compliment;
 import com.meline.gentleservice.R;
 import com.meline.gentleservice.utils.LocaleManagementUtils;
-import com.meline.gentleservice.utils.SdCardWriter;
 import com.meline.gentleservice.utils.SharedPreferencesUtils;
 
 public class ComplimentActivity extends AppCompatActivity implements View.OnClickListener {
@@ -52,14 +51,7 @@ public class ComplimentActivity extends AppCompatActivity implements View.OnClic
         boolean isDoNotDisturb = false;
         spUtils = new SharedPreferencesUtils(this, getString(R.string.sp_name));
         if (checkDisturbed) {
-            try {
                 isDoNotDisturb = spUtils.getBooleanFromSharedPreferences(getString(R.string.sp_do_not_disturb));
-            } catch (RuntimeException e) {
-                SdCardWriter sdCardWriter = new SdCardWriter("GentleComplimentsLog.txt");
-                sdCardWriter.appendNewLine(e.getLocalizedMessage());
-                sdCardWriter.appendNewLine(this.getClass().getSimpleName() + " isDoNotDisturb = spUtils.getBooleanFromSharedPreferences(getString(R.string.sp_do_not_disturb));");
-            }
-
             if (isDoNotDisturb) {
                 String firstTime = spUtils.getStringFromSharedPreferences(getString(R.string.sp_firstTime));
                 String secondTime = spUtils.getStringFromSharedPreferences(getString(R.string.sp_secondTime));
@@ -119,11 +111,12 @@ public class ComplimentActivity extends AppCompatActivity implements View.OnClic
 
         try {
             compliments = db.getLoadableComplements();
-        } catch (Exception e) {
-            SdCardWriter sdCardWriter = new SdCardWriter("GentleComplimentsLog.txt");
-            sdCardWriter.appendNewLine(e.getLocalizedMessage());
-            sdCardWriter.appendNewLine(this.getClass().getSimpleName() + " compliments = db.getLoadableComplements();");
+        } catch (ParseException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+
 
         twContainer = (TextView) findViewById(R.id.twContainer);
         String complimentStr = getString(R.string.no_loadable_compliments);
@@ -138,18 +131,15 @@ public class ComplimentActivity extends AppCompatActivity implements View.OnClic
                 try {
                     db.makeComplimentLoaded(mCompliment.getId());
                 } catch (SQLException e) {
-                    SdCardWriter sdCardWriter = new SdCardWriter("GentleComplimentsLog.txt");
-                    sdCardWriter.appendNewLine(e.getLocalizedMessage());
-                    sdCardWriter.appendNewLine(this.getClass().getSimpleName() + " db.makeComplimentLoaded(mCompliment.getId());");
+                    e.printStackTrace();
                 }
 
                 if (complimentsSize - 1 <= 0) { //last loadable compliment was loaded
+
                     try {
                         db.resetComplimentsToNotLoaded();
                     } catch (SQLException e) {
-                        SdCardWriter sdCardWriter = new SdCardWriter("GentleComplimentsLog.txt");
-                        sdCardWriter.appendNewLine(e.getLocalizedMessage());
-                        sdCardWriter.appendNewLine(this.getClass().getSimpleName() + " db.resetComplimentsToNotLoaded();");
+                        e.printStackTrace();
                     }
                 }
 
@@ -218,17 +208,16 @@ public class ComplimentActivity extends AppCompatActivity implements View.OnClic
                 Intent intentSms = new Intent(this, SmsActivity.class);
                 intentSms.putExtra(getString(R.string.sp_sms_text), mCompliment.getContent());
                 this.startActivity(intentSms);
+                this.finish();
                 break;
 
             case R.id.imgDislike:
                 DBHelper db = DBHelper.getInstance(this);
+
                 try {
                     db.changeIsHatedStatus(mCompliment.getContent(), true);
                 } catch (SQLException e) {
-                    Toast.makeText(this, getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
-                    SdCardWriter sdCardWriter = new SdCardWriter("GentleComplimentsLog.txt");
-                    sdCardWriter.appendNewLine(e.getLocalizedMessage());
-                    sdCardWriter.appendNewLine(this.getClass().getSimpleName() + " db.changeIsHatedStatus(mCompliment.getContent(), true);");
+                    e.printStackTrace();
                 }
 
                 Toast toast = Toast.makeText(this, String.format(getString(R.string.was_written_in_hated_list),
