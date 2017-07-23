@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.internal.view.ContextThemeWrapper;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.Menu;
@@ -89,8 +88,7 @@ public class LikeHatedActivity extends AppCompatActivity implements AdapterView.
         final String complimentText = parent.getItemAtPosition(position).toString();
 
         //show dialog
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-                new ContextThemeWrapper(this, android.R.style.Theme_Dialog));
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         // set title
         alertDialogBuilder.setTitle(getString(R.string.like_hated_title));
         // set dialog message
