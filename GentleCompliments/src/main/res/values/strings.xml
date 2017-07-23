@@ -69,55 +69,7 @@
 
     <string-array name="compliments_array">
         <item>"You're beautiful, it's true!"</item>
-        <item>"For me your smile is like the sunrise for the flowers!"</item>
-        <item>"Your beauty left me breathless!"</item>
-        <item>"You are more beautiful than the roses, because the roses have thorns!"</item>
-        <item>"If I have to say how much I love you from one to ten I would say thirteen"</item>
-        <item>"God has created you to show that he can do wonders!"</item>
-        <item>"Without you I feel half a person!"</item>
-        <item>"Forever is not enough to love you!"</item>
-        <item>"Without you, I see no reason to live!"</item>
-        <item>"If someone gives me a penny every time I think of you, I would be a billionaire!"</item>
-        <item>"When you are around me, nothing else matters!"</item>
-        <item>"I am addicted to you and I can not stop loving you!"</item>
-        <item>"I think we will grow old together!"</item>
-        <item>"I feel grateful when I see you looking at me!"</item>
-        <item>"You look great whether you are wearing something or not!"</item>
-        <item>"You are the definition of a woman!"</item>
-        <item>"Please tell me how can I fall in love with you every time I see you!"</item>
-        <item>"I love every second spent with you!"</item>
-        <item>"I realized that when I hug you I hold the best thing!"</item>
-        <item>"I can not wait to wake up to see your face!"</item>
-        <item>"You are beautiful in a million different ways!"</item>
-        <item>"All I want in life is you!"</item>
-        <item>"You are so unique!"</item>
-        <item>"You are the best version of yourself!"</item>
-        <item>"You are the best woman that someone might want!"</item>
-        <item>"I wish I was half as good as you!"</item>
-        <item>"If you ask me what I like most about you. I will answer EVERYTHING!"</item>
-        <item>"You give the best ideas!"</item>
-        <item>"Everything looks good when you are wearing it!"</item>
-        <item>"You should be tired because you are constantly running through my mind!"</item>
-        <item>"I will freeze not due to sickness, but because I am stunned by your beauty!"</item>
-        <item>"You have two of the most beautiful hands I have ever seen!"</item>
-        <item>"You are sweeter than a huge bucket of chocolate!"</item>
-        <item>"Is it so hot in here or I am just getting hot when you are around!"</item>
-        <item>"Being fabulous is so difficult, but you are doing so great!"</item>
-        <item>"Your smile can illuminate the whole universe!"</item>
-        <item>"You are the sun in my dreams!"</item>
-        <item>"It is impossible to think of a compliment  worthy  enough for you!"</item>
-        <item>"Without you I am like shoe ties without shoes and like a sentence without spaces!"</item>
-        <item>"Your voice is music to my ears!"</item>
-        <item>"I need you more than air!"</item>
-        <item>"You deserve all the compliments in the world!"</item>
-        <item>"The world would be a better place if more people were like you!"</item>
-        <item>"The flowers smell better when they are in your hand!"</item>
-        <item>"You are my reason to feel love!"</item>
-        <item>"You are more pleasant than a fairy tale with a happy ending!"</item>
-        <item>"Let me be your hero, for you I am ready to die in battle!"</item>
-        <item>"I can not take my eyes off of you!"</item>
-        <item>"Your smile shines brighter than a diamond!"</item>
-        <item>"You took my heart and my thoughts. Please take care of them well!"</item>
+
     </string-array>
 
     <string name="service_restarted">has been restarted</string>
