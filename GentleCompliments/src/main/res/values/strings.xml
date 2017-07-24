@@ -2,7 +2,8 @@
     <!-- values that have no need to be translated to locale language-->
     <string name="default_first_time">21:30</string>
     <string name="default_second_time">08:30</string>
-    <string name="smart_banner_ad_unit_id">ca-app-pub-6177746105485183/5817094357</string>
+    <string name="ads_user_id">3815845016477716</string>
+    <string name="smart_banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string><!--todo ca-app-pub-6177746105485183/5817094357 -->
     <string name="interstitial_ad_unit_id">ca-app-pub-6177746105485183/8072556755</string>
 
     <!-- sharedPreferences values -->
@@ -85,9 +86,6 @@
     <string name="surprise_option_every_12_hours">Every twelve Hours</string>
     <string name="delete">Delete</string>
     <string name="app_name">Gentle Compliments</string>
-    <string name="viber_icon">viber_icon</string>
-    <string name="whatsapp_icon">whatsapp_icon</string>
-    <string name="sms_icon">sms_icon</string>
     <string name="cancel_icon">cancel_icon</string>
     <string name="app_not_installed">The application is not installed!</string>
     <string name="not_connected">There is no internet connection!</string>
@@ -104,4 +102,12 @@
         <item>@string/surprise_option_every_12_hours</item>
         <item>@string/surprise_option_every_week</item>
     </string-array>
+
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="logo_icon">logo icon</string>
+    <string name="sms_icon">sms icon</string>
 </resources>

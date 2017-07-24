@@ -52,12 +52,12 @@ public class MainActivity extends AppCompatActivity
 
         etTimeWait = new EditText(this);
         mSpinner = new Spinner(this);
-        chbDontDisturb = (CheckBox) findViewById(R.id.chbDontDisturb);
+        chbDontDisturb = (CheckBox) findViewById(R.id.chb_dont_disturb);
 
-        etFirstTime = (EditText) findViewById(R.id.etFirstTime);
-        etSecondTime = (EditText) findViewById(R.id.etSecondTime);
-        btnStartStop = (Button) findViewById(R.id.btnStartStop);
-        llAreaInput = (LinearLayout) findViewById(R.id.llAreaInput);
+        etFirstTime = (EditText) findViewById(R.id.et_start_time);
+        etSecondTime = (EditText) findViewById(R.id.et_end_time);
+
+        llAreaInput = (LinearLayout) findViewById(R.id.ll_input_area);
         RadioGroup rgWaitingTimeArea = (RadioGroup) findViewById(R.id.rgWaitingTimeArea);
         rbSchedule = (RadioButton) findViewById(R.id.rbSchedule);
         rbSurpriseMe = (RadioButton) findViewById(R.id.rbSurpriseMe);
@@ -178,7 +178,7 @@ public class MainActivity extends AppCompatActivity
     public void onClick(View view) {
         SharedPreferencesUtils spUtils = new SharedPreferencesUtils(this, getString(R.string.sp_name));
         switch (view.getId()) {
-            case R.id.btnStartStop:
+            case R.id.fab_start_stop:
                 isServiceRunning = spUtils.getBooleanFromSharedPreferences(getString(R.string.sp_isServiceRunning));
                 if (isServiceRunning) {
                     //button stop is pressed
@@ -189,7 +189,7 @@ public class MainActivity extends AppCompatActivity
                 }
                 break;
 
-            case R.id.chbDontDisturb:
+            case R.id.chb_dont_disturb:
                 spUtils.putBooleanInSharedPreferences(getString(R.string.sp_do_not_disturb), chbDontDisturb.isChecked());
                 break;
 
@@ -204,13 +204,13 @@ public class MainActivity extends AppCompatActivity
         SharedPreferencesUtils spUtils = new SharedPreferencesUtils(MainActivity.this, getString(R.string.sp_name));
         boolean serviceDown = !(spUtils.getBooleanFromSharedPreferences(getString(R.string.sp_isServiceRunning)));
         switch (view.getId()) {
-            case R.id.etFirstTime:
+            case R.id.et_start_time:
                 if (hasFocus && serviceDown) {
                     showTimePicker(etFirstTime);
                 }
                 break;
 
-            case R.id.etSecondTime:
+            case R.id.et_end_time:
                 if (hasFocus && serviceDown) {
                     showTimePicker(etSecondTime);
                 }

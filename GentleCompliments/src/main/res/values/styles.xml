@@ -6,18 +6,22 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
+
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+
     <style name="textStyle">
         <item name="android:textColor">@color/colorDarkGrey</item>
         <item name="android:textStyle">bold</item>
     </style>
+
     <style name="customButton" parent="textStyle">
         <item name="android:padding">@dimen/padding_text_small</item>
         <item name="android:background">@drawable/custom_btn_background</item>
     </style>
+
     <style name="customActivity" parent="textStyle">
         <item name="android:background">@drawable/activity_gradient_background</item>
     </style>
@@ -25,16 +29,19 @@
     <style name="TextHeading" parent="textStyle">
         <item name="android:textSize">@dimen/heading_size</item>
     </style>
+
     <style name="separator">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_marginTop">@dimen/middle_margin</item>
         <item name="android:background">@color/colorDarkGrey</item>
     </style>
+
     <style name="spinnerItemStyle" parent="android:Widget.TextView.SpinnerItem">
         <item name="android:gravity">center</item>
         <item name="android:textColor">@color/colorDarkGrey</item>
         <item name="android:textStyle">bold</item>
     </style>
+
     <style name="spinnerDropDownStyle" parent="android:TextAppearance.Widget.TextView.SpinnerItem">
         <item name="android:gravity">center</item>
         <item name="android:textColor">@color/colorDarkGrey</item>
@@ -51,6 +58,8 @@
         <item name="android:background">@android:color/transparent</item>
 
     </style>
+
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>
