@@ -2,12 +2,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.meline.gentleservice.ui.fragments.AddNewComplimentFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <EditText
+        android:id="@+id/etAddCompliment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="ADD COMPLIMENT FRAGMENT" />
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|center_horizontal"
+        android:gravity="left|center_horizontal"
+        android:hint="@string/add_compliment_hint"
+        android:layout_marginTop="@dimen/middle_margin"
+        tools:ignore="RtlHardcoded" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_add_compliment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/RightBottomFragmentActionButton"
+        app:srcCompat="@android:drawable/ic_menu_save"
+        tools:ignore="RtlHardcoded" />
 
 </FrameLayout>

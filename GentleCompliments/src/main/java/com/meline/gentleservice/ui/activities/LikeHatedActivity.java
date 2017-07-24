@@ -117,7 +117,7 @@ public class LikeHatedActivity extends AppCompatActivity implements AdapterView.
     }
 
     private void loadList(ArrayList<String> hatedComplimentsStr) {
-        ListView listView = (ListView) findViewById(R.id.lvLikeHated);
+        ListView listView = (ListView) findViewById(R.id.lv_like_hated);
 
         if (hatedComplimentsStr.size() > 0) {
             listView.setOnItemClickListener(this);

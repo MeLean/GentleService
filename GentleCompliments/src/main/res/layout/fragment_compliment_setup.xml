@@ -129,11 +129,9 @@
         android:id="@+id/fab_start_stop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="right|bottom"
-        android:layout_marginBottom="@dimen/default_margin"
-        android:layout_marginRight="@dimen/default_margin"
-        android:layout_margin="@dimen/fab_margin"
+        style="@style/RightBottomFragmentActionButton"
         app:srcCompat="@android:drawable/ic_media_play"
-        tools:ignore="RtlHardcoded" />
+        tools:ignore="RtlHardcoded"
+        />
 
 </FrameLayout>
