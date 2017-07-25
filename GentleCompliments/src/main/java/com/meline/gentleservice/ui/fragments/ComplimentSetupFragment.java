@@ -2,6 +2,7 @@ package com.meline.gentleservice.ui.fragments;
 
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -23,7 +24,17 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.jobdispatcher.FirebaseJobDispatcher;
+import com.firebase.jobdispatcher.GooglePlayDriver;
+import com.firebase.jobdispatcher.Job;
+import com.firebase.jobdispatcher.Lifetime;
+import com.firebase.jobdispatcher.RetryStrategy;
+import com.firebase.jobdispatcher.Trigger;
 import com.meline.gentleservice.R;
+import com.meline.gentleservice.api.objects_model.Compliment;
+import com.meline.gentleservice.services.ComplimentWaitJobService;
+import com.meline.gentleservice.ui.activities.ComplimentActivity;
+import com.meline.gentleservice.ui.fragments.dialogs.TimePickerFragment;
 import com.meline.gentleservice.utils.SharedPreferencesUtils;
 
 public class ComplimentSetupFragment extends Fragment implements View.OnClickListener, View.OnFocusChangeListener, RadioGroup.OnCheckedChangeListener {
@@ -37,7 +48,7 @@ public class ComplimentSetupFragment extends Fragment implements View.OnClickLis
     private RadioButton mSurpriseMeRadio;
     private Spinner mSpinner;
     private EditText mTimeWait;
-    private static final String TIME_WAIT_TAG = "TimeWaitTag";
+    private static final String JOB_TAG = "wait_for_compliment_job";
 
     public ComplimentSetupFragment() {
         // Required empty public constructor
@@ -199,12 +210,48 @@ public class ComplimentSetupFragment extends Fragment implements View.OnClickLis
         setStartingComponentsValues();
 
         if (mScheduleRadio.isChecked()) {
-            //todo startScheduledComplimenting();
+            startScheduledComplimenting();
         } else if (mSurpriseMeRadio.isChecked()) {
-            //todo startSurpriseComplimenting();
+            startSurpriseComplimenting();
         } else {
             Toast.makeText(mActivity, R.string.i_do_not_know_what_to_do, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void startScheduledComplimenting() {
+        //todo
+    }
+
+    private void startSurpriseComplimenting() {
+        //runs only when app starts compliment for the first time
+        long timeSurpriseMaxValue;
+        String spinValue = mSpinner.getSelectedItem().toString();
+        if (spinValue.equals(getString(R.string.surprise_option_every_day))) {
+            timeSurpriseMaxValue = 24 * 60 * 60 * 1000; //hours * minutes * seconds * milliseconds
+
+        } else if (spinValue.equals(getString(R.string.surprise_option_every_12_hours))) {
+            timeSurpriseMaxValue = 12 * 60 * 60 * 1000; //hours * minutes * seconds * milliseconds
+        } else if (spinValue.equals(getString(R.string.surprise_option_every_8_hours))) {
+            timeSurpriseMaxValue = 8 * 60 * 60 * 1000; //hours * minutes * seconds * milliseconds
+        } else if (spinValue.equals(getString(R.string.surprise_option_every_6_hours))) {
+            timeSurpriseMaxValue = 6 * 60 * 60 * 1000; //hours * minutes * seconds * milliseconds
+        } else if (spinValue.equals(getString(R.string.surprise_option_every_week))) {
+            timeSurpriseMaxValue = 7 * 24 * 60 * 60 * 1000; //days * hours * minutes * seconds * milliseconds
+        } else {
+            throw new NullPointerException("Unimplemented option!");
+        }
+
+        FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(mActivity));
+        Job surpriseJob = dispatcher.newJobBuilder()
+                .setService(ComplimentWaitJobService.class)
+                .setRecurring(false)
+                .setTrigger(Trigger.executionWindow(1, 2))
+                .setRetryStrategy(RetryStrategy.DEFAULT_LINEAR)
+                .setTag(JOB_TAG)
+                .setLifetime(Lifetime.FOREVER)
+                .build();
+        dispatcher.mustSchedule(surpriseJob);
+
     }
 
     private void saveDontDisturbStartEndTime() {
@@ -220,7 +267,8 @@ public class ComplimentSetupFragment extends Fragment implements View.OnClickLis
 
     private void stopService() {
         //todo stop complimenting
-
+        FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(mActivity));
+        dispatcher.cancel(JOB_TAG);
         setDefaultComponentsValues();
     }
 

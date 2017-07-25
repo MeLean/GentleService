@@ -90,7 +90,6 @@
             android:label="@string/title_activity_sms_activity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <!-- Include the AdActivity configChanges and theme. -->
         <activity
             android:name="com.google.android.gms.ads.AdActivity"
@@ -106,6 +105,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <service
+            android:exported="false"
+            android:name=".services.ComplimentWaitJobService">
+            <intent-filter>
+                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE"/>"
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

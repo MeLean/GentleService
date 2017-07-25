@@ -70,6 +70,7 @@
 
     <string-array name="compliments_array">
         <item>"You're beautiful, it's true!"</item>
+        <item>"You're beautiful, it's true2!"</item>
     </string-array>
 
     <string name="service_restarted">has been restarted</string>

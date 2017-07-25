@@ -16,29 +16,31 @@ import com.meline.gentleservice.R;
 public class DBHelper extends SQLiteOpenHelper {
     //singleton pattern for DB
     private static DBHelper sInstance;
-    private Context mContext;
+    private static String[] defaultCompliments;
+
 
     public static synchronized DBHelper getInstance(Context context) {
+
         if (sInstance == null) {
-            sInstance = new DBHelper(context.getApplicationContext());
+            defaultCompliments = context.getResources().getStringArray(R.array.compliments_array);
+            sInstance = new DBHelper(context);
         }
 
         return sInstance;
     }
 
-    static final private String DB_NAME = "GentleServiceDB.db";
-    static final private int DB_CURRENT_VERSION = 1;
-    static final String TABLE_NAME = "compliments";
-    static final String COLUMN_ID = "_id";
-    static final String COLUMN_CONTENT = "content";
-    static final String COLUMN_IS_LOADED = "isLoaded";
-    static final String COLUMN_IS_CUSTOM = "isCustom";
-    static final String COLUMN_IS_HATED = "isHated";
-    SQLiteDatabase database;
+    private static final String DB_NAME = "GentleServiceDB.db";
+    private static final int DB_CURRENT_VERSION = 1;
+    private static final String TABLE_NAME = "compliments";
+    private static final String COLUMN_ID = "_id";
+    private static final String COLUMN_CONTENT = "content";
+    private static final String COLUMN_IS_LOADED = "isLoaded";
+    private static final String COLUMN_IS_CUSTOM = "isCustom";
+    private static final String COLUMN_IS_HATED = "isHated";
+    private SQLiteDatabase database;
 
     private DBHelper(Context context) {
         super(context, DB_NAME, null, DB_CURRENT_VERSION);
-        this.mContext = context;
     }
 
     @Override
@@ -62,11 +64,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
         db.execSQL(sqlCommand);
 
-        //compliments default texts from res folder it would get the appropriate locale
-        String[] compliments = mContext.getResources().getStringArray(R.array.compliments_array);
-
         //insert all compliments into local database
-        insertAllInDB(db, compliments);
+        insertAllInDB(db, defaultCompliments);
     }
 
     private void insertAllInDB(SQLiteDatabase db, String[] compliments) {
@@ -117,11 +116,11 @@ public class DBHelper extends SQLiteOpenHelper {
         return complimentsFromDB;
     }
 
-    public void openDB() throws SQLException {
+    private void openDB() throws SQLException {
         database = getWritableDatabase();
     }
 
-    public void closeDB() {
+    private void closeDB() {
         database.close();
     }
 
@@ -170,11 +169,11 @@ public class DBHelper extends SQLiteOpenHelper {
         this.closeDB();
     }
 
-    public void deleteAllDefaultCompliments() throws SQLException {
+/*    private void deleteAllDefaultCompliments() throws SQLException {
         this.openDB();
         database.delete(TABLE_NAME, COLUMN_IS_CUSTOM + "=?", new String[]{"0"});
         this.closeDB();
-    }
+    }*/
 
     public void deleteCompliment(String content) throws SQLException {
         this.openDB();
@@ -182,11 +181,13 @@ public class DBHelper extends SQLiteOpenHelper {
         this.closeDB();
     }
 
-    public void addAllCompliments(String[] compliments) throws SQLException {
+/*
+    private void addAllCompliments(String[] compliments) throws SQLException {
         SQLiteDatabase db = getWritableDatabase();
         insertAllInDB(db, compliments);
         db.close();
     }
+*/
 
     /*public void dropDb() throws SQLException{
         this.openDB();

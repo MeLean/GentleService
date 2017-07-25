@@ -38,13 +38,13 @@ public class DatabaseAsyncManager extends AsyncTask<String, Void, Void> {
 
         switch (requestStr) {
             case "changeComplimentsLocale":
-                try {
+      /*          try {
                     db.deleteAllDefaultCompliments();
                     String[] complimentsStr = mContext.getResources().getStringArray(R.array.compliments_array);
                     db.addAllCompliments(complimentsStr);
                 } catch (SQLException e) {
                     isSuccessful = false;
-                }
+                }*/
                 break;
             default:
                 isSuccessful = false;
