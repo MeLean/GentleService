@@ -65,7 +65,7 @@ public final class  CalendarUtils {
     public static long manageWaitingTime(Context context) {
         long nextFireInMilliseconds;
         SharedPreferencesUtils spUtils = new SharedPreferencesUtils(context, context.getString(R.string.sp_name));
-        long timeWaitPeriod = spUtils.getLongFromSharedPreferences(context.getString(R.string.sp_timeWaitingPeriod));
+        long timeWaitPeriod = spUtils.getLongFromSharedPreferences(context.getString(R.string.sp_time_wait_value));
         long oldEndPeriod = spUtils.getLongFromSharedPreferences(context.getString(R.string.sp_timeEndPeriod));
         long newEndPeriod = oldEndPeriod + timeWaitPeriod;
         Random random = new Random();

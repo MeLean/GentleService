@@ -6,6 +6,9 @@ import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
 import android.text.format.DateFormat;
 import android.widget.EditText;
 import android.widget.TimePicker;
@@ -14,13 +17,13 @@ import android.widget.TimePicker;
 @SuppressLint("ValidFragment")
 public class TimePickerFragment extends DialogFragment
         implements TimePickerDialog.OnTimeSetListener {
-
+    public static final String TAG = "com.meline.gentleservice.ui.fragments.TimePickerFragment";
     private String TIME_SEPARATOR = ":";
     EditText mTextView;
     TimePickerDialog mTimePickerDialog;
 
-    public TimePickerFragment(EditText textview) {
-        this.mTextView = textview;
+    public TimePickerFragment(EditText textView) {
+        this.mTextView = textView;
     }
 
     @NonNull
@@ -53,6 +56,20 @@ public class TimePickerFragment extends DialogFragment
         }
 
         return result;
+    }
+
+    public static void show(AppCompatActivity activity,EditText editText){
+        FragmentManager fragmentManager = activity.getSupportFragmentManager();
+        DialogFragment fragment = (DialogFragment)fragmentManager.findFragmentByTag(TAG);
+
+        if(fragment != null){
+            fragment.dismiss();
+        }
+
+        fragment = new TimePickerFragment(editText);
+        fragment.setCancelable(false);
+        fragment.show(activity.getSupportFragmentManager(), TimePickerFragment.TAG);
+        editText.clearFocus();
     }
 
 }

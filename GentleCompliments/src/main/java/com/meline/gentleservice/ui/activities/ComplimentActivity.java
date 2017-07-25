@@ -41,6 +41,7 @@ public class ComplimentActivity extends AppCompatActivity implements View.OnClic
     private TextView twContainer;
     InterstitialAd ad;
     SharedPreferencesUtils spUtils;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD |
@@ -51,10 +52,10 @@ public class ComplimentActivity extends AppCompatActivity implements View.OnClic
         boolean isDoNotDisturb = false;
         spUtils = new SharedPreferencesUtils(this, getString(R.string.sp_name));
         if (checkDisturbed) {
-                isDoNotDisturb = spUtils.getBooleanFromSharedPreferences(getString(R.string.sp_do_not_disturb));
+            isDoNotDisturb = spUtils.getBooleanFromSharedPreferences(getString(R.string.sp_do_not_disturb));
             if (isDoNotDisturb) {
-                String firstTime = spUtils.getStringFromSharedPreferences(getString(R.string.sp_firstTime));
-                String secondTime = spUtils.getStringFromSharedPreferences(getString(R.string.sp_secondTime));
+                String firstTime = spUtils.getStringFromSharedPreferences(getString(R.string.sp_start_time));
+                String secondTime = spUtils.getStringFromSharedPreferences(getString(R.string.sp_end_time));
                 String TIME_SEPARATOR = ":";
                 String[] firstTimeArr = firstTime.split(TIME_SEPARATOR);
                 String[] secondTimeArr = secondTime.split(TIME_SEPARATOR);
@@ -72,7 +73,7 @@ public class ComplimentActivity extends AppCompatActivity implements View.OnClic
                         CalendarUtils.checkIsBetween(startTimeInMilliseconds, currentHoursInMilliseconds, endTimeInMilliseconds);
 
                 if (isInDisturbPeriod) {
-                    showNotification((int)System.currentTimeMillis()/1000);//every time will receive new notification
+                    showNotification((int) System.currentTimeMillis() / 1000);//every time will receive new notification
                     finish();
                     return;
                 }
@@ -191,7 +192,7 @@ public class ComplimentActivity extends AppCompatActivity implements View.OnClic
     public void onClick(View view) {
 
         // if no compliments quits
-        if(twContainer.getText().equals(getString(R.string.no_loadable_compliments))){
+        if (twContainer.getText().equals(getString(R.string.no_loadable_compliments))) {
             this.cancelVibrator();
             this.finish();
             return;
@@ -284,6 +285,7 @@ public class ComplimentActivity extends AppCompatActivity implements View.OnClic
         NotificationManager mNotifyMgr = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         // Builds the notification and issues it.
         mNotifyMgr.notify(notificationId, mBuilder.build());
+
     }
 
 }

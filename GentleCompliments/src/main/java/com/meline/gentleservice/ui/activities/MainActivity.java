@@ -3,15 +3,11 @@ package com.meline.gentleservice.ui.activities;
 import android.content.Intent;
 import android.nfc.FormatException;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.InputType;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -26,7 +22,6 @@ import com.meline.gentleservice.api.api_module.GentleIntentLauncher;
 import com.meline.gentleservice.utils.CalendarUtils;
 import com.meline.gentleservice.utils.LocaleManagementUtils;
 import com.meline.gentleservice.utils.SharedPreferencesUtils;
-import com.meline.gentleservice.ui.fragments.TimePickerFragment;
 
 public class MainActivity extends AppCompatActivity
         implements View.OnClickListener, View.OnFocusChangeListener, RadioGroup.OnCheckedChangeListener {
@@ -98,14 +93,14 @@ public class MainActivity extends AppCompatActivity
 
         //set disturbed value if any
         chbDontDisturb.setChecked(willNotDisturb);
-        String fistDate = spUtils.getStringFromSharedPreferences(getString(R.string.sp_firstTime));
-        String secondDate = spUtils.getStringFromSharedPreferences(getString(R.string.sp_secondTime));
+        String fistDate = spUtils.getStringFromSharedPreferences(getString(R.string.sp_start_time));
+        String secondDate = spUtils.getStringFromSharedPreferences(getString(R.string.sp_end_time));
         if (fistDate != null && secondDate != null) {
             etFirstTime.setText(fistDate);
             etSecondTime.setText(secondDate);
         } else {
-            etFirstTime.setText(getString(R.string.default_first_time));
-            etSecondTime.setText(getString(R.string.default_second_time));
+            etFirstTime.setText(getString(R.string.default_start_time));
+            etSecondTime.setText(getString(R.string.default_end_time));
         }
 
         rbSchedule.setChecked(isSchedule);
@@ -113,7 +108,7 @@ public class MainActivity extends AppCompatActivity
 
         isServiceRunning = spUtils.getBooleanFromSharedPreferences(getString(R.string.sp_isServiceRunning));
         if (isServiceRunning) {
-            this.addInputView(llAreaInput);
+            //this.addInputView(llAreaInput);
             manageComponentsValues();
         }
 
@@ -206,13 +201,13 @@ public class MainActivity extends AppCompatActivity
         switch (view.getId()) {
             case R.id.et_start_time:
                 if (hasFocus && serviceDown) {
-                    showTimePicker(etFirstTime);
+                    //showTimePicker(etFirstTime);
                 }
                 break;
 
             case R.id.et_end_time:
                 if (hasFocus && serviceDown) {
-                    showTimePicker(etSecondTime);
+                    //showTimePicker(etSecondTime);
                 }
                 break;
 
@@ -224,61 +219,20 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
-        //auto puts scheduled option in sharedPreferences
+/*        //auto puts scheduled option in sharedPreferences
         SharedPreferencesUtils spUtils = new SharedPreferencesUtils(this, getString(R.string.sp_name));
         spUtils.putBooleanInSharedPreferences(getString(R.string.sp_isScheduled), rbSchedule.isChecked());
         spUtils.putBooleanInSharedPreferences(getString(R.string.sp_isSurpriseMe), rbSurpriseMe.isChecked());
-        addInputView(llAreaInput);
+        addInputView(llAreaInput);*/
     }
 
-    private void addInputView(LinearLayout llAreaInput) {
-        SharedPreferencesUtils spUtils = new SharedPreferencesUtils(this, getString(R.string.sp_name));
-        if (rbSurpriseMe.isChecked()) {
-            //remove all views if there are any
-            llAreaInput.removeAllViews();
-            // Application of the Array to the Spinner
-            ArrayAdapter<CharSequence> spinnerArrayAdapter =
-                    ArrayAdapter.createFromResource(this, R.array.surprises, R.layout.custom_spinner_item);
-            spinnerArrayAdapter.setDropDownViewResource(R.layout.custom_dropdown_spinner);
-            mSpinner.setAdapter(spinnerArrayAdapter);
-            mSpinner.setLayoutParams(new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT));
-            if (isServiceRunning) {
-                //if service running the value of chosen period must be set
-                String spinnerValue = spUtils.getStringFromSharedPreferences(getString(R.string.sp_surprise_spinner_value));
-                int position = 1; //default position just in case
-                if (spinnerValue != null) {
-                    position = spinnerArrayAdapter.getPosition(spinnerValue);
-                }
-                mSpinner.setSelection(position);
-            }
 
-            llAreaInput.addView(mSpinner);
 
-        } else if (rbSchedule.isChecked()) {
-            //removes all views if there are any
-            llAreaInput.removeAllViews();
-            etTimeWait.setHint(getString(R.string.time_hint));
-            etTimeWait.setGravity(Gravity.CENTER);
-            etTimeWait.setLayoutParams(new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT));
-            etTimeWait.setInputType(InputType.TYPE_CLASS_NUMBER);
-            llAreaInput.addView(etTimeWait);
-            etTimeWait.requestFocus();
-        }
-    }
 
-    private void showTimePicker(EditText editText) {
-        DialogFragment fragmentOne = new TimePickerFragment(editText);
-        fragmentOne.show(getSupportFragmentManager(), "datePicker");
-        editText.clearFocus();
-    }
 
     private void startService(SharedPreferencesUtils spUtils) {
-        spUtils.putStringInSharedPreferences(getString(R.string.sp_firstTime), etFirstTime.getText().toString());
-        spUtils.putStringInSharedPreferences(getString(R.string.sp_secondTime), etSecondTime.getText().toString());
+        spUtils.putStringInSharedPreferences(getString(R.string.sp_start_time), etFirstTime.getText().toString());
+        spUtils.putStringInSharedPreferences(getString(R.string.sp_end_time), etSecondTime.getText().toString());
 
         if (rbSchedule.isChecked()) {
             this.startScheduledComplimenting();
@@ -359,7 +313,7 @@ public class MainActivity extends AppCompatActivity
             }
 
             //runs every time
-            spUtils.putLongInSharedPreferences(getString(R.string.sp_timeWaitingPeriod), timeSurpriseWait);
+            spUtils.putLongInSharedPreferences(getString(R.string.sp_time_wait_value), timeSurpriseWait);
             spUtils.putLongInSharedPreferences(getString(R.string.sp_timeEndPeriod), System.currentTimeMillis());
             spUtils.putBooleanInSharedPreferences(getString(R.string.sp_isServiceRunning), true);
             manageComponentsValues();
@@ -371,18 +325,18 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void manageComponentsValues() {
-        chbDontDisturb.setEnabled(false);
+/*        chbDontDisturb.setEnabled(false);
         etTimeWait.setVisibility(View.INVISIBLE);
         etFirstTime.setFocusable(false);
         etSecondTime.setFocusable(false);
         rbSchedule.setEnabled(false);
         rbSurpriseMe.setEnabled(false);
         mSpinner.setEnabled(false);
-        btnStartStop.setText(getString(R.string.btnStop_text));
+        btnStartStop.setText(getString(R.string.btnStop_text));*/
     }
 
     private void setDefaultComponentsValues(SharedPreferencesUtils spUtils) {
-        btnStartStop.setText(getString(R.string.btnStart_text));
+      /*  btnStartStop.setText(getString(R.string.btnStart_text));
         spUtils.putBooleanInSharedPreferences(getString(R.string.sp_isServiceRunning), false);
         spUtils.putLongInSharedPreferences(getString(R.string.sp_fireNextInMilliseconds), 0);
         chbDontDisturb.setEnabled(true);
@@ -391,6 +345,6 @@ public class MainActivity extends AppCompatActivity
         etSecondTime.setFocusableInTouchMode(true);
         rbSchedule.setEnabled(true);
         rbSurpriseMe.setEnabled(true);
-        mSpinner.setEnabled(true);
+        mSpinner.setEnabled(true);*/
     }
 }

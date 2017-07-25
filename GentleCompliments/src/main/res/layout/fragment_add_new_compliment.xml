@@ -4,7 +4,11 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.meline.gentleservice.ui.fragments.AddNewComplimentFragment">
-
+    <TextView
+        android:id="@+id/add_compliment_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
     <EditText
         android:id="@+id/etAddCompliment"
         android:layout_width="match_parent"

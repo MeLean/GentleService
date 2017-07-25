@@ -38,7 +38,7 @@ public class AddNewComplimentActivity extends AppCompatActivity implements View.
         etAddCompliment.setOnKeyListener(new View.OnKeyListener() {
             public boolean onKey(View view, int keyCode, KeyEvent event) {
                 if (keyCode == KeyEvent.KEYCODE_ENTER) {
-                    hideKeyboard(view);
+                    //hideKeyboard(view);
                     return true;
                 }
                 return false;
@@ -98,11 +98,6 @@ public class AddNewComplimentActivity extends AppCompatActivity implements View.
         }
     }
 
-    private void hideKeyboard(View view) {
-        InputMethodManager manager = (InputMethodManager) view.getContext()
-                .getSystemService(INPUT_METHOD_SERVICE);
-        if (manager != null)
-            manager.hideSoftInputFromWindow(view.getWindowToken(), 0);
-    }
+
 }
 
