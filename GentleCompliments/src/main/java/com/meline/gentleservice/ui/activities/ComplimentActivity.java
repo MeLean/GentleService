@@ -38,8 +38,8 @@ import com.meline.gentleservice.utils.SharedPreferencesUtils;
 public class ComplimentActivity extends AppCompatActivity implements View.OnClickListener {
     private Compliment mCompliment;
     private Vibrator mVibrator = null;
-    private TextView twContainer;
-    InterstitialAd ad;
+    private TextView mContainer;
+    InterstitialAd mInterstitialAd;
     SharedPreferencesUtils spUtils;
 
     @Override
@@ -112,14 +112,12 @@ public class ComplimentActivity extends AppCompatActivity implements View.OnClic
 
         try {
             compliments = db.getLoadableComplements();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        } catch (SQLException e) {
+        } catch (ParseException | SQLException e) {
             e.printStackTrace();
         }
 
 
-        twContainer = (TextView) findViewById(R.id.twContainer);
+        mContainer = (TextView) findViewById(R.id.twContainer);
         String complimentStr = getString(R.string.no_loadable_compliments);
         if (compliments != null) {
             int complimentsSize = compliments.size();
@@ -127,7 +125,7 @@ public class ComplimentActivity extends AppCompatActivity implements View.OnClic
                 int random = new Random().nextInt(compliments.size());
                 mCompliment = compliments.get(random);
                 complimentStr = mCompliment.getContent();
-                twContainer.setText(complimentStr);
+                mContainer.setText(complimentStr);
 
                 try {
                     db.makeComplimentLoaded(mCompliment.getId());
@@ -145,16 +143,16 @@ public class ComplimentActivity extends AppCompatActivity implements View.OnClic
                 }
 
             } else {
-                twContainer.setText(complimentStr);
+                mContainer.setText(complimentStr);
             }
         }
 
         LocaleManagementUtils localeManagementUtils = new LocaleManagementUtils(this);
         localeManagementUtils.manageLocale(spUtils, spUtils);
 
-        ad = new InterstitialAd(this);
-        ad.setAdUnitId(getString(R.string.interstitial_ad_unit_id));
-        ad.setAdListener(new AdListener() {
+        mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId(getString(R.string.interstitial_ad_unit_id));
+        mInterstitialAd.setAdListener(new AdListener() {
             @Override
             public void onAdClosed() {
                 requestNewInterstitial();
@@ -164,16 +162,16 @@ public class ComplimentActivity extends AppCompatActivity implements View.OnClic
 
         Random random = new Random();
         int num = random.nextInt(100);
-        if (num <= 30) {// 30% chance to fire a interstitial ad
-            if (ad.isLoaded()) {
-                ad.show();
+        if (num <= 50) {// 50% chance to fire a interstitial mInterstitialAd
+            if (mInterstitialAd.isLoaded()) {
+                mInterstitialAd.show();
             }
         }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_just_finish, menu);
+        getMenuInflater().inflate(R.menu.menu_settings_finish, menu);
         return true;
     }
 
@@ -184,6 +182,9 @@ public class ComplimentActivity extends AppCompatActivity implements View.OnClic
             case R.id.action_return:
                 finish();
                 return true;
+            case R.id.action_settings:
+                startActivity(new Intent(ComplimentActivity.this, StartActivity.class));
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -192,7 +193,7 @@ public class ComplimentActivity extends AppCompatActivity implements View.OnClic
     public void onClick(View view) {
 
         // if no compliments quits
-        if (twContainer.getText().equals(getString(R.string.no_loadable_compliments))) {
+        if (mContainer.getText().equals(getString(R.string.no_loadable_compliments))) {
             this.cancelVibrator();
             this.finish();
             return;
@@ -258,7 +259,7 @@ public class ComplimentActivity extends AppCompatActivity implements View.OnClic
                 .setGender(AdRequest.GENDER_FEMALE)
                 .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
                 .build();
-        ad.loadAd(adRequest);
+        mInterstitialAd.loadAd(adRequest);
     }
 
     private void showNotification(int notificationId) {

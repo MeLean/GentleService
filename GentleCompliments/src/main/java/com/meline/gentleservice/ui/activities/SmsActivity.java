@@ -7,6 +7,7 @@ import android.content.pm.ResolveInfo;
 
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -25,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SmsActivity extends AppCompatActivity implements View.OnClickListener, View.OnKeyListener {
-    private EditText etSmsText;
+    private EditText mSmsText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,11 +41,11 @@ public class SmsActivity extends AppCompatActivity implements View.OnClickListen
         }*/
 
         String smsText = getIntent().getStringExtra(getString(R.string.sp_sms_text));
-        etSmsText = (EditText) findViewById(R.id.etSmsText);
-        etSmsText.setText(smsText);
-        etSmsText.requestFocus();
+        mSmsText = (EditText) findViewById(R.id.etSmsText);
+        mSmsText.setText(smsText);
+        mSmsText.requestFocus();
 
-        etSmsText.setOnKeyListener(this);
+        mSmsText.setOnKeyListener(this);
 
 
         ImageButton btnSms = (ImageButton) findViewById(R.id.btnSms);
@@ -55,12 +56,12 @@ public class SmsActivity extends AppCompatActivity implements View.OnClickListen
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         switch (requestCode) {
             case RuntimePermissionAssistant.PERMISSIONS_SEND_SMS_CONSTANT: {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    sendMessage(etSmsText.getText().toString().trim());
+                    sendMessage(mSmsText.getText().toString().trim());
                 }
             }
             break;
@@ -81,7 +82,7 @@ public class SmsActivity extends AppCompatActivity implements View.OnClickListen
                 );
 
                 if (permission_received) {
-                    sendMessage(etSmsText.getText().toString().trim());
+                    sendMessage(mSmsText.getText().toString().trim());
                 }
                 break;
             case R.id.btnCancel:
@@ -103,7 +104,7 @@ public class SmsActivity extends AppCompatActivity implements View.OnClickListen
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_just_finish, menu);
+        getMenuInflater().inflate(R.menu.menu_settings_finish, menu);
         return true;
     }
 

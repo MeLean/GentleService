@@ -2,8 +2,9 @@ package com.meline.gentleservice.ui.fragments;
 
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemClock;
+import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -24,6 +25,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.jobdispatcher.Constraint;
 import com.firebase.jobdispatcher.FirebaseJobDispatcher;
 import com.firebase.jobdispatcher.GooglePlayDriver;
 import com.firebase.jobdispatcher.Job;
@@ -31,9 +33,7 @@ import com.firebase.jobdispatcher.Lifetime;
 import com.firebase.jobdispatcher.RetryStrategy;
 import com.firebase.jobdispatcher.Trigger;
 import com.meline.gentleservice.R;
-import com.meline.gentleservice.api.objects_model.Compliment;
-import com.meline.gentleservice.services.ComplimentWaitJobService;
-import com.meline.gentleservice.ui.activities.ComplimentActivity;
+import com.meline.gentleservice.services.ComplimentService;
 import com.meline.gentleservice.ui.fragments.dialogs.TimePickerFragment;
 import com.meline.gentleservice.utils.SharedPreferencesUtils;
 
@@ -48,7 +48,7 @@ public class ComplimentSetupFragment extends Fragment implements View.OnClickLis
     private RadioButton mSurpriseMeRadio;
     private Spinner mSpinner;
     private EditText mTimeWait;
-    private static final String JOB_TAG = "wait_for_compliment_job";
+
 
     public ComplimentSetupFragment() {
         // Required empty public constructor
@@ -207,19 +207,37 @@ public class ComplimentSetupFragment extends Fragment implements View.OnClickLis
     }
 
     private void startService() {
-        setStartingComponentsValues();
-
         if (mScheduleRadio.isChecked()) {
-            startScheduledComplimenting();
+            String errorMessage = checkForErrors();
+            if(errorMessage == null){
+                startComplimentingJob();
+            } else {
+                Toast.makeText(mActivity, errorMessage, Toast.LENGTH_SHORT).show();
+            }
         } else if (mSurpriseMeRadio.isChecked()) {
-            startSurpriseComplimenting();
+            startComplimentingJob();
         } else {
             Toast.makeText(mActivity, R.string.i_do_not_know_what_to_do, Toast.LENGTH_SHORT).show();
         }
     }
 
-    private void startScheduledComplimenting() {
-        //todo
+    private String checkForErrors() {
+        long MINIMUM_WAITING_TIME = 2; //todo * 60 * 60; // two hours is a minimum time
+        try {
+            int inputNum = Integer.parseInt(String.valueOf(mTimeWait.getText()));
+
+            if (inputNum < MINIMUM_WAITING_TIME) {
+                if (inputNum < 0) {
+                    throw new NumberFormatException("Just catch me to return error message!");
+                }
+
+                return getString(R.string.minimum_waiting_time_text) + MINIMUM_WAITING_TIME;
+            }
+        } catch (NumberFormatException e) {
+            return getString(R.string.invalid_number_text);
+        }
+
+        return null;
     }
 
     private void startSurpriseComplimenting() {
@@ -240,21 +258,9 @@ public class ComplimentSetupFragment extends Fragment implements View.OnClickLis
         } else {
             throw new NullPointerException("Unimplemented option!");
         }
-
-        FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(mActivity));
-        Job surpriseJob = dispatcher.newJobBuilder()
-                .setService(ComplimentWaitJobService.class)
-                .setRecurring(false)
-                .setTrigger(Trigger.executionWindow(1, 2))
-                .setRetryStrategy(RetryStrategy.DEFAULT_LINEAR)
-                .setTag(JOB_TAG)
-                .setLifetime(Lifetime.FOREVER)
-                .build();
-        dispatcher.mustSchedule(surpriseJob);
-
     }
 
-    private void saveDontDisturbStartEndTime() {
+    private void saveDonNotDisturbStartEndTime() {
         SharedPreferencesUtils.saveString(mActivity, getString(R.string.sp_start_time), mStartTime.getText().toString());
         SharedPreferencesUtils.saveString(mActivity, getString(R.string.sp_end_time), mEndTime.getText().toString());
     }
@@ -266,10 +272,31 @@ public class ComplimentSetupFragment extends Fragment implements View.OnClickLis
     }
 
     private void stopService() {
-        //todo stop complimenting
         FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(mActivity));
-        dispatcher.cancel(JOB_TAG);
+        dispatcher.cancel(ComplimentService.DEFAULT_JOB_TAG);
         setDefaultComponentsValues();
+    }
+
+
+    private void startComplimentingJob() {
+
+        FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(mActivity));
+        Job surpriseJob = dispatcher.newJobBuilder()
+                .setService(ComplimentService.class)
+                .setRecurring(false)
+                .setTrigger(Trigger.executionWindow(0, 0))
+                .setRetryStrategy(RetryStrategy.DEFAULT_LINEAR)
+                .setTag(ComplimentService.DEFAULT_JOB_TAG)
+                .setLifetime(Lifetime.FOREVER)
+                .setConstraints(Constraint.ON_ANY_NETWORK)
+                .build();
+        dispatcher.mustSchedule(surpriseJob);
+
+        setStartingComponentsValues();
+
+        //leave application and weit to start ComplimentActivity
+        mActivity.finish();
+        System.exit(0);
     }
 
     private void managePreviouslyChosenValues() {
@@ -298,7 +325,7 @@ public class ComplimentSetupFragment extends Fragment implements View.OnClickLis
     }
 
     private void setStartingComponentsValues() {
-        saveDontDisturbStartEndTime();
+        saveDonNotDisturbStartEndTime();
         isServiceRunning = true;
         SharedPreferencesUtils.saveBoolean(mActivity, getString(R.string.sp_isServiceRunning), isServiceRunning);
         mFabStartStop.setImageResource(android.R.drawable.alert_light_frame);

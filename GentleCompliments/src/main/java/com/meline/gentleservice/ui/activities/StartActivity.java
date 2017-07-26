@@ -1,6 +1,7 @@
 package com.meline.gentleservice.ui.activities;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -23,7 +24,7 @@ import com.meline.gentleservice.ui.adapters.MainViewPagerAdapter;
 public class StartActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private static final String TAG = "AppDebug";
-    private ViewPager mViewPager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,7 +33,7 @@ public class StartActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
 
-        mViewPager = (ViewPager) findViewById(R.id.start_view_pager);
+        ViewPager mViewPager = (ViewPager) findViewById(R.id.start_view_pager);
         mViewPager.setAdapter(new MainViewPagerAdapter(this));
         //index 1 is SetupFragment
         mViewPager.setCurrentItem(1, false);
@@ -67,7 +68,7 @@ public class StartActivity extends AppCompatActivity
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
