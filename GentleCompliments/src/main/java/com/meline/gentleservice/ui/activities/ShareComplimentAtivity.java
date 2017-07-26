@@ -25,8 +25,8 @@ import com.meline.gentleservice.utils.RuntimePermissionAssistant;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SmsActivity extends AppCompatActivity implements View.OnClickListener, View.OnKeyListener {
-    private EditText mSmsText;
+public class ShareComplimentAtivity extends AppCompatActivity implements View.OnClickListener, View.OnKeyListener {
+    private EditText mShareComplimentText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,16 +36,16 @@ public class SmsActivity extends AppCompatActivity implements View.OnClickListen
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        /*if(getSupportActionBar() != null){
+        if(getSupportActionBar() != null){
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }*/
+        }
 
         String smsText = getIntent().getStringExtra(getString(R.string.sp_sms_text));
-        mSmsText = (EditText) findViewById(R.id.etSmsText);
-        mSmsText.setText(smsText);
-        mSmsText.requestFocus();
+        mShareComplimentText = (EditText) findViewById(R.id.et_share_text);
+        mShareComplimentText.setText(smsText);
+        mShareComplimentText.requestFocus();
 
-        mSmsText.setOnKeyListener(this);
+        mShareComplimentText.setOnKeyListener(this);
 
 
         ImageButton btnSms = (ImageButton) findViewById(R.id.btnSms);
@@ -61,7 +61,7 @@ public class SmsActivity extends AppCompatActivity implements View.OnClickListen
             case RuntimePermissionAssistant.PERMISSIONS_SEND_SMS_CONSTANT: {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    sendMessage(mSmsText.getText().toString().trim());
+                    sendMessage(mShareComplimentText.getText().toString().trim());
                 }
             }
             break;
@@ -82,7 +82,7 @@ public class SmsActivity extends AppCompatActivity implements View.OnClickListen
                 );
 
                 if (permission_received) {
-                    sendMessage(mSmsText.getText().toString().trim());
+                    sendMessage(mShareComplimentText.getText().toString().trim());
                 }
                 break;
             case R.id.btnCancel:

@@ -46,23 +46,13 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".ui.activities.AddNewComplimentActivity"
-            android:configChanges="orientation|locale"
-            android:label="@string/title_activity_add_new_compliment"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.meline.gentleservice.ui.activities.MainActivity" />
-        </activity>
-
         <activity android:name=".ui.activities.ComplimentActivity"
             android:configChanges="orientation|locale"
             android:label="@string/title_activity_compliment"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
 
-        <activity android:name=".ui.activities.SmsActivity"
+        <activity android:name=".ui.activities.ShareComplimentAtivity"
             android:configChanges="orientation|locale"
             android:label="@string/title_activity_sms_activity"
             android:screenOrientation="portrait"

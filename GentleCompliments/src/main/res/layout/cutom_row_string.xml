@@ -6,12 +6,12 @@
     android:gravity="center_horizontal">
 
     <TextView
-        android:id="@+id/twCustomRow"
+        android:id="@+id/tw_custom_row"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Large Text"
         style="@style/textStyle"
-        android:gravity="center_vertical|center_horizontal"
+        android:gravity="center"
         />
 </LinearLayout>

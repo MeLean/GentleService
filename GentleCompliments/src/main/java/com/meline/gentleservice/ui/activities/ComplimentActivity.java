@@ -26,10 +26,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Random;
 
-import com.firebase.jobdispatcher.FirebaseJobDispatcher;
-import com.firebase.jobdispatcher.GooglePlayDriver;
-import com.firebase.jobdispatcher.Job;
-import com.firebase.jobdispatcher.Trigger;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
@@ -169,7 +165,7 @@ public class ComplimentActivity extends AppCompatActivity implements View.OnClic
             case R.id.imgSMS:
                 showAd();
                 this.cancelVibrator();
-                Intent intentSms = new Intent(this, SmsActivity.class);
+                Intent intentSms = new Intent(this, ShareComplimentAtivity.class);
                 intentSms.putExtra(getString(R.string.sp_sms_text), mCompliment.getContent());
                 this.startActivity(intentSms);
                 this.finish();
@@ -322,7 +318,6 @@ public class ComplimentActivity extends AppCompatActivity implements View.OnClic
 
         return getString(R.string.no_loadable_compliments);
     }
-
 
     private int[] getBackgrounds() {
         return new int[]{
