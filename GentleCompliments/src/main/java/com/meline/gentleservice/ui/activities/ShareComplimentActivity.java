@@ -8,6 +8,7 @@ import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -19,13 +20,14 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
+import com.google.android.gms.ads.MobileAds;
 import com.meline.gentleservice.R;
 import com.meline.gentleservice.utils.RuntimePermissionAssistant;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ShareComplimentAtivity extends AppCompatActivity implements View.OnClickListener, View.OnKeyListener {
+public class ShareComplimentActivity extends AppCompatActivity implements View.OnClickListener, View.OnKeyListener {
     private EditText mShareComplimentText;
 
     @Override
@@ -36,14 +38,20 @@ public class ShareComplimentAtivity extends AppCompatActivity implements View.On
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        if(getSupportActionBar() != null){
+        if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        String smsText = getIntent().getStringExtra(getString(R.string.sp_sms_text));
+        String smsText = null;
+        if (savedInstanceState == null) {
+            smsText = getIntent().getStringExtra(getString(R.string.sp_sms_text));
+        } else{
+            smsText = savedInstanceState.getString(getString(R.string.sp_sms_text));
+        }
+
         mShareComplimentText = (EditText) findViewById(R.id.et_share_text);
         mShareComplimentText.setText(smsText);
-        mShareComplimentText.requestFocus();
+        mShareComplimentText.clearFocus();
 
         mShareComplimentText.setOnKeyListener(this);
 
@@ -112,11 +120,26 @@ public class ShareComplimentAtivity extends AppCompatActivity implements View.On
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
+                return true;
             case R.id.action_return:
                 finish();
                 return true;
+            case R.id.action_settings:
+                startActivity(new Intent(ShareComplimentActivity.this, StartActivity.class));
+                return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(
+                getString(R.string.sp_sms_text),
+                mShareComplimentText.getText().toString()
+        );
     }
 
     private void hideSoftInput(View view) {

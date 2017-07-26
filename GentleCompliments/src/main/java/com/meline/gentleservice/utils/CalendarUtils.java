@@ -6,11 +6,13 @@ import com.meline.gentleservice.R;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Random;
 
 //static class
 public final class  CalendarUtils {
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy MM dd HH:mm:ss Z");
+    private static final SimpleDateFormat DATE_FORMAT =
+            new SimpleDateFormat("yyyy MM dd HH:mm:ss Z", Locale.getDefault());
 
     private CalendarUtils() {
     }
@@ -58,7 +60,7 @@ public final class  CalendarUtils {
         return isBetween;
     }
 
-    static long addDayInMilliseconds(long currentMilliseconds){
+    private static long addDayInMilliseconds(long currentMilliseconds){
         return currentMilliseconds + (24 * 60 * 60 * 1000); //(one day) hours * minutes * seconds * milliseconds
     }
 

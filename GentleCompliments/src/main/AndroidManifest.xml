@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.meline.gentleservice">
 
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -27,18 +28,20 @@
 
     <application
         android:allowBackup="true"
+        android:fullBackupContent="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        android:fullBackupContent="true">
+        android:theme="@style/AppTheme">
 
         <!-- This meta-data tag is required to use Google Play Services. -->
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <receiver android:name=".services.GentleIntentReceiver"
+        <receiver
+            android:name=".services.GentleIntentReceiver"
+            android:exported="false"
             android:process=":remote">
             <intent-filter>
                 <action android:name="android.intent.action.ACTION_LOCALE_CHANGED" />
@@ -46,24 +49,43 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".ui.activities.ComplimentActivity"
-            android:configChanges="orientation|locale"
+        <activity
+            android:name=".ui.activities.ComplimentActivity"
             android:label="@string/title_activity_compliment"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.QUICK_VIEW" />
 
-        <activity android:name=".ui.activities.ShareComplimentAtivity"
-            android:configChanges="orientation|locale"
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".ui.activities.ShareComplimentActivity"
             android:label="@string/title_activity_sms_activity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:parentActivityName=".ui.activities.ComplimentActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            tools:targetApi="jelly_bean">
+            <intent-filter>
+                <action android:name="android.intent.action.QUICK_VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.activities.ComplimentActivity" />
+        </activity>
 
         <!-- Include the AdActivity configChanges and theme. -->
-        <activity android:name="com.google.android.gms.ads.AdActivity"
+        <activity
+            android:name="com.google.android.gms.ads.AdActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
             android:theme="@android:style/Theme.Translucent" />
 
-        <activity android:name=".ui.activities.StartActivity"
+        <activity
+            android:name=".ui.activities.StartActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -73,11 +95,11 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".services.ComplimentService"
-            android:exported="false"
-            >
+        <service
+            android:name=".services.ComplimentService"
+            android:exported="false">
             <intent-filter>
-                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE"/>"
+                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE" />"
             </intent-filter>
         </service>
     </application>

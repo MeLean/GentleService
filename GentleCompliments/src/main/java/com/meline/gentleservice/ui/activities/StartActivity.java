@@ -2,10 +2,7 @@ package com.meline.gentleservice.ui.activities;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -13,7 +10,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -23,6 +19,8 @@ import com.meline.gentleservice.ui.adapters.MainViewPagerAdapter;
 
 public class StartActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, ViewPager.OnPageChangeListener {
+    NavigationView mNavigationView;
+    private ViewPager mViewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,8 +29,10 @@ public class StartActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        mNavigationView = (NavigationView) findViewById(R.id.nav_view);
+        mNavigationView.setNavigationItemSelectedListener(this);
 
-        ViewPager mViewPager = (ViewPager) findViewById(R.id.start_view_pager);
+        mViewPager = (ViewPager) findViewById(R.id.start_view_pager);
         mViewPager.setAdapter(new MainViewPagerAdapter(this));
         mViewPager.addOnPageChangeListener(this);
         //index 1 is SetupFragment
@@ -51,8 +51,7 @@ public class StartActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+
     }
 
     @Override
@@ -66,24 +65,23 @@ public class StartActivity extends AppCompatActivity
     }
 
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        if (id == R.id.nav_add) {
+            //add compliment fragment is index 0
+            mViewPager.setCurrentItem(0, true);
+        } else if (id == R.id.nav_like_dislike) {
+            //add like dislike fragment is index 2
+            mViewPager.setCurrentItem(2, true);
+        } else if (id == R.id.nav_settings) {
+            //add like setup fragment is index 1
+            mViewPager.setCurrentItem(1, true);
+        } else if (id == R.id.nav_exit) {
+            this.finish();
+            System.exit(0);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -93,12 +91,12 @@ public class StartActivity extends AppCompatActivity
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-        setTitles(position);
+        manageChosenPage(position);
     }
 
     @Override
     public void onPageSelected(int position) {
-        setTitles(position);
+        manageChosenPage(position);
     }
 
     @Override
@@ -106,7 +104,8 @@ public class StartActivity extends AppCompatActivity
 
     }
 
-    private void setTitles(int position) {
+    private void manageChosenPage(int position) {
+        mNavigationView.getMenu().getItem(position).setChecked(true);
         if(position == 0){
             setTitle(getString(R.string.title_activity_add_new_compliment));
         }else if(position == 1){
@@ -117,4 +116,6 @@ public class StartActivity extends AppCompatActivity
             setTitle(getString(R.string.app_name));
         }
     }
+
+
 }

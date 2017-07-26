@@ -75,7 +75,7 @@ public class DBHelper extends SQLiteOpenHelper {
             defaultCompliments.put(COLUMN_IS_LOADED, 0);
             defaultCompliments.put(COLUMN_IS_CUSTOM, 0);
             defaultCompliments.put(COLUMN_IS_HATED, 0);
-            db.insert(TABLE_NAME, null, defaultCompliments);
+            db.insertWithOnConflict(TABLE_NAME, null, defaultCompliments,SQLiteDatabase.CONFLICT_REPLACE);
         }
     }
 
@@ -141,7 +141,12 @@ public class DBHelper extends SQLiteOpenHelper {
         contentValues.put(COLUMN_IS_LOADED, (complement.isLoaded() ? 1 : 0));
         contentValues.put(COLUMN_IS_CUSTOM, (complement.isCustom() ? 1 : 0));
         contentValues.put(COLUMN_IS_HATED, (complement.isHated() ? 1 : 0));
-        this.database.insert(TABLE_NAME, null, contentValues);
+        this.database.insertWithOnConflict(
+                TABLE_NAME,
+                null,
+                contentValues,
+                SQLiteDatabase.CONFLICT_REPLACE
+        );
         this.closeDB();
     }
 
@@ -149,7 +154,12 @@ public class DBHelper extends SQLiteOpenHelper {
         ContentValues contentValues = new ContentValues();
         contentValues.put(COLUMN_IS_LOADED, 1);
         this.openDB();
-        database.update(TABLE_NAME, contentValues, COLUMN_ID + "=?", new String[]{String.valueOf(id)});
+        database.updateWithOnConflict(
+                TABLE_NAME, contentValues,
+                COLUMN_ID + "=?",
+                new String[]{String.valueOf(id)},
+                SQLiteDatabase.CONFLICT_REPLACE
+        );
         this.closeDB();
     }
 
@@ -157,7 +167,13 @@ public class DBHelper extends SQLiteOpenHelper {
         ContentValues contentValues = new ContentValues();
         contentValues.put(COLUMN_IS_HATED, (isHated ? 1 : 0));
         this.openDB();
-        database.update(TABLE_NAME, contentValues, COLUMN_CONTENT + "=?", new String[]{String.valueOf(content)});
+        database.updateWithOnConflict(
+                TABLE_NAME,
+                contentValues,
+                COLUMN_CONTENT + "=?",
+                new String[]{String.valueOf(content)},
+                SQLiteDatabase.CONFLICT_REPLACE
+        );
         this.closeDB();
     }
 
@@ -165,7 +181,7 @@ public class DBHelper extends SQLiteOpenHelper {
         ContentValues contentValues = new ContentValues();
         contentValues.put(COLUMN_IS_LOADED, 0);
         this.openDB();
-        database.update(TABLE_NAME, contentValues, null, null);
+        database.updateWithOnConflict(TABLE_NAME, contentValues, null, null, SQLiteDatabase.CONFLICT_REPLACE);
         this.closeDB();
     }
 

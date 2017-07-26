@@ -23,7 +23,6 @@
         android:maxWidth="@dimen/max_width_component"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:background="@drawable/show_compliment_background"
-        android:singleLine="false"
         android:gravity="center_vertical|center_horizontal"
         android:padding="@dimen/default_padding"
         android:layout_marginTop="140dp"

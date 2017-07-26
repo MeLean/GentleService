@@ -85,7 +85,7 @@ public class ComplimentActivity extends AppCompatActivity implements View.OnClic
         int DEFAULT_VALUE = 1; //todo 8*60*60; use 8 hours as default
         int result = DEFAULT_VALUE;
         if (isSurpriseMe) {
-            //todo
+            //todo implement me
             result = DEFAULT_VALUE;
         }
 
@@ -136,6 +136,7 @@ public class ComplimentActivity extends AppCompatActivity implements View.OnClic
         switch (item.getItemId()) {
             // Respond to the action bar's Up/Home button
             case R.id.action_return:
+                launchAd();
                 finish();
                 return true;
             case R.id.action_settings:
@@ -157,29 +158,30 @@ public class ComplimentActivity extends AppCompatActivity implements View.OnClic
 
         switch (view.getId()) {
             case R.id.imgLike:
-                showAd();
+                launchAd();
                 this.cancelVibrator();
                 this.finish();
                 break;
 
             case R.id.imgSMS:
-                showAd();
+                launchAd();
                 this.cancelVibrator();
-                Intent intentSms = new Intent(this, ShareComplimentAtivity.class);
-                intentSms.putExtra(getString(R.string.sp_sms_text), mCompliment.getContent());
+                Intent intentSms = new Intent(this, ShareComplimentActivity.class);
+                intentSms.putExtra(getString(R.string.sp_sms_text), mComplimentContainer.getText().toString());
                 this.startActivity(intentSms);
-                this.finish();
                 break;
 
             case R.id.imgDislike:
-                showAd();
+                launchAd();
                 DBHelper db = DBHelper.getInstance(this);
+
 
                 try {
                     db.changeIsHatedStatus(mCompliment.getContent(), true);
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
+
 
                 Toast toast = Toast.makeText(this, String.format(getString(R.string.was_written_in_hated_list),
                         mCompliment.getContent()), Toast.LENGTH_SHORT);
@@ -202,6 +204,12 @@ public class ComplimentActivity extends AppCompatActivity implements View.OnClic
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString(SAVED_COMPLIMENT_TEXT, mComplimentContainer.getText().toString());
+    }
+
+    @Override
+    public void onBackPressed() {
+        launchAd();
+        super.onBackPressed();
     }
 
     private void launchCompliment(boolean mustVibrate, Bundle savedInstanceState) {
@@ -330,7 +338,7 @@ public class ComplimentActivity extends AppCompatActivity implements View.OnClic
         };
     }
 
-    private void showAd() {
+    private void launchAd() {
         Random random = new Random();
         int num = random.nextInt(100);
         if (num <= 50) {// 50% chance to fire a interstitial mInterstitialAd

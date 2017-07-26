@@ -9,6 +9,7 @@
         android:id="@+id/tw_custom_row"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_margin"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Large Text"
         style="@style/textStyle"
