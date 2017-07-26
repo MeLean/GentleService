@@ -11,11 +11,11 @@ public class ComplimentService extends JobService {
     public static final String DEFAULT_JOB_TAG = "wait_for_compliment_job";
     @Override
     public boolean onStartJob(JobParameters job) {
-        Log.d("AppDebug", "onStartJob called jobTag: "+job.getTag());
+        //Log.d("AppDebug", "onStartJob called jobTag: "+job.getTag());
         Intent complimentingIntent = new Intent(this, ComplimentActivity.class);
         complimentingIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(complimentingIntent);
-        return false; // todo make me true
+        return false;
     }
 
     @Override

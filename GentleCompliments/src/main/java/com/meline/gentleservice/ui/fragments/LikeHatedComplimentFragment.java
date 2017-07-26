@@ -1,6 +1,7 @@
 package com.meline.gentleservice.ui.fragments;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -32,7 +33,7 @@ import java.util.ArrayList;
  */
 public class LikeHatedComplimentFragment extends Fragment implements AdapterView.OnItemClickListener {
     private ArrayList<String> mHatedComplimentsStr;
-    private Context mContext;
+    private Activity mActivity;
 
     public LikeHatedComplimentFragment() {
         // Required empty public constructor
@@ -43,9 +44,9 @@ public class LikeHatedComplimentFragment extends Fragment implements AdapterView
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_like_hated_compliment, container, false);
-        mContext = getContext();
+        mActivity = getActivity();
 
-        DBHelper db = DBHelper.getInstance(mContext);
+        DBHelper db = DBHelper.getInstance(mActivity);
         ArrayList<Compliment> hatedCompliments = new ArrayList<>();
 
         try {
@@ -69,7 +70,7 @@ public class LikeHatedComplimentFragment extends Fragment implements AdapterView
         final String complimentText = parent.getItemAtPosition(position).toString();
 
         //show dialog
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mContext);
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mActivity);
         // set title
         alertDialogBuilder.setTitle(getString(R.string.like_hated_title));
         // set dialog message
@@ -107,16 +108,16 @@ public class LikeHatedComplimentFragment extends Fragment implements AdapterView
             listView.setOnItemClickListener(null);
         }
 
-        ArrayAdapter<String> adapter = new CustomAdapter(mContext, hatedComplimentsStr);
+        ArrayAdapter<String> adapter = new CustomAdapter(mActivity, hatedComplimentsStr);
         listView.setAdapter(adapter);
     }
 
     private void removeComplimentFromList(View view, String complimentText, boolean isItForDelete) {
-        Animation fadeOut = AnimationUtils.loadAnimation(mContext, android.R.anim.fade_out);
+        Animation fadeOut = AnimationUtils.loadAnimation(mActivity, android.R.anim.fade_out);
         view.setAnimation(fadeOut);
         view.setVisibility(View.GONE);
 
-        DBHelper db = DBHelper.getInstance(mContext);
+        DBHelper db = DBHelper.getInstance(mActivity);
         try {
             if (isItForDelete) {
                 db.deleteCompliment(complimentText);
@@ -128,7 +129,7 @@ public class LikeHatedComplimentFragment extends Fragment implements AdapterView
         }
 
         String msg = isItForDelete ? getString(R.string.hated_was_deleted) : getString(R.string.hated_was_removed);
-        Toast toast = Toast.makeText(mContext, String.format("\"%s\" %s", complimentText, msg), Toast.LENGTH_SHORT);
+        Toast toast = Toast.makeText(mActivity, String.format("\"%s\" %s", complimentText, msg), Toast.LENGTH_SHORT);
         TextView textView = (TextView) toast.getView().findViewById(android.R.id.message);
         if (textView != null) {
             textView.setGravity(Gravity.CENTER);

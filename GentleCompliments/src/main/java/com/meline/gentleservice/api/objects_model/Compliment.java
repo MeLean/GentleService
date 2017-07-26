@@ -16,7 +16,7 @@ public class Compliment {
     }
 
     public Compliment(String content) {
-        this(0, content, false, false, false);
+        this((int) (System.currentTimeMillis() /1000), content, false, false, false);
     }
 
     public int getId() {

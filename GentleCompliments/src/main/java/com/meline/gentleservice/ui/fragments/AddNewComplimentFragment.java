@@ -53,7 +53,6 @@ public class AddNewComplimentFragment extends Fragment implements View.OnClickLi
         });
 
         FloatingActionButton btnAddCompliment = (FloatingActionButton) view.findViewById(R.id.fab_add_compliment);
-
         btnAddCompliment.setOnClickListener(this);
         return view;
     }
@@ -69,7 +68,7 @@ public class AddNewComplimentFragment extends Fragment implements View.OnClickLi
     public void onClick(View view) {
         Context context = getContext();
         switch (view.getId()){
-            case R.id.btnAddCompliment:
+            case R.id.fab_add_compliment:
                 String input = String.valueOf(etAddCompliment.getText());
                 if (input.equals("")){
                     Toast.makeText(context, R.string.enter_compliment, Toast.LENGTH_SHORT).show();
@@ -87,6 +86,7 @@ public class AddNewComplimentFragment extends Fragment implements View.OnClickLi
                 }
 
                 etAddCompliment.setText("");
+                hideKeyboard(view);
                 Toast.makeText(context, R.string.compliment_added, Toast.LENGTH_LONG).show();
 
                 break;

@@ -22,7 +22,7 @@ import com.meline.gentleservice.R;
 import com.meline.gentleservice.ui.adapters.MainViewPagerAdapter;
 
 public class StartActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, ViewPager.OnPageChangeListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +34,7 @@ public class StartActivity extends AppCompatActivity
 
         ViewPager mViewPager = (ViewPager) findViewById(R.id.start_view_pager);
         mViewPager.setAdapter(new MainViewPagerAdapter(this));
+        mViewPager.addOnPageChangeListener(this);
         //index 1 is SetupFragment
         mViewPager.setCurrentItem(1, false);
 
@@ -88,5 +89,32 @@ public class StartActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        setTitles(position);
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        setTitles(position);
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
+    }
+
+    private void setTitles(int position) {
+        if(position == 0){
+            setTitle(getString(R.string.title_activity_add_new_compliment));
+        }else if(position == 1){
+            setTitle(getString(R.string.app_name));
+        } else if(position == 2){
+            setTitle(getString(R.string.title_activity_like_hated));
+        }else{
+            setTitle(getString(R.string.app_name));
+        }
     }
 }

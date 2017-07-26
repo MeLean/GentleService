@@ -1,14 +1,10 @@
-package com.meline.gentleservice.api.api_module;
+package com.meline.gentleservice.services;
 
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
-
-import com.meline.gentleservice.ui.activities.MainActivity;
-import com.meline.gentleservice.R;
-import com.meline.gentleservice.utils.SharedPreferencesUtils;
 
 public class GentleIntentReceiver extends BroadcastReceiver {
     static final String SINGLE_SHOT_ALARM = "com.meline.gentleservice.SINGLE_SHOT_ALARM";
