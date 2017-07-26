@@ -11,9 +11,9 @@
     <string name="sp_fireNextInMilliseconds">GS_SP_nextScheduleFire</string>
     <string name="sp_timeWaiting">GS_SP_time</string>
     <string name="sp_do_not_disturb">GS_SP_disturb</string>
-    <string name="sp_isServiceRunning">GS_SP_isRunning</string>
-    <string name="sp_isScheduled">GS_SP_isScheduled</string>
-    <string name="sp_isSurpriseMe">GS_SP_isSurpriseMe</string>
+    <string name="sp_is_service_running">GS_SP_isRunning</string>
+    <string name="sp_is_scheduled">GS_SP_isScheduled</string>
+    <string name="sp_surprise_me">GS_SP_isSurpriseMe</string>
     <string name="sp_start_time">GS_SP_spinner_timeOne</string>
     <string name="sp_end_time">GS_SP_spinner_timeTwo</string>
     <string name="sp_locale">GS_SP_app_locale</string>

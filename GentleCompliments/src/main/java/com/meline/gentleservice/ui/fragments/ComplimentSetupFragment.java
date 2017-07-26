@@ -3,8 +3,6 @@ package com.meline.gentleservice.ui.fragments;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.os.SystemClock;
-import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -25,13 +23,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.firebase.jobdispatcher.Constraint;
 import com.firebase.jobdispatcher.FirebaseJobDispatcher;
 import com.firebase.jobdispatcher.GooglePlayDriver;
-import com.firebase.jobdispatcher.Job;
-import com.firebase.jobdispatcher.Lifetime;
-import com.firebase.jobdispatcher.RetryStrategy;
-import com.firebase.jobdispatcher.Trigger;
 import com.meline.gentleservice.R;
 import com.meline.gentleservice.services.ComplimentService;
 import com.meline.gentleservice.ui.fragments.dialogs.TimePickerFragment;
@@ -83,11 +76,11 @@ public class ComplimentSetupFragment extends Fragment implements View.OnClickLis
         mAreaInput = (LinearLayout) view.findViewById(R.id.ll_input_area);
         RadioGroup waitingTimeArea = (RadioGroup) view.findViewById(R.id.rgWaitingTimeArea);
         waitingTimeArea.setOnCheckedChangeListener(this);
-        mScheduleRadio = (RadioButton) view.findViewById(R.id.rbSchedule);
-        mSurpriseMeRadio = (RadioButton) view.findViewById(R.id.rbSurpriseMe);
+        mScheduleRadio = (RadioButton) view.findViewById(R.id.rb_schedule);
+        mSurpriseMeRadio = (RadioButton) view.findViewById(R.id.rb_surpriseMe);
 
         //manage preview set options
-        isServiceRunning = SharedPreferencesUtils.loadBoolean(mActivity, getString(R.string.sp_isServiceRunning), false);
+        isServiceRunning = SharedPreferencesUtils.loadBoolean(mActivity, getString(R.string.sp_is_service_running), false);
 
         managePreviouslyChosenValues();
         manageStartingValues(isServiceRunning);
@@ -269,8 +262,8 @@ public class ComplimentSetupFragment extends Fragment implements View.OnClickLis
 
 
     private void saveRadioButtonsState() {
-        SharedPreferencesUtils.saveBoolean(mActivity, getString(R.string.sp_isSurpriseMe), mSurpriseMeRadio.isChecked());
-        SharedPreferencesUtils.saveBoolean(mActivity, getString(R.string.sp_isScheduled), mScheduleRadio.isChecked());
+        SharedPreferencesUtils.saveBoolean(mActivity, getString(R.string.sp_surprise_me), mSurpriseMeRadio.isChecked());
+        SharedPreferencesUtils.saveBoolean(mActivity, getString(R.string.sp_is_scheduled), mScheduleRadio.isChecked());
     }
 
     private void stopService() {
@@ -281,11 +274,8 @@ public class ComplimentSetupFragment extends Fragment implements View.OnClickLis
 
 
     private void startComplimentingJob() {
-
         DispatcherUtils.startComplimentingJob(mActivity, 0, 0);
-
         setStartingComponentsValues();
-
         //leave application and weit to start ComplimentActivity
         mActivity.finish();
         System.exit(0);
@@ -295,8 +285,8 @@ public class ComplimentSetupFragment extends Fragment implements View.OnClickLis
     private void managePreviouslyChosenValues() {
         mDontDisturb.setChecked(SharedPreferencesUtils.loadBoolean(mActivity, getString(R.string.sp_do_not_disturb), true));
 
-        mSurpriseMeRadio.setChecked(SharedPreferencesUtils.loadBoolean(mActivity, getString(R.string.sp_isSurpriseMe), true));
-        mScheduleRadio.setChecked(SharedPreferencesUtils.loadBoolean(mActivity, getString(R.string.sp_isScheduled), false));
+        mSurpriseMeRadio.setChecked(SharedPreferencesUtils.loadBoolean(mActivity, getString(R.string.sp_surprise_me), true));
+        mScheduleRadio.setChecked(SharedPreferencesUtils.loadBoolean(mActivity, getString(R.string.sp_is_scheduled), false));
 
         mStartTime.setText(SharedPreferencesUtils.loadString(mActivity, getString(R.string.sp_start_time), getString(R.string.default_start_time)));
         mEndTime.setText(SharedPreferencesUtils.loadString(mActivity, getString(R.string.sp_end_time), getString(R.string.default_end_time)));
@@ -307,7 +297,7 @@ public class ComplimentSetupFragment extends Fragment implements View.OnClickLis
     private void setDefaultComponentsValues() {
         mFabStartStop.setImageResource(android.R.drawable.ic_media_play);
         isServiceRunning = false;
-        SharedPreferencesUtils.saveBoolean(mActivity, getString(R.string.sp_isServiceRunning), isServiceRunning);
+        SharedPreferencesUtils.saveBoolean(mActivity, getString(R.string.sp_is_service_running), isServiceRunning);
         mDontDisturb.setEnabled(true);
         mTimeWait.setFocusableInTouchMode(true);
         mStartTime.setFocusableInTouchMode(true);
@@ -320,7 +310,7 @@ public class ComplimentSetupFragment extends Fragment implements View.OnClickLis
     private void setStartingComponentsValues() {
         saveDonNotDisturbStartEndTime();
         isServiceRunning = true;
-        SharedPreferencesUtils.saveBoolean(mActivity, getString(R.string.sp_isServiceRunning), isServiceRunning);
+        SharedPreferencesUtils.saveBoolean(mActivity, getString(R.string.sp_is_service_running), isServiceRunning);
         mFabStartStop.setImageResource(android.R.drawable.alert_light_frame);
         mDontDisturb.setEnabled(false);
         mTimeWait.setFocusable(false);

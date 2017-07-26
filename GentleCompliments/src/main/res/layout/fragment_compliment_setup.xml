@@ -101,7 +101,7 @@
                 android:gravity="top|center_horizontal">
 
                 <RadioButton
-                    android:id="@+id/rbSchedule"
+                    android:id="@+id/rb_schedule"
                     style="@style/textStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -110,7 +110,7 @@
                     android:text="@string/time_scheduler_text" />
 
                 <RadioButton
-                    android:id="@+id/rbSurpriseMe"
+                    android:id="@+id/rb_surpriseMe"
                     style="@style/textStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

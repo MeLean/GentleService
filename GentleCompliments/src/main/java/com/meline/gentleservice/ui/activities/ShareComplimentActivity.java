@@ -20,7 +20,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
-import com.google.android.gms.ads.MobileAds;
 import com.meline.gentleservice.R;
 import com.meline.gentleservice.utils.RuntimePermissionAssistant;
 

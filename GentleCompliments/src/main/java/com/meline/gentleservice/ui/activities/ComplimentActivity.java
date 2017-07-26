@@ -29,6 +29,7 @@ import java.util.Random;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
+import com.meline.gentleservice.ProjectConstants;
 import com.meline.gentleservice.api.database.DBHelper;
 import com.meline.gentleservice.utils.CalendarUtils;
 import com.meline.gentleservice.api.objects_model.Compliment;
@@ -44,6 +45,7 @@ public class ComplimentActivity extends AppCompatActivity implements View.OnClic
 
     private static final String SHOW_COMPLIMENT_ONLY = "was_started_from_notification";
     private static final String SAVED_COMPLIMENT_TEXT = "saved_compliment_text";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,11 +63,8 @@ public class ComplimentActivity extends AppCompatActivity implements View.OnClic
         mInterstitialAd.loadAd(new AdRequest.Builder().build());
         mInterstitialAd.setAdListener(getAddListener());
 
-
         boolean mustOnlyLaunchCompliment = getIntent().getBooleanExtra(SHOW_COMPLIMENT_ONLY, false);
-        boolean isDoNotDisturbMode = SharedPreferencesUtils.loadBoolean(this, getString(R.string.sp_do_not_disturb), true);
-
-        //when you are in not disturbMode but the activity is launched by notification
+               //when you are in not disturbMode but the activity is launched by notification
         //it will vibrate, it also will vibrate if doNotDisturb mode is off
         //it wont vibrate if doNotDisturb mode is on and activity is started from ComplimentService
         if (mustOnlyLaunchCompliment) {
@@ -74,14 +73,22 @@ public class ComplimentActivity extends AppCompatActivity implements View.OnClic
             //first check if activity has to show or has to add a Notification
             int calculatedTime = getCalculatedTime();
             DispatcherUtils.startComplimentingJob(this, calculatedTime, calculatedTime);
-            checkForDisturbPeriod();
+            boolean isDoNotDisturbMode = SharedPreferencesUtils.loadBoolean(this, getString(R.string.sp_do_not_disturb), true);
+            if(isDoNotDisturbMode){
+                checkForDisturbPeriod();
+            }
             launchCompliment(!isDoNotDisturbMode, savedInstanceState);
+            saveLauncedDate();
         }
     }
 
+    private void saveLauncedDate() {
+        SharedPreferencesUtils.saveLong(this, ProjectConstants.SAVED_LAST_LAUNCH_MILLISECONDS, System.currentTimeMillis());
+    }
+
     private int getCalculatedTime() {
-        boolean isSurpriseMe = SharedPreferencesUtils.loadBoolean(this, getString(R.string.sp_isSurpriseMe), true);
-        boolean isScheduled = SharedPreferencesUtils.loadBoolean(this, getString(R.string.sp_isScheduled), false);
+        boolean isSurpriseMe = SharedPreferencesUtils.loadBoolean(this, getString(R.string.sp_surprise_me), true);
+        boolean isScheduled = SharedPreferencesUtils.loadBoolean(this, getString(R.string.sp_is_scheduled), false);
         int DEFAULT_VALUE = 1; //todo 8*60*60; use 8 hours as default
         int result = DEFAULT_VALUE;
         if (isSurpriseMe) {
@@ -181,7 +188,6 @@ public class ComplimentActivity extends AppCompatActivity implements View.OnClic
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
-
 
                 Toast toast = Toast.makeText(this, String.format(getString(R.string.was_written_in_hated_list),
                         mCompliment.getContent()), Toast.LENGTH_SHORT);
