@@ -9,6 +9,7 @@ import android.os.Vibrator;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,6 +26,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Random;
 
+import com.firebase.jobdispatcher.FirebaseJobDispatcher;
+import com.firebase.jobdispatcher.GooglePlayDriver;
+import com.firebase.jobdispatcher.Job;
+import com.firebase.jobdispatcher.Trigger;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
@@ -32,15 +37,17 @@ import com.meline.gentleservice.api.database.DBHelper;
 import com.meline.gentleservice.utils.CalendarUtils;
 import com.meline.gentleservice.api.objects_model.Compliment;
 import com.meline.gentleservice.R;
-import com.meline.gentleservice.utils.LocaleManagementUtils;
+import com.meline.gentleservice.utils.DispatcherUtils;
 import com.meline.gentleservice.utils.SharedPreferencesUtils;
 
 public class ComplimentActivity extends AppCompatActivity implements View.OnClickListener {
     private Compliment mCompliment;
     private Vibrator mVibrator = null;
-    private TextView mContainer;
-    InterstitialAd mInterstitialAd;
-    SharedPreferencesUtils spUtils;
+    private TextView mComplimentContainer;
+    private InterstitialAd mInterstitialAd;
+
+    private static final String SHOW_COMPLIMENT_ONLY = "was_started_from_notification";
+    private static final String SAVED_COMPLIMENT_TEXT = "saved_compliment_text";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,124 +55,77 @@ public class ComplimentActivity extends AppCompatActivity implements View.OnClic
                 WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
                 WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
         super.onCreate(savedInstanceState);
-        boolean checkDisturbed = getIntent().getBooleanExtra(getString(R.string.sp_disturb_check), true);
-        boolean isDoNotDisturb = false;
-        spUtils = new SharedPreferencesUtils(this, getString(R.string.sp_name));
-        if (checkDisturbed) {
-            isDoNotDisturb = spUtils.getBooleanFromSharedPreferences(getString(R.string.sp_do_not_disturb));
-            if (isDoNotDisturb) {
-                String firstTime = spUtils.getStringFromSharedPreferences(getString(R.string.sp_start_time));
-                String secondTime = spUtils.getStringFromSharedPreferences(getString(R.string.sp_end_time));
-                String TIME_SEPARATOR = ":";
-                String[] firstTimeArr = firstTime.split(TIME_SEPARATOR);
-                String[] secondTimeArr = secondTime.split(TIME_SEPARATOR);
-
-                Calendar calendar = Calendar.getInstance();
-                int currentHours = calendar.get(Calendar.HOUR_OF_DAY);
-                int currentMinutes = calendar.get(Calendar.MINUTE);
-
-                long startTimeInMilliseconds =
-                        CalendarUtils.getMillisecondsFromTime(Integer.parseInt(firstTimeArr[0]), Integer.parseInt(firstTimeArr[1]));
-                long currentHoursInMilliseconds = CalendarUtils.getMillisecondsFromTime(currentHours, currentMinutes);
-                long endTimeInMilliseconds =
-                        CalendarUtils.getMillisecondsFromTime(Integer.parseInt(secondTimeArr[0]), Integer.parseInt(secondTimeArr[1]));
-                boolean isInDisturbPeriod =
-                        CalendarUtils.checkIsBetween(startTimeInMilliseconds, currentHoursInMilliseconds, endTimeInMilliseconds);
-
-                if (isInDisturbPeriod) {
-                    showNotification((int) System.currentTimeMillis() / 1000);//every time will receive new notification
-                    finish();
-                    return;
-                }
-            }
-        }
         setContentView(R.layout.activity_compliment);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        makeHeartBeatVibrate();
-        ImageView imgLike = (ImageView) findViewById(R.id.imgLike);
-        ImageView imgSMS = (ImageView) findViewById(R.id.imgSMS);
-        ImageView imgDislike = (ImageView) findViewById(R.id.imgDislike);
-        imgLike.setOnClickListener(this);
-        imgSMS.setOnClickListener(this);
-        imgDislike.setOnClickListener(this);
-        //loads random background
-        RelativeLayout rlContainer = (RelativeLayout) findViewById(R.id.rlContainer);
-        int[] backgroundIds = new int[]{
-                R.drawable.bg_one,
-                R.drawable.bg_two,
-                R.drawable.bg_four,
-                R.drawable.bg_five,
-                R.drawable.bg_three,
-                R.drawable.bg_six
-        };
-        rlContainer.setBackgroundResource(backgroundIds[new Random().nextInt(backgroundIds.length)]);
-        DBHelper db = DBHelper.getInstance(this);
-        ArrayList<Compliment> compliments = null;
-
-        try {
-            compliments = db.getLoadableComplements();
-        } catch (ParseException | SQLException e) {
-            e.printStackTrace();
-        }
-
-
-        mContainer = (TextView) findViewById(R.id.twContainer);
-        String complimentStr = getString(R.string.no_loadable_compliments);
-        if (compliments != null) {
-            int complimentsSize = compliments.size();
-            if (complimentsSize > 0) {
-                int random = new Random().nextInt(compliments.size());
-                mCompliment = compliments.get(random);
-                complimentStr = mCompliment.getContent();
-                mContainer.setText(complimentStr);
-
-                try {
-                    db.makeComplimentLoaded(mCompliment.getId());
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-
-                if (complimentsSize - 1 <= 0) { //last loadable compliment was loaded
-
-                    try {
-                        db.resetComplimentsToNotLoaded();
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-            } else {
-                mContainer.setText(complimentStr);
-            }
-        }
-
-        LocaleManagementUtils localeManagementUtils = new LocaleManagementUtils(this);
-        localeManagementUtils.manageLocale(spUtils, spUtils);
 
         mInterstitialAd = new InterstitialAd(this);
         mInterstitialAd.setAdUnitId(getString(R.string.interstitial_ad_unit_id));
-        mInterstitialAd.setAdListener(new AdListener() {
-            @Override
-            public void onAdClosed() {
-                requestNewInterstitial();
-            }
-        });
-        requestNewInterstitial();
+        mInterstitialAd.loadAd(new AdRequest.Builder().build());
+        mInterstitialAd.setAdListener(getAddListener());
 
-        Random random = new Random();
-        int num = random.nextInt(100);
-        if (num <= 50) {// 50% chance to fire a interstitial mInterstitialAd
-            if (mInterstitialAd.isLoaded()) {
-                mInterstitialAd.show();
-            }
+
+        boolean mustOnlyLaunchCompliment = getIntent().getBooleanExtra(SHOW_COMPLIMENT_ONLY, false);
+        boolean isDoNotDisturbMode = SharedPreferencesUtils.loadBoolean(this, getString(R.string.sp_do_not_disturb), true);
+
+        //when you are in not disturbMode but the activity is launched by notification
+        //it will vibrate, it also will vibrate if doNotDisturb mode is off
+        //it wont vibrate if doNotDisturb mode is on and activity is started from ComplimentService
+        if (mustOnlyLaunchCompliment) {
+            launchCompliment(true, savedInstanceState);
+        } else {
+            //first check if activity has to show or has to add a Notification
+            int calculatedTime = getCalculatedTime();
+            DispatcherUtils.startComplimentingJob(this, calculatedTime, calculatedTime);
+            checkForDisturbPeriod();
+            launchCompliment(!isDoNotDisturbMode, savedInstanceState);
+        }
+    }
+
+    private int getCalculatedTime() {
+        boolean isSurpriseMe = SharedPreferencesUtils.loadBoolean(this, getString(R.string.sp_isSurpriseMe), true);
+        boolean isScheduled = SharedPreferencesUtils.loadBoolean(this, getString(R.string.sp_isScheduled), false);
+        int DEFAULT_VALUE = 1; //todo 8*60*60; use 8 hours as default
+        int result = DEFAULT_VALUE;
+        if (isSurpriseMe) {
+            //todo
+            result = DEFAULT_VALUE;
+        }
+
+        if (isScheduled) {
+            String savedStringValue = SharedPreferencesUtils.loadString(this, getString(R.string.sp_time_wait_value), null);
+            //make saved time in minutes
+            result = savedStringValue != null ? Integer.parseInt(savedStringValue) * 60 : DEFAULT_VALUE;
+            Log.d("AppDebug", "ComplimentActivity getCalculatedTime for scheduled: " + result);
+        }
+
+        return result;
+    }
+
+    private void checkForDisturbPeriod() {
+        String firstTime = SharedPreferencesUtils.loadString(this, getString(R.string.sp_start_time), getString(R.string.default_start_time));
+        String secondTime = SharedPreferencesUtils.loadString(this, getString(R.string.sp_end_time), getString(R.string.default_end_time));
+        String TIME_SEPARATOR = ":";
+        String[] firstTimeArr = firstTime.split(TIME_SEPARATOR);
+        String[] secondTimeArr = secondTime.split(TIME_SEPARATOR);
+
+        Calendar calendar = Calendar.getInstance();
+        int currentHours = calendar.get(Calendar.HOUR_OF_DAY);
+        int currentMinutes = calendar.get(Calendar.MINUTE);
+
+        long startTimeInMilliseconds =
+                CalendarUtils.getMillisecondsFromTime(Integer.parseInt(firstTimeArr[0]), Integer.parseInt(firstTimeArr[1]));
+        long currentHoursInMilliseconds = CalendarUtils.getMillisecondsFromTime(currentHours, currentMinutes);
+        long endTimeInMilliseconds =
+                CalendarUtils.getMillisecondsFromTime(Integer.parseInt(secondTimeArr[0]), Integer.parseInt(secondTimeArr[1]));
+        boolean isInDisturbPeriod =
+                CalendarUtils.checkIsBetween(startTimeInMilliseconds, currentHoursInMilliseconds, endTimeInMilliseconds);
+
+        if (isInDisturbPeriod) {
+            addNotificationOnPane((int) System.currentTimeMillis() / 1000);//guarantee unique ID and every time client receive new notification
+            finish();
+            System.exit(0);
         }
     }
 
@@ -193,7 +153,7 @@ public class ComplimentActivity extends AppCompatActivity implements View.OnClic
     public void onClick(View view) {
 
         // if no compliments quits
-        if (mContainer.getText().equals(getString(R.string.no_loadable_compliments))) {
+        if (mComplimentContainer.getText().equals(getString(R.string.no_loadable_compliments))) {
             this.cancelVibrator();
             this.finish();
             return;
@@ -201,11 +161,13 @@ public class ComplimentActivity extends AppCompatActivity implements View.OnClic
 
         switch (view.getId()) {
             case R.id.imgLike:
+                showAd();
                 this.cancelVibrator();
                 this.finish();
                 break;
 
             case R.id.imgSMS:
+                showAd();
                 this.cancelVibrator();
                 Intent intentSms = new Intent(this, SmsActivity.class);
                 intentSms.putExtra(getString(R.string.sp_sms_text), mCompliment.getContent());
@@ -214,6 +176,7 @@ public class ComplimentActivity extends AppCompatActivity implements View.OnClic
                 break;
 
             case R.id.imgDislike:
+                showAd();
                 DBHelper db = DBHelper.getInstance(this);
 
                 try {
@@ -239,6 +202,37 @@ public class ComplimentActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(SAVED_COMPLIMENT_TEXT, mComplimentContainer.getText().toString());
+    }
+
+    private void launchCompliment(boolean mustVibrate, Bundle savedInstanceState) {
+        if (mustVibrate && savedInstanceState == null) {
+            makeHeartBeatVibrate();
+        }
+
+        ImageView imgLike = (ImageView) findViewById(R.id.imgLike);
+        imgLike.setOnClickListener(this);
+        ImageView imgSMS = (ImageView) findViewById(R.id.imgSMS);
+        imgSMS.setOnClickListener(this);
+        ImageView imgDislike = (ImageView) findViewById(R.id.imgDislike);
+        imgDislike.setOnClickListener(this);
+
+        mComplimentContainer = (TextView) findViewById(R.id.tw_compliment_conteiner);
+
+        RelativeLayout rlContainer = (RelativeLayout) findViewById(R.id.rlContainer);
+        int[] backgroundIds = getBackgrounds();
+        rlContainer.setBackgroundResource(backgroundIds[new Random().nextInt(backgroundIds.length)]);
+
+        if (savedInstanceState == null) {
+            mComplimentContainer.setText(getComplimentFromDatabase());
+        } else {
+            mComplimentContainer.setText(savedInstanceState.getString(SAVED_COMPLIMENT_TEXT));
+        }
+    }
+
     private void makeHeartBeatVibrate() {
         Object getVibrator = this.getSystemService(Context.VIBRATOR_SERVICE);
         if (getVibrator != null) {
@@ -254,15 +248,7 @@ public class ComplimentActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
-    private void requestNewInterstitial() {
-        AdRequest adRequest = new AdRequest.Builder()
-                .setGender(AdRequest.GENDER_FEMALE)
-                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                .build();
-        mInterstitialAd.loadAd(adRequest);
-    }
-
-    private void showNotification(int notificationId) {
+    private void addNotificationOnPane(int notificationId) {
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.gentle_service)
@@ -270,7 +256,7 @@ public class ComplimentActivity extends AppCompatActivity implements View.OnClic
                         .setContentText(getString(R.string.notify_unread_compliment_text));
 
         Intent intentLoad = new Intent(this, this.getClass());
-        intentLoad.putExtra(getString(R.string.sp_disturb_check), false);
+        intentLoad.putExtra(SHOW_COMPLIMENT_ONLY, true);
         PendingIntent resultPendingIntent =
                 PendingIntent.getActivity(
                         this,
@@ -289,4 +275,73 @@ public class ComplimentActivity extends AppCompatActivity implements View.OnClic
 
     }
 
+    public AdListener getAddListener() {
+        return new AdListener() {
+            @Override
+            public void onAdClosed() {
+                super.onAdClosed();
+            }
+        };
+    }
+
+    public String getComplimentFromDatabase() {
+        DBHelper db = DBHelper.getInstance(this);
+        ArrayList<Compliment> compliments = null;
+
+        try {
+            compliments = db.getLoadableComplements();
+        } catch (ParseException | SQLException e) {
+            e.printStackTrace();
+        }
+
+        if (compliments != null) {
+            int complimentsSize = compliments.size();
+            if (complimentsSize > 0) {
+                int random = new Random().nextInt(compliments.size());
+                mCompliment = compliments.get(random);
+                String result = mCompliment.getContent();
+
+                try {
+                    db.makeComplimentLoaded(mCompliment.getId());
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+
+                if (complimentsSize - 1 <= 0) { //last loadable compliment was loaded
+
+                    try {
+                        db.resetComplimentsToNotLoaded();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                return result;
+            }
+        }
+
+        return getString(R.string.no_loadable_compliments);
+    }
+
+
+    private int[] getBackgrounds() {
+        return new int[]{
+                R.drawable.bg_one,
+                R.drawable.bg_two,
+                R.drawable.bg_four,
+                R.drawable.bg_five,
+                R.drawable.bg_three,
+                R.drawable.bg_six
+        };
+    }
+
+    private void showAd() {
+        Random random = new Random();
+        int num = random.nextInt(100);
+        if (num <= 50) {// 50% chance to fire a interstitial mInterstitialAd
+            if (mInterstitialAd != null && mInterstitialAd.isLoaded()) {
+                mInterstitialAd.show();
+            }
+        }
+    }
 }

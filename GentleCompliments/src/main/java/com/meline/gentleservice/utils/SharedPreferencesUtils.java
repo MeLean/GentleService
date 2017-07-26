@@ -9,7 +9,7 @@ import com.meline.gentleservice.ui.interfaces.LocaleSaver;
 import java.util.Set;
 
 public class SharedPreferencesUtils implements LocaleLoader, LocaleSaver {
-    private static final String PREF_NAME = "com.mddimitrov.staradvice.utils.SharedPreferences";
+    private static final String PREF_NAME = "StarAdvice.SharedPreferences";
 
     public static void saveString(Context context, String key, String value) {
         getSharedPreferences(context, PREF_NAME)

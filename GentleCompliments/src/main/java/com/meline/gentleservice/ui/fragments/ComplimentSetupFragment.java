@@ -35,6 +35,7 @@ import com.firebase.jobdispatcher.Trigger;
 import com.meline.gentleservice.R;
 import com.meline.gentleservice.services.ComplimentService;
 import com.meline.gentleservice.ui.fragments.dialogs.TimePickerFragment;
+import com.meline.gentleservice.utils.DispatcherUtils;
 import com.meline.gentleservice.utils.SharedPreferencesUtils;
 
 public class ComplimentSetupFragment extends Fragment implements View.OnClickListener, View.OnFocusChangeListener, RadioGroup.OnCheckedChangeListener {
@@ -61,8 +62,6 @@ public class ComplimentSetupFragment extends Fragment implements View.OnClickLis
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_compliment_setup, container, false);
         initComponents(view);
-
-
         return view;
     }
 
@@ -89,6 +88,7 @@ public class ComplimentSetupFragment extends Fragment implements View.OnClickLis
 
         //manage preview set options
         isServiceRunning = SharedPreferencesUtils.loadBoolean(mActivity, getString(R.string.sp_isServiceRunning), false);
+
         managePreviouslyChosenValues();
         manageStartingValues(isServiceRunning);
     }
@@ -222,16 +222,18 @@ public class ComplimentSetupFragment extends Fragment implements View.OnClickLis
     }
 
     private String checkForErrors() {
-        long MINIMUM_WAITING_TIME = 2; //todo * 60 * 60; // two hours is a minimum time
+        long MINIMUM_WAITING_TIME = 60 ; //todo 2 * 60 * 60; // two hours is a minimum time
         try {
-            int inputNum = Integer.parseInt(String.valueOf(mTimeWait.getText()));
+            //make time in minutes
+            int inputNum = (Integer.parseInt(String.valueOf(mTimeWait.getText()))) * 60;
 
             if (inputNum < MINIMUM_WAITING_TIME) {
                 if (inputNum < 0) {
                     throw new NumberFormatException("Just catch me to return error message!");
                 }
 
-                return getString(R.string.minimum_waiting_time_text) + MINIMUM_WAITING_TIME;
+                //make saved MINIMUM_WAITING_TIME in minutes
+                return getString(R.string.minimum_waiting_time_text) + MINIMUM_WAITING_TIME/60;
             }
         } catch (NumberFormatException e) {
             return getString(R.string.invalid_number_text);
@@ -280,17 +282,7 @@ public class ComplimentSetupFragment extends Fragment implements View.OnClickLis
 
     private void startComplimentingJob() {
 
-        FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(mActivity));
-        Job surpriseJob = dispatcher.newJobBuilder()
-                .setService(ComplimentService.class)
-                .setRecurring(false)
-                .setTrigger(Trigger.executionWindow(0, 0))
-                .setRetryStrategy(RetryStrategy.DEFAULT_LINEAR)
-                .setTag(ComplimentService.DEFAULT_JOB_TAG)
-                .setLifetime(Lifetime.FOREVER)
-                .setConstraints(Constraint.ON_ANY_NETWORK)
-                .build();
-        dispatcher.mustSchedule(surpriseJob);
+        DispatcherUtils.startComplimentingJob(mActivity, 0, 0);
 
         setStartingComponentsValues();
 
@@ -298,6 +290,7 @@ public class ComplimentSetupFragment extends Fragment implements View.OnClickLis
         mActivity.finish();
         System.exit(0);
     }
+
 
     private void managePreviouslyChosenValues() {
         mDontDisturb.setChecked(SharedPreferencesUtils.loadBoolean(mActivity, getString(R.string.sp_do_not_disturb), true));

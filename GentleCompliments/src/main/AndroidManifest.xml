@@ -75,16 +75,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ui.activities.LikeHatedActivity"
-            android:configChanges="orientation|locale"
-            android:label="@string/title_activity_like_hated"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.meline.gentleservice.ui.activities.MainActivity" />
-        </activity>
-        <activity
             android:name=".ui.activities.SmsActivity"
             android:configChanges="orientation|locale"
             android:label="@string/title_activity_sms_activity"

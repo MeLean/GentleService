@@ -23,7 +23,6 @@ import com.meline.gentleservice.ui.adapters.MainViewPagerAdapter;
 
 public class StartActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    private static final String TAG = "AppDebug";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

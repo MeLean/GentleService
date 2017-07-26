@@ -146,7 +146,7 @@ public class MainActivity extends AppCompatActivity
                 startActivity(new Intent(this, AddNewComplimentActivity.class));
                 break;
             case R.id.action_like_hated:
-                startActivity(new Intent(this, LikeHatedActivity.class));
+                //startActivity(new Intent(this, LikeHatedActivity.class));
                 break;
 
             /*case R.id.get_next_load_date:

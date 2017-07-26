@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.Configuration;
 
 import com.meline.gentleservice.R;
-import com.meline.gentleservice.api.database.DatabaseAsyncManager;
 import com.meline.gentleservice.ui.interfaces.LocaleLoader;
 import com.meline.gentleservice.ui.interfaces.LocaleSaver;
 
@@ -22,10 +21,10 @@ public class LocaleManagementUtils {
         String oldLocale = localeLoader.loadLocale(mContext.getString(R.string.sp_locale));
         if (oldLocale != null) {
             if (isLocaleChanged(oldLocale)) {
-                changeLocale(mNewLocaleStr);
+   /*             changeLocale(mNewLocaleStr);
                 localeSaver.saveLocale(mContext.getString(R.string.sp_locale), mNewLocaleStr);
                 DatabaseAsyncManager managerDB = new DatabaseAsyncManager(mContext);
-                managerDB.execute("changeComplimentsLocale");
+                managerDB.execute("changeComplimentsLocale");*/
             }
         } else {
             localeSaver.saveLocale(mContext.getString(R.string.sp_locale), mNewLocaleStr);

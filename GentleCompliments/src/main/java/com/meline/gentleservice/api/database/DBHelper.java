@@ -169,11 +169,11 @@ public class DBHelper extends SQLiteOpenHelper {
         this.closeDB();
     }
 
-/*    private void deleteAllDefaultCompliments() throws SQLException {
+    private void deleteAllDefaultCompliments() throws SQLException {
         this.openDB();
         database.delete(TABLE_NAME, COLUMN_IS_CUSTOM + "=?", new String[]{"0"});
         this.closeDB();
-    }*/
+    }
 
     public void deleteCompliment(String content) throws SQLException {
         this.openDB();

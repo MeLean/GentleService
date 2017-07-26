@@ -15,41 +15,19 @@ public class GentleIntentReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        SharedPreferencesUtils spUtils = new SharedPreferencesUtils(context, context.getString(R.string.sp_name));
         String action = intent.getAction();
-        boolean isServiceRunning;
-        try {
-            isServiceRunning = spUtils.getBooleanFromSharedPreferences(context.getString(R.string.sp_isServiceRunning));
-        } catch (RuntimeException e) {
-            isServiceRunning = false;
-        }
 
         switch (action) {
-            case SINGLE_SHOT_ALARM:
-                startMainActivityJustForComplimenting(context);
-                break;
-
-            case "android.intent.action.BOOT_COMPLETED":
-                if (isServiceRunning) {
-                    String msg = String.format("%1$s %2$s",
-                            context.getString(R.string.app_name),
-                            context.getString(R.string.service_restarted));
-
-                    Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
-                    startMainActivityJustForComplimenting(context);
-                }
+            case Intent.ACTION_LOCALE_CHANGED:
+                Toast.makeText(context, "THE LOCALE HAS BEEN CHANGED", Toast.LENGTH_SHORT).show();
                 break;
 
             default:
-                Toast.makeText(context, context.getString(R.string.i_do_not_know_what_to_do), Toast.LENGTH_SHORT).show();
                 break;
         }
     }
 
-    private void startMainActivityJustForComplimenting(Context context) {
-        Intent startActivityIntent = new Intent(context, MainActivity.class);
-        startActivityIntent.putExtra("reloadComplimentingOnly", true);
-        startActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(startActivityIntent);
+    private void manageComplimentsLocaleChanges(Context context){
+        //todo
     }
 }

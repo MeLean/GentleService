@@ -4,7 +4,7 @@
     <string name="default_end_time">08:30</string>
     <string name="ads_user_id">3815845016477716</string>
     <string name="smart_banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string><!--todo ca-app-pub-6177746105485183/5817094357 -->
-    <string name="interstitial_ad_unit_id">ca-app-pub-6177746105485183/8072556755</string>
+    <string name="interstitial_ad_unit_id">ca-app-pub-3940256099942544/1033173712</string><!-- todo ca-app-pub-6177746105485183/8072556755 -->
 
     <!-- sharedPreferences values -->
     <string name="sp_name">GS_SP_GentleServiceLocalData</string>
@@ -24,7 +24,7 @@
     <string name="sp_locale_has_changed">GS_SP_locale_has_changed</string>
     <string name="sp_surprise_spinner_value">GS_SP_sniper_value</string>
     <string name="sp_time_wait_value">GS_SP_time_waiting_period</string>
-    <string name="sp_disturb_check">disturb_check</string>
+    <string name="sp_show_compliment_only">sp_show_compliment_only</string>
     <string name="sp_restart_complimenting">GS_SP_restart_complimenting</string>
     <string name="sms">SMS</string>
     <string name="i_do_not_know_what_to_do">I don not know what to do!</string>
