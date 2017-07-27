@@ -2,6 +2,7 @@ package com.meline.gentleservice.ui.fragments;
 
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -25,10 +26,12 @@ import android.widget.Toast;
 
 import com.firebase.jobdispatcher.FirebaseJobDispatcher;
 import com.firebase.jobdispatcher.GooglePlayDriver;
+import com.meline.gentleservice.ProjectConstants;
 import com.meline.gentleservice.R;
 import com.meline.gentleservice.services.ComplimentService;
+import com.meline.gentleservice.ui.activities.ComplimentActivity;
 import com.meline.gentleservice.ui.fragments.dialogs.TimePickerFragment;
-import com.meline.gentleservice.utils.DispatcherUtils;
+import com.meline.gentleservice.utils.SchedulingUtils;
 import com.meline.gentleservice.utils.SharedPreferencesUtils;
 
 public class ComplimentSetupFragment extends Fragment implements View.OnClickListener, View.OnFocusChangeListener, RadioGroup.OnCheckedChangeListener {
@@ -94,6 +97,7 @@ public class ComplimentSetupFragment extends Fragment implements View.OnClickLis
                 if (isServiceRunning) {
                     //button stop is pressed
                     stopService();
+                    SharedPreferencesUtils.saveLong(mActivity, ProjectConstants.SAVED_LAST_LAUNCH_MILLISECONDS, 0);
                 } else {
                     //button start is pressed
                     startService();
@@ -150,12 +154,14 @@ public class ComplimentSetupFragment extends Fragment implements View.OnClickLis
             if (spinnerValue != null) {
                 position = spinnerArrayAdapter.getPosition(spinnerValue);
             }
-            mSpinner.setSelection(position);
+
 
             mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    SharedPreferencesUtils.saveString(mActivity, getString(R.string.sp_surprise_spinner_value), ((TextView) view).getText().toString());
+                    String sniperText = ((TextView) view).getText().toString();
+                    SharedPreferencesUtils.saveString(mActivity, getString(R.string.sp_surprise_spinner_value), sniperText);
+                    SharedPreferencesUtils.saveInt(mActivity, getString(R.string.sp_surprise_time_max_value), calculateSurpriseTimeMaxValue(sniperText));
                 }
 
                 @Override
@@ -163,7 +169,8 @@ public class ComplimentSetupFragment extends Fragment implements View.OnClickLis
                     //do nothing
                 }
             });
-
+            //in order to save firstly selected valie
+            mSpinner.setSelection(position);
             areaInput.addView(mSpinner);
 
         } else if (mScheduleRadio.isChecked()) {
@@ -201,7 +208,7 @@ public class ComplimentSetupFragment extends Fragment implements View.OnClickLis
 
     private void startService() {
         if (mScheduleRadio.isChecked()) {
-            String errorMessage = checkForErrors();
+            String errorMessage = SchedulingUtils.checkForErrors(mActivity, mTimeWait.getText().toString());
             if(errorMessage == null){
                 startComplimentingJob();
             } else {
@@ -214,45 +221,26 @@ public class ComplimentSetupFragment extends Fragment implements View.OnClickLis
         }
     }
 
-    private String checkForErrors() {
-        long MINIMUM_WAITING_TIME = 60 ; //todo 2 * 60 * 60; // two hours is a minimum time
-        try {
-            //make time in minutes
-            int inputNum = (Integer.parseInt(String.valueOf(mTimeWait.getText()))) * 60;
-
-            if (inputNum < MINIMUM_WAITING_TIME) {
-                if (inputNum < 0) {
-                    throw new NumberFormatException("Just catch me to return error message!");
-                }
-
-                //make saved MINIMUM_WAITING_TIME in minutes
-                return getString(R.string.minimum_waiting_time_text) + MINIMUM_WAITING_TIME/60;
-            }
-        } catch (NumberFormatException e) {
-            return getString(R.string.invalid_number_text);
-        }
-
-        return null;
-    }
-
-    private void startSurpriseComplimenting() {
+    private int calculateSurpriseTimeMaxValue(String spinValue) {
         //runs only when app starts compliment for the first time
-        long timeSurpriseMaxValue;
-        String spinValue = mSpinner.getSelectedItem().toString();
-        if (spinValue.equals(getString(R.string.surprise_option_every_day))) {
-            timeSurpriseMaxValue = 24 * 60 * 60 * 1000; //hours * minutes * seconds * milliseconds
+        int surpriseTimeMaxValue;
 
+        if (spinValue.equals(getString(R.string.surprise_option_every_day))) {
+            //pattern days * hours * minutes  if milliseconds needed* seconds * 1000
+            surpriseTimeMaxValue = 24 * 60 * 60 ;
         } else if (spinValue.equals(getString(R.string.surprise_option_every_12_hours))) {
-            timeSurpriseMaxValue = 12 * 60 * 60 * 1000; //hours * minutes * seconds * milliseconds
+            surpriseTimeMaxValue = 12 * 60 * 60;
         } else if (spinValue.equals(getString(R.string.surprise_option_every_8_hours))) {
-            timeSurpriseMaxValue = 8 * 60 * 60 * 1000; //hours * minutes * seconds * milliseconds
+            surpriseTimeMaxValue = 8 * 60 * 60;
         } else if (spinValue.equals(getString(R.string.surprise_option_every_6_hours))) {
-            timeSurpriseMaxValue = 6 * 60 * 60 * 1000; //hours * minutes * seconds * milliseconds
+            surpriseTimeMaxValue = 6 * 60 * 60;
         } else if (spinValue.equals(getString(R.string.surprise_option_every_week))) {
-            timeSurpriseMaxValue = 7 * 24 * 60 * 60 * 1000; //days * hours * minutes * seconds * milliseconds
+            surpriseTimeMaxValue = 60;//todo 7 * 24 * 60 * 60 * 1000;
         } else {
             throw new NullPointerException("Unimplemented option!");
         }
+
+        return surpriseTimeMaxValue;
     }
 
     private void saveDonNotDisturbStartEndTime() {
@@ -269,18 +257,18 @@ public class ComplimentSetupFragment extends Fragment implements View.OnClickLis
     private void stopService() {
         FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(mActivity));
         dispatcher.cancel(ComplimentService.DEFAULT_JOB_TAG);
+        //in order to clear previews launching times
         setDefaultComponentsValues();
     }
 
 
     private void startComplimentingJob() {
-        DispatcherUtils.startComplimentingJob(mActivity, 0, 0);
+        startActivity(new Intent(mActivity, ComplimentActivity.class));
+        //leave application and wait to start ComplimentActivity
         setStartingComponentsValues();
-        //leave application and weit to start ComplimentActivity
         mActivity.finish();
         System.exit(0);
     }
-
 
     private void managePreviouslyChosenValues() {
         mDontDisturb.setChecked(SharedPreferencesUtils.loadBoolean(mActivity, getString(R.string.sp_do_not_disturb), true));

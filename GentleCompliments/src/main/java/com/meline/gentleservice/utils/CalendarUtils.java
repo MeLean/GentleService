@@ -63,17 +63,4 @@ public final class  CalendarUtils {
     private static long addDayInMilliseconds(long currentMilliseconds){
         return currentMilliseconds + (24 * 60 * 60 * 1000); //(one day) hours * minutes * seconds * milliseconds
     }
-
-    public static long manageWaitingTime(Context context) {
-        long nextFireInMilliseconds;
-        SharedPreferencesUtils spUtils = new SharedPreferencesUtils(context, context.getString(R.string.sp_name));
-        long timeWaitPeriod = spUtils.getLongFromSharedPreferences(context.getString(R.string.sp_time_wait_value));
-        long oldEndPeriod = spUtils.getLongFromSharedPreferences(context.getString(R.string.sp_timeEndPeriod));
-        long newEndPeriod = oldEndPeriod + timeWaitPeriod;
-        Random random = new Random();
-        nextFireInMilliseconds = oldEndPeriod + (long) (random.nextDouble() * timeWaitPeriod);
-        spUtils.putLongInSharedPreferences(context.getString(R.string.sp_timeEndPeriod), newEndPeriod);
-        spUtils.putLongInSharedPreferences(context.getString(R.string.sp_fireNextInMilliseconds), nextFireInMilliseconds);
-        return nextFireInMilliseconds;
-    }
 }

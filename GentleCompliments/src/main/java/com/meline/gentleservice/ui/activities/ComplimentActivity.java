@@ -24,6 +24,7 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Random;
 
 import com.google.android.gms.ads.AdListener;
@@ -34,7 +35,7 @@ import com.meline.gentleservice.api.database.DBHelper;
 import com.meline.gentleservice.utils.CalendarUtils;
 import com.meline.gentleservice.api.objects_model.Compliment;
 import com.meline.gentleservice.R;
-import com.meline.gentleservice.utils.DispatcherUtils;
+import com.meline.gentleservice.utils.SchedulingUtils;
 import com.meline.gentleservice.utils.SharedPreferencesUtils;
 
 public class ComplimentActivity extends AppCompatActivity implements View.OnClickListener {
@@ -71,39 +72,32 @@ public class ComplimentActivity extends AppCompatActivity implements View.OnClic
             launchCompliment(true, savedInstanceState);
         } else {
             //first check if activity has to show or has to add a Notification
-            int calculatedTime = getCalculatedTime();
-            DispatcherUtils.startComplimentingJob(this, calculatedTime, calculatedTime);
+            boolean isSurpriseMe = SharedPreferencesUtils.loadBoolean(this, getString(R.string.sp_surprise_me), true);
+            boolean isScheduled = SharedPreferencesUtils.loadBoolean(this, getString(R.string.sp_is_scheduled), false);
+            int calculatedTime = SchedulingUtils.calculateWaitingTimeInSeconds(this, isSurpriseMe, isScheduled);
+            SchedulingUtils.startComplimentingJob(this, calculatedTime, calculatedTime);
+            saveLaunchedDate(isSurpriseMe, isScheduled);
             boolean isDoNotDisturbMode = SharedPreferencesUtils.loadBoolean(this, getString(R.string.sp_do_not_disturb), true);
             if(isDoNotDisturbMode){
                 checkForDisturbPeriod();
             }
+
             launchCompliment(!isDoNotDisturbMode, savedInstanceState);
-            saveLauncedDate();
+
         }
     }
 
-    private void saveLauncedDate() {
-        SharedPreferencesUtils.saveLong(this, ProjectConstants.SAVED_LAST_LAUNCH_MILLISECONDS, System.currentTimeMillis());
-    }
-
-    private int getCalculatedTime() {
-        boolean isSurpriseMe = SharedPreferencesUtils.loadBoolean(this, getString(R.string.sp_surprise_me), true);
-        boolean isScheduled = SharedPreferencesUtils.loadBoolean(this, getString(R.string.sp_is_scheduled), false);
-        int DEFAULT_VALUE = 1; //todo 8*60*60; use 8 hours as default
-        int result = DEFAULT_VALUE;
-        if (isSurpriseMe) {
-            //todo implement me
-            result = DEFAULT_VALUE;
+    private void saveLaunchedDate(boolean isSurpriseMe, boolean isScheduled) {
+        if(isSurpriseMe){
+            Log.d("AppDebug", "saveLaunched isSurpriseMe Date :  " + new Date(System.currentTimeMillis()));
+            SharedPreferencesUtils.saveLong(this, getString(R.string.sp_next_surprise_milliseconds), System.currentTimeMillis());
         }
 
-        if (isScheduled) {
-            String savedStringValue = SharedPreferencesUtils.loadString(this, getString(R.string.sp_time_wait_value), null);
-            //make saved time in minutes
-            result = savedStringValue != null ? Integer.parseInt(savedStringValue) * 60 : DEFAULT_VALUE;
-            Log.d("AppDebug", "ComplimentActivity getCalculatedTime for scheduled: " + result);
+        if(isScheduled){
+            Log.d("AppDebug", "saveLaunched isScheduled Date :  " + new Date(System.currentTimeMillis()));
+            SharedPreferencesUtils.saveLong(this, ProjectConstants.SAVED_LAST_LAUNCH_MILLISECONDS, System.currentTimeMillis());
         }
 
-        return result;
     }
 
     private void checkForDisturbPeriod() {
@@ -126,7 +120,7 @@ public class ComplimentActivity extends AppCompatActivity implements View.OnClic
                 CalendarUtils.checkIsBetween(startTimeInMilliseconds, currentHoursInMilliseconds, endTimeInMilliseconds);
 
         if (isInDisturbPeriod) {
-            addNotificationOnPane((int) System.currentTimeMillis() / 1000);//guarantee unique ID and every time client receive new notification
+            addNotificationOnPane((int) System.currentTimeMillis() / 1000);//guarantee unique ID for a second :D and every time client receive new notification
             finish();
             System.exit(0);
         }
@@ -345,12 +339,13 @@ public class ComplimentActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void launchAd() {
-        Random random = new Random();
-        int num = random.nextInt(100);
-        if (num <= 50) {// 50% chance to fire a interstitial mInterstitialAd
+        int num = SchedulingUtils.generateRandom(100);
+        if (num <= 100) {//todo make 50% chance to fire a interstitial mInterstitialAd
             if (mInterstitialAd != null && mInterstitialAd.isLoaded()) {
                 mInterstitialAd.show();
             }
         }
     }
+
+
 }

@@ -8,7 +8,7 @@
 
     <!-- sharedPreferences values -->
     <string name="sp_name">GS_SP_GentleServiceLocalData</string>
-    <string name="sp_fireNextInMilliseconds">GS_SP_nextScheduleFire</string>
+    <string name="sp_next_surprise_milliseconds">GS_SP_next_surprise_until</string>
     <string name="sp_timeWaiting">GS_SP_time</string>
     <string name="sp_do_not_disturb">GS_SP_disturb</string>
     <string name="sp_is_service_running">GS_SP_isRunning</string>
@@ -23,6 +23,7 @@
     <string name="sp_timeEndPeriod">GS_SP_end_Period</string>
     <string name="sp_locale_has_changed">GS_SP_locale_has_changed</string>
     <string name="sp_surprise_spinner_value">GS_SP_sniper_value</string>
+    <string name="sp_surprise_time_max_value">GS_SP_time_max_value</string>
     <string name="sp_time_wait_value">GS_SP_time_waiting_period</string>
     <string name="sp_show_compliment_only">sp_show_compliment_only</string>
     <string name="sp_restart_complimenting">GS_SP_restart_complimenting</string>
