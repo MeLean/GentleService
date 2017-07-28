@@ -55,6 +55,6 @@ public class GentleSystemActionReceiver extends BroadcastReceiver {
     }
 
     private void manageComplimentsLocaleChanges(Context context){
-        //todo
+        //todo manage Locale changes
     }
 }
