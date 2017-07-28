@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -24,15 +26,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.firebase.jobdispatcher.FirebaseJobDispatcher;
-import com.firebase.jobdispatcher.GooglePlayDriver;
 import com.meline.gentleservice.ProjectConstants;
 import com.meline.gentleservice.R;
-import com.meline.gentleservice.services.ComplimentService;
 import com.meline.gentleservice.ui.activities.ComplimentActivity;
 import com.meline.gentleservice.ui.fragments.dialogs.TimePickerFragment;
 import com.meline.gentleservice.utils.SchedulingUtils;
 import com.meline.gentleservice.utils.SharedPreferencesUtils;
+import com.meline.gentleservice.utils.SoftInputManager;
 
 public class ComplimentSetupFragment extends Fragment implements View.OnClickListener, View.OnFocusChangeListener, RadioGroup.OnCheckedChangeListener {
     private Activity mActivity;
@@ -87,6 +87,19 @@ public class ComplimentSetupFragment extends Fragment implements View.OnClickLis
 
         managePreviouslyChosenValues();
         manageStartingValues(isServiceRunning);
+
+        //vibration on/off checkbox
+        CheckBox vibratorCheck = (CheckBox) view.findViewById(R.id.vibrator_check);
+        vibratorCheck.setChecked(
+                SharedPreferencesUtils.loadBoolean(mActivity, ProjectConstants.SAVED_VIBRATION_STATUS, true)
+        );
+
+        vibratorCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                SharedPreferencesUtils.saveBoolean(mActivity, ProjectConstants.SAVED_VIBRATION_STATUS, isChecked);
+            }
+        });
     }
 
     @Override
@@ -97,7 +110,7 @@ public class ComplimentSetupFragment extends Fragment implements View.OnClickLis
                 if (isServiceRunning) {
                     //button stop is pressed
                     stopService();
-                    SharedPreferencesUtils.saveLong(mActivity, ProjectConstants.SAVED_LAST_LAUNCH_MILLISECONDS, 0);
+
                 } else {
                     //button start is pressed
                     startService();
@@ -182,12 +195,19 @@ public class ComplimentSetupFragment extends Fragment implements View.OnClickLis
             mTimeWait.setInputType(InputType.TYPE_CLASS_NUMBER);
             mTimeWait.setTextColor(ContextCompat.getColor(mActivity, R.color.colorDarkGrey));
             mTimeWait.setHintTextColor(ContextCompat.getColor(mActivity, R.color.colorDarkGrey));
-            mTimeWait.setText(SharedPreferencesUtils.loadString(mActivity, getString(R.string.sp_time_wait_value), ""));
+
+            String savedText = SharedPreferencesUtils.loadString(mActivity, getString(R.string.sp_time_wait_value), null);
+            if (savedText != null) {
+                mTimeWait.setText(savedText);
+            }
+
+            mTimeWait.setOnKeyListener(new SoftInputManager());
 
             mTimeWait.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override
                 public void onFocusChange(View view, boolean hasFocus) {
-                    if(!hasFocus){
+                    if (!hasFocus) {
+                        Log.d("AppDebug", "hasFocus saved string " + mTimeWait.getText().toString());
                         SharedPreferencesUtils.saveString(mActivity, getString(R.string.sp_time_wait_value), mTimeWait.getText().toString());
                     }
                 }
@@ -207,18 +227,34 @@ public class ComplimentSetupFragment extends Fragment implements View.OnClickLis
     }
 
     private void startService() {
+        saveRadioButtonsState();
+
         if (mScheduleRadio.isChecked()) {
-            String errorMessage = SchedulingUtils.checkForErrors(mActivity, mTimeWait.getText().toString());
-            if(errorMessage == null){
+            String inputValue = mTimeWait.getText().toString();
+            String errorMessage = SchedulingUtils.checkForErrors(mActivity, inputValue);
+            if (errorMessage == null) {
+                SharedPreferencesUtils.saveString(mActivity, getString(R.string.sp_time_wait_value), inputValue);
                 startComplimentingJob();
             } else {
                 Toast.makeText(mActivity, errorMessage, Toast.LENGTH_SHORT).show();
             }
         } else if (mSurpriseMeRadio.isChecked()) {
+            SharedPreferencesUtils.saveInt(
+                    mActivity,
+                    getString(R.string.sp_surprise_time_max_value),
+                    calculateSurpriseTimeMaxValue(mSpinner.getSelectedItem().toString())
+            );
             startComplimentingJob();
         } else {
             Toast.makeText(mActivity, R.string.i_do_not_know_what_to_do, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void stopService() {
+        SchedulingUtils.stopComplimenting(mActivity);
+        SharedPreferencesUtils.saveLong(mActivity, ProjectConstants.SAVED_NEXT_LAUNCH_MILLISECONDS, 0);
+        setDefaultComponentsValues();
+
     }
 
     private int calculateSurpriseTimeMaxValue(String spinValue) {
@@ -226,16 +262,16 @@ public class ComplimentSetupFragment extends Fragment implements View.OnClickLis
         int surpriseTimeMaxValue;
 
         if (spinValue.equals(getString(R.string.surprise_option_every_day))) {
-            //pattern days * hours * minutes  if milliseconds needed* seconds * 1000
-            surpriseTimeMaxValue = 24 * 60 * 60 ;
+            //pattern days * hours * minutes  * seconds *  milliseconds
+            surpriseTimeMaxValue = 24 * 60 * 60 * 1000;
         } else if (spinValue.equals(getString(R.string.surprise_option_every_12_hours))) {
-            surpriseTimeMaxValue = 12 * 60 * 60;
+            surpriseTimeMaxValue = 12 * 60 * 60 * 1000;
         } else if (spinValue.equals(getString(R.string.surprise_option_every_8_hours))) {
-            surpriseTimeMaxValue = 8 * 60 * 60;
+            surpriseTimeMaxValue = 8 * 60 * 60 * 1000;
         } else if (spinValue.equals(getString(R.string.surprise_option_every_6_hours))) {
-            surpriseTimeMaxValue = 6 * 60 * 60;
+            surpriseTimeMaxValue = 6 * 60 * 60* 1000;
         } else if (spinValue.equals(getString(R.string.surprise_option_every_week))) {
-            surpriseTimeMaxValue = 60;//todo 7 * 24 * 60 * 60 * 1000;
+            surpriseTimeMaxValue = 60 * 1000;//todo 7 * 24 * 60 * 60 * 1000;
         } else {
             throw new NullPointerException("Unimplemented option!");
         }
@@ -253,14 +289,6 @@ public class ComplimentSetupFragment extends Fragment implements View.OnClickLis
         SharedPreferencesUtils.saveBoolean(mActivity, getString(R.string.sp_surprise_me), mSurpriseMeRadio.isChecked());
         SharedPreferencesUtils.saveBoolean(mActivity, getString(R.string.sp_is_scheduled), mScheduleRadio.isChecked());
     }
-
-    private void stopService() {
-        FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(mActivity));
-        dispatcher.cancel(ComplimentService.DEFAULT_JOB_TAG);
-        //in order to clear previews launching times
-        setDefaultComponentsValues();
-    }
-
 
     private void startComplimentingJob() {
         startActivity(new Intent(mActivity, ComplimentActivity.class));

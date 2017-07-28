@@ -91,6 +91,21 @@
                 style="@style/separator"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/thin_border" />
+            <CheckBox
+                android:id="@+id/vibrator_check"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/middle_margin"
+                android:text="@string/vibration"
+                android:textColor="@color/colorDarkGrey"
+                android:checked="true"
+                />
+            <!-- horizontal line -->
+            <View
+                style="@style/separator"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/thin_border" />
 
             <!-- disturb type of complimenting area -->
             <RadioGroup

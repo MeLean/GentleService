@@ -69,35 +69,17 @@ public class ComplimentActivity extends AppCompatActivity implements View.OnClic
         //it will vibrate, it also will vibrate if doNotDisturb mode is off
         //it wont vibrate if doNotDisturb mode is on and activity is started from ComplimentService
         if (mustOnlyLaunchCompliment) {
-            launchCompliment(true, savedInstanceState);
+            launchCompliment(savedInstanceState);
         } else {
             //first check if activity has to show or has to add a Notification
-            boolean isSurpriseMe = SharedPreferencesUtils.loadBoolean(this, getString(R.string.sp_surprise_me), true);
-            boolean isScheduled = SharedPreferencesUtils.loadBoolean(this, getString(R.string.sp_is_scheduled), false);
-            int calculatedTime = SchedulingUtils.calculateWaitingTimeInSeconds(this, isSurpriseMe, isScheduled);
-            SchedulingUtils.startComplimentingJob(this, calculatedTime, calculatedTime);
-            saveLaunchedDate(isSurpriseMe, isScheduled);
+            SchedulingUtils.startComplimentingJob(this);
             boolean isDoNotDisturbMode = SharedPreferencesUtils.loadBoolean(this, getString(R.string.sp_do_not_disturb), true);
             if(isDoNotDisturbMode){
                 checkForDisturbPeriod();
             }
 
-            launchCompliment(!isDoNotDisturbMode, savedInstanceState);
-
+            launchCompliment(savedInstanceState);
         }
-    }
-
-    private void saveLaunchedDate(boolean isSurpriseMe, boolean isScheduled) {
-        if(isSurpriseMe){
-            Log.d("AppDebug", "saveLaunched isSurpriseMe Date :  " + new Date(System.currentTimeMillis()));
-            SharedPreferencesUtils.saveLong(this, getString(R.string.sp_next_surprise_milliseconds), System.currentTimeMillis());
-        }
-
-        if(isScheduled){
-            Log.d("AppDebug", "saveLaunched isScheduled Date :  " + new Date(System.currentTimeMillis()));
-            SharedPreferencesUtils.saveLong(this, ProjectConstants.SAVED_LAST_LAUNCH_MILLISECONDS, System.currentTimeMillis());
-        }
-
     }
 
     private void checkForDisturbPeriod() {
@@ -212,11 +194,8 @@ public class ComplimentActivity extends AppCompatActivity implements View.OnClic
         super.onBackPressed();
     }
 
-    private void launchCompliment(boolean mustVibrate, Bundle savedInstanceState) {
-        if (mustVibrate && savedInstanceState == null) {
-            makeHeartBeatVibrate();
-        }
-
+    private void launchCompliment(Bundle savedInstanceState) {
+        makeHeartBeatVibrate();
         ImageView imgLike = (ImageView) findViewById(R.id.imgLike);
         imgLike.setOnClickListener(this);
         ImageView imgSMS = (ImageView) findViewById(R.id.imgSMS);
@@ -239,9 +218,10 @@ public class ComplimentActivity extends AppCompatActivity implements View.OnClic
 
     private void makeHeartBeatVibrate() {
         Object getVibrator = this.getSystemService(Context.VIBRATOR_SERVICE);
-        if (getVibrator != null) {
+        boolean isVibratorOn = SharedPreferencesUtils.loadBoolean(this,ProjectConstants.SAVED_VIBRATION_STATUS, true);
+        if (getVibrator != null && isVibratorOn) {
             mVibrator = (Vibrator) getVibrator;
-            long[] heartBeatPattern = {0, 100, 50, 125, 600, 100, 50, 125, 600, 100, 50, 125}; //heartbeat interval constants
+            long[] heartBeatPattern = {0,100,250,125,700,100,250,125};//old {0,100,50,125,600,100,50,125,600,100,50,125}; //heartbeat interval constants
             mVibrator.vibrate(heartBeatPattern, -1);
         }
     }
@@ -346,6 +326,4 @@ public class ComplimentActivity extends AppCompatActivity implements View.OnClic
             }
         }
     }
-
-
 }

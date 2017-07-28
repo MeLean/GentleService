@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.meline.gentleservice.R;
 import com.meline.gentleservice.api.database.DBHelper;
 import com.meline.gentleservice.api.objects_model.Compliment;
+import com.meline.gentleservice.utils.SoftInputManager;
 
 import java.sql.SQLException;
 
@@ -42,27 +43,14 @@ public class AddNewComplimentFragment extends Fragment implements View.OnClickLi
 
         //todo saved instance
         etAddCompliment = (EditText)view.findViewById(R.id.etAddCompliment);
-        etAddCompliment.setOnKeyListener(new View.OnKeyListener() {
-            public boolean onKey(View view, int keyCode, KeyEvent event) {
-                if (keyCode == KeyEvent.KEYCODE_ENTER) {
-                    hideKeyboard(view);
-                    return true;
-                }
-                return false;
-            }
-        });
+        etAddCompliment.setOnKeyListener(new SoftInputManager());
 
         FloatingActionButton btnAddCompliment = (FloatingActionButton) view.findViewById(R.id.fab_add_compliment);
         btnAddCompliment.setOnClickListener(this);
         return view;
     }
 
-    private void hideKeyboard(View view) {
-        InputMethodManager manager = (InputMethodManager) view.getContext()
-                .getSystemService(INPUT_METHOD_SERVICE);
-        if (manager != null)
-            manager.hideSoftInputFromWindow(view.getWindowToken(), 0);
-    }
+
 
     @Override
     public void onClick(View view) {
@@ -86,7 +74,7 @@ public class AddNewComplimentFragment extends Fragment implements View.OnClickLi
                 }
 
                 etAddCompliment.setText("");
-                hideKeyboard(view);
+                SoftInputManager.hideSoftInput(view);
                 Toast.makeText(context, R.string.compliment_added, Toast.LENGTH_LONG).show();
 
                 break;

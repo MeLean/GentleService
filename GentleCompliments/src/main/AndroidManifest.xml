@@ -39,17 +39,6 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <receiver android:name=".services.GentleSystemActionReceiver"
-            android:enabled="true"
-            android:exported="true"
-            android:process=":remote">
-            <intent-filter>
-                <action android:name="android.intent.action.ACTION_LOCALE_CHANGED" />
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </receiver>
-
         <activity android:name=".ui.activities.ComplimentActivity"
             android:label="@string/title_activity_compliment"
             android:theme="@style/AppTheme.NoActionBar">
@@ -75,8 +64,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activities.ComplimentActivity" />
         </activity>
-
         <!-- Include the AdActivity configChanges and theme. -->
+
         <activity android:name="com.google.android.gms.ads.AdActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
             android:theme="@android:style/Theme.Translucent" />
@@ -91,12 +80,19 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".services.ComplimentService"
-            android:exported="false">
+        <receiver android:name=".services.GentleSystemActionReceiver"
+            android:enabled="true"
+            android:process=":remote"><!--android:exported="false"-->
             <intent-filter>
-                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE" />"
+                <action android:name="android.intent.action.ACTION_LOCALE_CHANGED" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
-        </service>
+        </receiver>
+
+        <receiver android:name=".services.AlarmsProvider"/>
+
+        <service android:name=".services.GentleSchedulingService" /> <!--android:exported="false"-->
+
     </application>
 
 </manifest>

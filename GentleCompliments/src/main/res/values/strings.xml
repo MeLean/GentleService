@@ -8,7 +8,6 @@
 
     <!-- sharedPreferences values -->
     <string name="sp_name">GS_SP_GentleServiceLocalData</string>
-    <string name="sp_next_surprise_milliseconds">GS_SP_next_surprise_until</string>
     <string name="sp_timeWaiting">GS_SP_time</string>
     <string name="sp_do_not_disturb">GS_SP_disturb</string>
     <string name="sp_is_service_running">GS_SP_isRunning</string>
@@ -27,6 +26,7 @@
     <string name="sp_time_wait_value">GS_SP_time_waiting_period</string>
     <string name="sp_show_compliment_only">sp_show_compliment_only</string>
     <string name="sp_restart_complimenting">GS_SP_restart_complimenting</string>
+
     <string name="sms">SMS</string>
     <string name="i_do_not_know_what_to_do">I don not know what to do!</string>
 
@@ -112,4 +112,5 @@
     <string name="action_settings">Settings</string>
     <string name="logo_icon">logo icon</string>
     <string name="sms_icon">sms icon</string>
+    <string name="vibration">Vibration</string>
 </resources>
