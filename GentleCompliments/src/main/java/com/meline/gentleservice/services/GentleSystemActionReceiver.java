@@ -43,9 +43,11 @@ public class GentleSystemActionReceiver extends BroadcastReceiver {
         long fireAtMilliseconds = SharedPreferencesUtils.loadLong(context, ProjectConstants.SAVED_NEXT_LAUNCH_MILLISECONDS, System.currentTimeMillis());
 
         if(fireAtMilliseconds > System.currentTimeMillis()){
+            Log.d("AppDebug","ACTION_BOOT_COMPLETED must wait more");
             AlarmsProvider alarmsProvider = new AlarmsProvider();
             alarmsProvider.setAlarm(context, fireAtMilliseconds);
         } else {
+            Log.d("AppDebug","ACTION_BOOT_COMPLETED must should fire activity");
             Intent startingCompliment = new Intent(context, ComplimentActivity.class);
             startingCompliment.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(startingCompliment);
