@@ -10,11 +10,8 @@ import com.meline.gentleservice.R;
 import com.meline.gentleservice.ui.activities.ComplimentActivity;
 import com.meline.gentleservice.utils.SharedPreferencesUtils;
 
-import java.util.Date;
 
 public class GentleSystemActionReceiver extends BroadcastReceiver {
-    private static final int MILLISECONDS_TO_MINUTES_CONSTANT = 60000;
-    private static final int MILLISECONDS_TO_SECONDS_CONSTANT = 1000;
     @Override
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
@@ -42,7 +39,8 @@ public class GentleSystemActionReceiver extends BroadcastReceiver {
     private void manageRebooting(Context context) {
         long fireAtMilliseconds = SharedPreferencesUtils.loadLong(context, ProjectConstants.SAVED_NEXT_LAUNCH_MILLISECONDS, System.currentTimeMillis());
 
-        if(fireAtMilliseconds > System.currentTimeMillis()){
+        //to insure we get the fireAtMilliseconds one second less
+        if(fireAtMilliseconds - 1000 > System.currentTimeMillis()){
             Log.d("AppDebug","ACTION_BOOT_COMPLETED must wait more");
             AlarmsProvider alarmsProvider = new AlarmsProvider();
             alarmsProvider.setAlarm(context, fireAtMilliseconds);

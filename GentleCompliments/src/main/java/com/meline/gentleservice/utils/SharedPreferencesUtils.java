@@ -4,8 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 
-import java.util.Set;
-
 public class SharedPreferencesUtils {
     private static final String PREF_NAME = "StarAdvice.SharedPreferences";
 
@@ -59,6 +57,13 @@ public class SharedPreferencesUtils {
 
     public static  boolean loadBoolean(Context context, String key, boolean defValue) {
         return getSharedPreferences(context, PREF_NAME).getBoolean(key, defValue);
+    }
+
+    public static void removeValue(Context context, String key) {
+        getSharedPreferences(context, PREF_NAME)
+                .edit()
+                .remove(key)
+                .apply();
     }
 
   /*  public static Set<String> loadStringSet(Context context, String key, Set<String> defValue) {

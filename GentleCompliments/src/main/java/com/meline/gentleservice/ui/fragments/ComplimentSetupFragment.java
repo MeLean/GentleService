@@ -252,7 +252,8 @@ public class ComplimentSetupFragment extends Fragment implements View.OnClickLis
 
     private void stopService() {
         SchedulingUtils.stopComplimenting(mActivity);
-        SharedPreferencesUtils.saveLong(mActivity, ProjectConstants.SAVED_NEXT_LAUNCH_MILLISECONDS, 0);
+        SharedPreferencesUtils.removeValue(mActivity, ProjectConstants.SAVED_NEXT_LAUNCH_MILLISECONDS);
+        SharedPreferencesUtils.removeValue(mActivity, ProjectConstants.SAVED_SURPRISE_ENDING_MILLISECONDS);
         setDefaultComponentsValues();
 
     }

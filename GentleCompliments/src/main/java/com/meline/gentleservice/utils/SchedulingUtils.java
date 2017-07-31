@@ -29,10 +29,20 @@ public class SchedulingUtils {
                     context.getString(R.string.sp_surprise_time_max_value),
                     DEFAULT_VALUE_IN_MILLISECONDS
             );
+            long currentMilliseconds = System.currentTimeMillis();
+            long surpriseEndingMilliseconds = SharedPreferencesUtils.loadLong(context, ProjectConstants.SAVED_SURPRISE_ENDING_MILLISECONDS, currentMilliseconds);
 
-            if(surprisePeriod==DEFAULT_VALUE_IN_MILLISECONDS){
-                Log.d("AppDebug", "SchedulingUtils calculateTriggerAtMilliseconds surprisePeriod will be DEFAULT_VALUE_IN_MILLISECONDS that is bad");
+            long newSurpriseEndingMilliseconds = surpriseEndingMilliseconds + surprisePeriod;
+
+            //if the device is turned off for the long time or any other reason
+            //newSurpriseEndingMilliseconds may be passed during the current compliment loading
+            //the complimenting loop will be restarted from now
+            if(newSurpriseEndingMilliseconds < currentMilliseconds){
+                newSurpriseEndingMilliseconds = currentMilliseconds + surprisePeriod;
+                surpriseEndingMilliseconds = currentMilliseconds;
             }
+
+            SharedPreferencesUtils.saveLong(context, ProjectConstants.SAVED_SURPRISE_ENDING_MILLISECONDS, newSurpriseEndingMilliseconds);
 
             int randNum = generateRandom(surprisePeriod);
             Log.d("AppDebug", "SchedulingUtils calculateTriggerAtMilliseconds randNum: " + randNum
@@ -42,7 +52,7 @@ public class SchedulingUtils {
 
             );
 
-            return System.currentTimeMillis() + randNum;
+            return surpriseEndingMilliseconds + randNum;
         }
 
         if (isScheduled) {
