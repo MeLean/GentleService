@@ -272,7 +272,7 @@ public class ComplimentSetupFragment extends Fragment implements View.OnClickLis
         } else if (spinValue.equals(getString(R.string.surprise_option_every_6_hours))) {
             surpriseTimeMaxValue = 6 * 60 * 60* 1000;
         } else if (spinValue.equals(getString(R.string.surprise_option_every_week))) {
-            surpriseTimeMaxValue = 60 * 1000;//todo 7 * 24 * 60 * 60 * 1000;
+            surpriseTimeMaxValue = 2 * 60 * 1000;//todo 7 * 24 * 60 * 60 * 1000;
         } else {
             throw new NullPointerException("Unimplemented option!");
         }
@@ -295,8 +295,6 @@ public class ComplimentSetupFragment extends Fragment implements View.OnClickLis
         startActivity(new Intent(mActivity, ComplimentActivity.class));
         //leave application and wait to start ComplimentActivity
         setStartingComponentsValues();
-        mActivity.finish();
-        System.exit(0);
     }
 
     private void managePreviouslyChosenValues() {

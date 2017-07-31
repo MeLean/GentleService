@@ -84,8 +84,9 @@
             android:enabled="true"
             android:process=":remote"><!--android:exported="false"-->
             <intent-filter>
-                <action android:name="android.intent.action.ACTION_LOCALE_CHANGED" />
+                <action android:name="android.intent.action.LOCALE_CHANGED" />
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="com.meline.gentleservice.action.MANAGE_LOCALE_CHANGE" />
             </intent-filter>
         </receiver>
 

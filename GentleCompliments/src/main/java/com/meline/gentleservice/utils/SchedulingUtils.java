@@ -45,10 +45,11 @@ public class SchedulingUtils {
             SharedPreferencesUtils.saveLong(context, ProjectConstants.SAVED_SURPRISE_ENDING_MILLISECONDS, newSurpriseEndingMilliseconds);
 
             int randNum = generateRandom(surprisePeriod);
-            Log.d("AppDebug", "SchedulingUtils calculateTriggerAtMilliseconds randNum: " + randNum
-                    + "\nnextLaunch date: " + new Date(System.currentTimeMillis() + randNum)
-                    + "\nCur Date" + new Date(System.currentTimeMillis())
-                    + "\nresult in milliseconds: " + System.currentTimeMillis() + randNum
+            Log.d("AppDebug", "SchedulingUtils calculateTriggerAtMilliseconds surprisePeriod: " + surprisePeriod /60000 + " minutes"
+                    + "\nrandNum: " + randNum / 60000d  + " minutes"
+                    + "\nCur Date" + new Date(currentMilliseconds)
+                    + "\nnextMaxTime date: " + new Date(newSurpriseEndingMilliseconds)
+                    + "\nresult launch: " + new Date(surpriseEndingMilliseconds + randNum)
 
             );
 

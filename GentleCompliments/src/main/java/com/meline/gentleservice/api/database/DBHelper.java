@@ -68,7 +68,7 @@ public class DBHelper extends SQLiteOpenHelper {
         insertAllInDB(db, defaultCompliments);
     }
 
-    private void insertAllInDB(SQLiteDatabase db, String[] compliments) {
+     private void insertAllInDB(SQLiteDatabase db, String[] compliments) {
         for (String compliment : compliments) {
             ContentValues defaultCompliments = new ContentValues();
             defaultCompliments.put(COLUMN_CONTENT, compliment);
@@ -150,6 +150,28 @@ public class DBHelper extends SQLiteOpenHelper {
         this.closeDB();
     }
 
+    void addAllComplementsAsDefault(String[] compliments) throws SQLException {
+        this.openDB();
+
+        for (String complimentStr : compliments) {
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(COLUMN_CONTENT, complimentStr);
+            contentValues.put(COLUMN_IS_LOADED, (0));
+            contentValues.put(COLUMN_IS_CUSTOM, (0));
+            contentValues.put(COLUMN_IS_HATED, (0));
+
+            this.database.insertWithOnConflict(
+                    TABLE_NAME,
+                    null,
+                    contentValues,
+                    SQLiteDatabase.CONFLICT_REPLACE
+            );
+        }
+
+        this.closeDB();
+    }
+
+
     public void makeComplimentLoaded(int id) throws SQLException {
         ContentValues contentValues = new ContentValues();
         contentValues.put(COLUMN_IS_LOADED, 1);
@@ -185,7 +207,7 @@ public class DBHelper extends SQLiteOpenHelper {
         this.closeDB();
     }
 
-    private void deleteAllDefaultCompliments() throws SQLException {
+    void deleteAllDefaultCompliments() throws SQLException {
         this.openDB();
         database.delete(TABLE_NAME, COLUMN_IS_CUSTOM + "=?", new String[]{"0"});
         this.closeDB();
