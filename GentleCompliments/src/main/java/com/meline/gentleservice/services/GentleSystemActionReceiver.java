@@ -21,17 +21,17 @@ public class GentleSystemActionReceiver extends BroadcastReceiver {
 
         switch (action) {
             case Intent.ACTION_LOCALE_CHANGED:
-                Log.d("AppDebug","GentleSystemActionReceiver ACTION_LOCALE_CHANGED");
+                //Log.d("AppDebug","GentleSystemActionReceiver ACTION_LOCALE_CHANGED");
                 manageLocaleChanges(context);
                 break;
 
             case Intent.ACTION_BOOT_COMPLETED:
-                Log.d("AppDebug","GentleSystemActionReceiver ACTION_BOOT_COMPLETED");
+                //Log.d("AppDebug","GentleSystemActionReceiver ACTION_BOOT_COMPLETED");
                 handleAction(context);
                 break;
 
             case ACTION_MANAGE_AFTER_LOCALE_CHANGED:
-                Log.d("AppDebug", "GentleSystemActionReceiver get ACTION_MANAGE_AFTER_LOCALE_CHANGED");
+                //Log.d("AppDebug", "GentleSystemActionReceiver get ACTION_MANAGE_AFTER_LOCALE_CHANGED");
                 handleAction(context);
                 break;
 
@@ -53,11 +53,11 @@ public class GentleSystemActionReceiver extends BroadcastReceiver {
 
         //to insure we get the fireAtMilliseconds one second less
         if(fireAtMilliseconds - 1000 > System.currentTimeMillis()){
-            Log.d("AppDebug","GentleSystemActionReceiver ACTION_BOOT_COMPLETED must wait more");
+            //Log.d("AppDebug","GentleSystemActionReceiver ACTION_BOOT_COMPLETED must wait more");
             AlarmsProvider alarmsProvider = new AlarmsProvider();
             alarmsProvider.setAlarm(context, fireAtMilliseconds);
         } else {
-            Log.d("AppDebug","GentleSystemActionReceiver ACTION_BOOT_COMPLETED must should fire activity");
+            //Log.d("AppDebug","GentleSystemActionReceiver ACTION_BOOT_COMPLETED must should fire activity");
             Intent startingCompliment = new Intent(context, ComplimentActivity.class);
             startingCompliment.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(startingCompliment);

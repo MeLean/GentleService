@@ -207,7 +207,7 @@ public class ComplimentSetupFragment extends Fragment implements View.OnClickLis
                 @Override
                 public void onFocusChange(View view, boolean hasFocus) {
                     if (!hasFocus) {
-                        Log.d("AppDebug", "hasFocus saved string " + mTimeWait.getText().toString());
+                        //Log.d("AppDebug", "hasFocus saved string " + mTimeWait.getText().toString());
                         SharedPreferencesUtils.saveString(mActivity, getString(R.string.sp_time_wait_value), mTimeWait.getText().toString());
                     }
                 }
@@ -272,7 +272,7 @@ public class ComplimentSetupFragment extends Fragment implements View.OnClickLis
         } else if (spinValue.equals(getString(R.string.surprise_option_every_6_hours))) {
             surpriseTimeMaxValue = 6 * 60 * 60* 1000;
         } else if (spinValue.equals(getString(R.string.surprise_option_every_week))) {
-            surpriseTimeMaxValue = 2 * 60 * 1000;//todo 7 * 24 * 60 * 60 * 1000;
+            surpriseTimeMaxValue = 7 * 24 * 60 * 60 * 1000;
         } else {
             throw new NullPointerException("Unimplemented option!");
         }
@@ -292,9 +292,10 @@ public class ComplimentSetupFragment extends Fragment implements View.OnClickLis
     }
 
     private void startComplimentingJob() {
-        startActivity(new Intent(mActivity, ComplimentActivity.class));
-        //leave application and wait to start ComplimentActivity
         setStartingComponentsValues();
+        startActivity(new Intent(mActivity, ComplimentActivity.class));
+        mActivity.finish();
+        Runtime.getRuntime().exit(0);
     }
 
     private void managePreviouslyChosenValues() {

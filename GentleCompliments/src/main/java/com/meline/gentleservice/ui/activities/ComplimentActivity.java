@@ -9,7 +9,6 @@ import android.os.Vibrator;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,7 +23,6 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Random;
 
 import com.google.android.gms.ads.AdListener;
@@ -46,6 +44,8 @@ public class ComplimentActivity extends AppCompatActivity implements View.OnClic
 
     private static final String SHOW_COMPLIMENT_ONLY = "was_started_from_notification";
     private static final String SAVED_COMPLIMENT_TEXT = "saved_compliment_text";
+    private static final String SAVED_BACKGROUND_ID = "saved_background_id";
+    private int mBackgroundId = 0;
 
 
     @Override
@@ -186,6 +186,7 @@ public class ComplimentActivity extends AppCompatActivity implements View.OnClic
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString(SAVED_COMPLIMENT_TEXT, mComplimentContainer.getText().toString());
+        outState.putInt(SAVED_BACKGROUND_ID, mBackgroundId);
     }
 
     @Override
@@ -207,13 +208,18 @@ public class ComplimentActivity extends AppCompatActivity implements View.OnClic
 
         RelativeLayout rlContainer = (RelativeLayout) findViewById(R.id.rlContainer);
         int[] backgroundIds = getBackgrounds();
-        rlContainer.setBackgroundResource(backgroundIds[new Random().nextInt(backgroundIds.length)]);
+
+
 
         if (savedInstanceState == null) {
             mComplimentContainer.setText(getComplimentFromDatabase());
+            mBackgroundId = SchedulingUtils.generateRandom(backgroundIds.length);
         } else {
             mComplimentContainer.setText(savedInstanceState.getString(SAVED_COMPLIMENT_TEXT));
+            mBackgroundId = savedInstanceState.getInt(SAVED_BACKGROUND_ID);
         }
+
+        rlContainer.setBackgroundResource(backgroundIds[mBackgroundId]);
     }
 
     private void makeHeartBeatVibrate() {
@@ -320,7 +326,7 @@ public class ComplimentActivity extends AppCompatActivity implements View.OnClic
 
     private void launchAd() {
         int num = SchedulingUtils.generateRandom(100);
-        if (num <= 100) {//todo make 50% chance to fire a interstitial mInterstitialAd
+        if (num <= 50) {//50% chance to fire a interstitial mInterstitialAd
             if (mInterstitialAd != null && mInterstitialAd.isLoaded()) {
                 mInterstitialAd.show();
             }

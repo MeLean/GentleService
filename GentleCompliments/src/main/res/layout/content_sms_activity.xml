@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="@string/message"
-            android:id="@+id/tw_static_mesage" />
+            android:id="@+id/tw_static_message" />
 
         <EditText
             android:id="@+id/et_share_text"
@@ -40,35 +40,17 @@
             android:gravity="center_vertical|center_horizontal"
             style="@style/textStyle" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
+
+        <ImageButton
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/btnSms"
+            android:src="@drawable/sms_pic"
+            android:contentDescription="@string/sms_icon"
+            style="@style/imageButton"
             android:layout_gravity="center"
             android:layout_marginTop="@dimen/middle_margin"
-            android:weightSum="12"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:paddingLeft="@dimen/default_padding"
-            android:paddingRight="@dimen/default_padding"
-            android:id="@+id/llSendButtons">
-
-            <ImageButton
-                android:id="@+id/btnSms"
-                android:src="@drawable/sms_pic"
-                android:contentDescription="@string/sms_icon"
-                android:layout_weight="3"
-                style="@style/imageButton"
-                />
-
-            <ImageButton
-                android:id="@+id/btnCancel"
-                android:src="@drawable/ic_cancel"
-                android:contentDescription="@string/cancel_icon"
-                android:layout_weight="3"
-                style="@style/imageButton"
-                />
-        </LinearLayout>
-
+            />
     </LinearLayout>
 </ScrollView>
 

@@ -118,6 +118,4 @@ public class StartActivity extends AppCompatActivity
             setTitle(getString(R.string.app_name));
         }
     }
-
-
 }

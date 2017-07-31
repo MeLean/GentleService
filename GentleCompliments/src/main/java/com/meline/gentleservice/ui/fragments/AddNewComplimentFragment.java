@@ -27,6 +27,7 @@ import static android.content.Context.INPUT_METHOD_SERVICE;
  * A simple {@link Fragment} subclass.
  */
 public class AddNewComplimentFragment extends Fragment implements View.OnClickListener {
+    private static final String SAVED_COMPLIMENT_VALUE = "AddNewComplimentFragment.SAVED_COMPLIMENT_VALUE";
     private EditText etAddCompliment;
 
 
@@ -41,16 +42,17 @@ public class AddNewComplimentFragment extends Fragment implements View.OnClickLi
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_add_new_compliment, container, false);
 
-        //todo saved instance
         etAddCompliment = (EditText)view.findViewById(R.id.etAddCompliment);
         etAddCompliment.setOnKeyListener(new SoftInputManager());
+
+        if(savedInstanceState != null){
+            etAddCompliment.setText(savedInstanceState.getString(SAVED_COMPLIMENT_VALUE));
+        }
 
         FloatingActionButton btnAddCompliment = (FloatingActionButton) view.findViewById(R.id.fab_add_compliment);
         btnAddCompliment.setOnClickListener(this);
         return view;
     }
-
-
 
     @Override
     public void onClick(View view) {
@@ -83,5 +85,11 @@ public class AddNewComplimentFragment extends Fragment implements View.OnClickLi
                 Toast.makeText(context, R.string.i_do_not_know_what_to_do, Toast.LENGTH_SHORT).show();
                 break;
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(SAVED_COMPLIMENT_VALUE, etAddCompliment.getText().toString());
     }
 }

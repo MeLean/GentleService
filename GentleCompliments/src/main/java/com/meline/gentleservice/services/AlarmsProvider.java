@@ -21,7 +21,7 @@ public class AlarmsProvider extends WakefulBroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.d("AppDebug", "AlarmsProvider onReceive: " + intent);
+        //Log.d("AppDebug", "AlarmsProvider onReceive: " + intent);
         // BEGIN_INCLUDE(alarm_onreceive)
         /* 
          * If your receiver intent includes extras that need to be passed along to the
@@ -48,14 +48,15 @@ public class AlarmsProvider extends WakefulBroadcastReceiver {
     // BEGIN_INCLUDE(set_alarm)
 
     public void setAlarm(Context context, long triggerAtMilliseconds) {
-        Log.d("AppDebug", "AlarmsProvider setAlarm millisecondsOfNextLaunch: " + triggerAtMilliseconds + " millisecondsOfNextLaunch date: " + new Date(triggerAtMilliseconds));
+        //Log.d("AppDebug", "AlarmsProvider setAlarm millisecondsOfNextLaunch: " + triggerAtMilliseconds + " millisecondsOfNextLaunch date: " + new Date(triggerAtMilliseconds));
         AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
 
         PendingIntent alarmIntent = makeComplimentPendingIntent(context);
 
        /*
-        todo Calendar calendar = Calendar.getInstance();
+        this will be a feature to launch in certain hour
+        Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
         // Set the alarm's trigger time to 8:30 a.m.
         calendar.set(Calendar.HOUR_OF_DAY, 11);
@@ -121,7 +122,7 @@ public class AlarmsProvider extends WakefulBroadcastReceiver {
     // BEGIN_INCLUDE(cancel_alarm)
     public static void cancelAlarm(Context context) {
 
-        Log.d("AppDebug", "cancelAlarm managed");
+        //Log.d("AppDebug", "cancelAlarm managed");
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         alarmManager.cancel(makeComplimentPendingIntent(context));
 

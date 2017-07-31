@@ -3,8 +3,8 @@
     <string name="default_start_time">21:30</string>
     <string name="default_end_time">08:30</string>
     <string name="ads_user_id">3815845016477716</string>
-    <string name="smart_banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string><!--todo ca-app-pub-6177746105485183/5817094357 -->
-    <string name="interstitial_ad_unit_id">ca-app-pub-3940256099942544/1033173712</string><!-- todo ca-app-pub-6177746105485183/8072556755 -->
+    <string name="smart_banner_ad_unit_id">ca-app-pub-6177746105485183/5817094357 </string><!--test: ca-app-pub-3940256099942544/6300978111-->
+    <string name="interstitial_ad_unit_id">ca-app-pub-6177746105485183/8072556755 </string><!--test: ca-app-pub-3940256099942544/1033173712 -->
 
     <!-- sharedPreferences values -->
     <string name="sp_name">GS_SP_GentleServiceLocalData</string>

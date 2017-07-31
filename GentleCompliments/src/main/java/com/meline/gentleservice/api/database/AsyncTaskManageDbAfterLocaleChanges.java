@@ -24,13 +24,13 @@ public class AsyncTaskManageDbAfterLocaleChanges extends AsyncTask<Context, Void
 
         } catch (SQLException e) {
             hasNoErrors = false;
-            Log.d("AppDebug", "AsyncTaskManageDbAfterLocaleChanges error:\n" + e.getLocalizedMessage());
+            //Log.d("AppDebug", "AsyncTaskManageDbAfterLocaleChanges error:\n" + e.getLocalizedMessage());
             e.printStackTrace();
         }
 
         if(hasNoErrors){
             broadcastManageLoacaleChangesAction(context);
-            Log.d("AppDebug", "AsyncTaskManageDbAfterLocaleChanges everything is OK");
+            //Log.d("AppDebug", "AsyncTaskManageDbAfterLocaleChanges everything is OK");
         }
 
         return null;

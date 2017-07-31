@@ -21,7 +21,7 @@ public class SchedulingUtils {
     }
 
     private static long calculateTriggerAtMilliseconds(Context context, boolean isSurpriseMe, boolean isScheduled) {
-        int DEFAULT_VALUE_IN_MILLISECONDS = 120000; //todo 8*60*60*1000; use 8 hours as default
+        int DEFAULT_VALUE_IN_MILLISECONDS = 8 * 60 * 60 * 1000; //use 8 hours as default
         if (isSurpriseMe) {
 
             int surprisePeriod = SharedPreferencesUtils.loadInt(
@@ -45,13 +45,13 @@ public class SchedulingUtils {
             SharedPreferencesUtils.saveLong(context, ProjectConstants.SAVED_SURPRISE_ENDING_MILLISECONDS, newSurpriseEndingMilliseconds);
 
             int randNum = generateRandom(surprisePeriod);
-            Log.d("AppDebug", "SchedulingUtils calculateTriggerAtMilliseconds surprisePeriod: " + surprisePeriod /60000 + " minutes"
+            /*Log.d("AppDebug", "SchedulingUtils calculateTriggerAtMilliseconds surprisePeriod: " + surprisePeriod /60000 + " minutes"
                     + "\nrandNum: " + randNum / 60000d  + " minutes"
                     + "\nCur Date" + new Date(currentMilliseconds)
                     + "\nnextMaxTime date: " + new Date(newSurpriseEndingMilliseconds)
                     + "\nresult launch: " + new Date(surpriseEndingMilliseconds + randNum)
 
-            );
+            );*/
 
             return surpriseEndingMilliseconds + randNum;
         }
@@ -59,7 +59,7 @@ public class SchedulingUtils {
         if (isScheduled) {
             String savedStringValue = SharedPreferencesUtils.loadString(context, context.getString(R.string.sp_time_wait_value), null);
 
-            Log.d("AppDebug", "SchedulingUtils savedStringValue: " + savedStringValue);
+            //Log.d("AppDebug", "SchedulingUtils savedStringValue: " + savedStringValue);
             //return saved time in milliseconds
             long result = savedStringValue != null ? (Integer.parseInt(savedStringValue) * 60000) : DEFAULT_VALUE_IN_MILLISECONDS ;
             return System.currentTimeMillis() + result;
@@ -71,7 +71,7 @@ public class SchedulingUtils {
 
     public static String checkForErrors(Context context, String enteredInt) {
         //time constants should be in minutes
-        int MINIMUM_WAITING_TIME = 1; //todo  2 * 60 * 60; two hours in seconds is a minimum time
+        int MINIMUM_WAITING_TIME = 2 * 60; //two hours in minutes is a minimum time
         int MAX_WAITING_TIME = 35790;
         try {
             int inputNum = (Integer.parseInt(String.valueOf(enteredInt)));
@@ -100,12 +100,12 @@ public class SchedulingUtils {
     }
 
     public static void stopComplimenting(Context context) {
-        Log.d("AppDebug", "SchedulingUtils stopComplimenting called");
+        //Log.d("AppDebug", "SchedulingUtils stopComplimenting called");
         AlarmsProvider.cancelAlarm(context);
     }
 
     private static void saveNextTriggerDate(Context context, long nextFireInMilliseconds) {
-        Log.d("AppDebug", "SchedulingUtils saveNextTriggerDate isScheduled Date :  " + new Date(nextFireInMilliseconds));
+        //Log.d("AppDebug", "SchedulingUtils saveNextTriggerDate isScheduled Date :  " + new Date(nextFireInMilliseconds));
         SharedPreferencesUtils.saveLong(context, ProjectConstants.SAVED_NEXT_LAUNCH_MILLISECONDS, nextFireInMilliseconds);
     }
 }

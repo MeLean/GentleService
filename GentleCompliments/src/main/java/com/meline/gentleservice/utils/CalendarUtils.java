@@ -1,16 +1,11 @@
 package com.meline.gentleservice.utils;
 
-import android.content.Context;
-
-import com.meline.gentleservice.R;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import java.util.Random;
 
 //static class
-public final class  CalendarUtils {
+public final class CalendarUtils {
     private static final SimpleDateFormat DATE_FORMAT =
             new SimpleDateFormat("yyyy MM dd HH:mm:ss Z", Locale.getDefault());
 

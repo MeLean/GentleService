@@ -41,7 +41,7 @@ public class ShareComplimentActivity extends AppCompatActivity implements View.O
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        String smsText = null;
+        String smsText;
         if (savedInstanceState == null) {
             smsText = getIntent().getStringExtra(getString(R.string.sp_sms_text));
         } else{
@@ -56,10 +56,8 @@ public class ShareComplimentActivity extends AppCompatActivity implements View.O
 
 
         ImageButton btnSms = (ImageButton) findViewById(R.id.btnSms);
-        ImageButton btnCancel = (ImageButton) findViewById(R.id.btnCancel);
 
         btnSms.setOnClickListener(this);
-        btnCancel.setOnClickListener(this);
     }
 
     @Override
@@ -91,9 +89,6 @@ public class ShareComplimentActivity extends AppCompatActivity implements View.O
                 if (permission_received) {
                     sendMessage(mShareComplimentText.getText().toString().trim());
                 }
-                break;
-            case R.id.btnCancel:
-                finish();
                 break;
             default:
                 throw new UnsupportedOperationException("No action found fot id: " + view.getId());

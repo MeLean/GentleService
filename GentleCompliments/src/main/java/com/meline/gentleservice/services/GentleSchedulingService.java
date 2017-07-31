@@ -31,7 +31,7 @@ public class GentleSchedulingService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        Log.d("AppDebug", "GentleSchedulingService onHandleIntent: " +  intent);
+        //Log.d("AppDebug", "GentleSchedulingService onHandleIntent: " +  intent);
         Intent startComplimenting = new Intent(this, ComplimentActivity.class);
         startComplimenting.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(startComplimenting);

@@ -53,7 +53,6 @@
     <style name="imageButton">
         <item name="android:layout_width">@dimen/imageButtonWidth</item>
         <item name="android:layout_height">@dimen/imageButtonHeight</item>
-        <item name="android:layout_marginRight">@dimen/small_margin</item>
         <item name="android:scaleType">fitCenter</item>
         <item name="android:background">@android:color/transparent</item>
 
