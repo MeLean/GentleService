@@ -8,8 +8,8 @@ android {
         applicationId "milen.com.gentleservice"
         minSdkVersion 9
         targetSdkVersion 25
-        versionCode 3
-        versionName "3.00"
+        versionCode 9
+        versionName "2.09"
     }
     buildTypes {
         release {
