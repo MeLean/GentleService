@@ -1,13 +1,11 @@
 package com.meline.gentleservice.utils;
 
 import android.content.Context;
-import android.util.Log;
 
-import com.meline.gentleservice.ProjectConstants;
+import com.meline.gentleservice.constants.ProjectConstants;
 import com.meline.gentleservice.R;
 import com.meline.gentleservice.services.AlarmsProvider;
 
-import java.util.Date;
 import java.util.Random;
 
 public class SchedulingUtils {

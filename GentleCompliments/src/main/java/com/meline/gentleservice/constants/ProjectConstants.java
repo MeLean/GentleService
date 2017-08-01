@@ -1,4 +1,4 @@
-package com.meline.gentleservice;
+package com.meline.gentleservice.constants;
 
 
 public class ProjectConstants {

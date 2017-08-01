@@ -5,11 +5,9 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -19,9 +17,6 @@ import com.meline.gentleservice.api.objects_model.Compliment;
 import com.meline.gentleservice.utils.SoftInputManager;
 
 import java.sql.SQLException;
-
-import static android.content.Context.INPUT_METHOD_SERVICE;
-
 
 /**
  * A simple {@link Fragment} subclass.

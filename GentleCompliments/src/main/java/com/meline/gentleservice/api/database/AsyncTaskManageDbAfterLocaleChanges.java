@@ -3,7 +3,7 @@ package com.meline.gentleservice.api.database;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.util.Log;
+import android.os.Build;
 
 import com.meline.gentleservice.R;
 import com.meline.gentleservice.services.GentleSystemActionReceiver;
@@ -39,6 +39,9 @@ public class AsyncTaskManageDbAfterLocaleChanges extends AsyncTask<Context, Void
     private static void broadcastManageLoacaleChangesAction(Context context) {
         Intent intent = new Intent();
         intent.setAction(GentleSystemActionReceiver.ACTION_MANAGE_AFTER_LOCALE_CHANGED);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
+            intent.setFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+        }
         context.sendBroadcast(intent);
     }
 }

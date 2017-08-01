@@ -9,7 +9,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,7 +25,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.meline.gentleservice.ProjectConstants;
+import com.meline.gentleservice.constants.ProjectConstants;
 import com.meline.gentleservice.R;
 import com.meline.gentleservice.ui.activities.ComplimentActivity;
 import com.meline.gentleservice.ui.fragments.dialogs.TimePickerFragment;

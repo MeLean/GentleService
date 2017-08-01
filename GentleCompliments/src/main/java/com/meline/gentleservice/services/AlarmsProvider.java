@@ -8,9 +8,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.v4.content.WakefulBroadcastReceiver;
-import android.util.Log;
-
-import java.util.Date;
 
 /**
  * When the alarm fires, this WakefulBroadcastReceiver receives the broadcast Intent

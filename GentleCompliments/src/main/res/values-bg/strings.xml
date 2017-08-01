@@ -1,0 +1,164 @@
+<resources>
+    <!-- values that have no need to be translated to locale language-->
+    <string name="smart_banner_ad_unit_id">ca-app-pub-6177746105485183/5817094357</string>
+    <string name="interstitial_ad_unit_id">ca-app-pub-6177746105485183/8072556755</string>
+
+    <!-- sharedPreferences values -->
+    <string name="sp_name">GS_SP_GentleServiceLocalData</string>
+    <string name="sp_timeWaiting">GS_SP_time</string>
+    <string name="sp_do_not_disturb">GS_SP_disturb</string>
+    <string name="sp_is_service_running">GS_SP_isRunning</string>
+    <string name="sp_is_scheduled">GS_SP_isScheduled</string>
+    <string name="sp_surprise_me">GS_SP_isSurpriseMe</string>
+    <string name="sp_locale">GS_SP_app_locale</string>
+    <string name="sp_contact_name">GS_SP_contact_name</string>
+    <string name="sp_contact_phone_num">GS_SP_phone_number</string>
+    <string name="sp_sms_text">GS_SP_sms_text</string>
+    <string name="sp_timeEndPeriod">GS_SP_end_Period</string>
+    <string name="sp_locale_has_changed">GS_SP_locale_has_changed</string>
+    <string name="sp_surprise_spinner_value">GS_SP_sniper_value</string>
+
+    <string name="sp_restart_complimenting">GS_SP_restart_complimenting</string>
+    <string name="sms">SMS</string>
+    <string name="i_do_not_know_what_to_do">I don not know what to do!</string>
+
+    <!-- values that have to be translated to locale language-->
+    <string name="app_name">Нежни комплименти</string>
+    <string name="exit_text">Изход</string>
+    <string name="do_not_disturb_label">Не ме безпокой</string>
+    <string name="btnStart_text">Стартирай Комплименти</string>
+    <string name="btnStop_text">Спри Комплименти</string>
+    <string name="time_hint">Въведете време в минути</string>
+    <string name="invalid_number_text">Невалидни входни данни!\nВремето трябва да е положително цяло число!</string>
+    <string name="timePicker_between_text">между</string>
+    <string name="timePicker_and_text">и</string>
+    <string name="title_activity_complimenter">Кавалер</string>
+    <string name="title_activity_compliment">Комплимент</string>
+    <string name="random_period_text">Изненадай ме</string>
+    <string name="time_scheduler_text">През определено време</string>
+    <string name="add_new_compliment">Въведи нов комплимент</string>
+    <string name="action_like_hated">Харесай намразен комплимент</string>
+    <string name="title_activity_add_new_compliment">Въведи нов комплимент</string>
+    <string name="add_compliment_hint">Въведи комплимента си тук!</string>
+    <string name="add_compliment_btn_text">Въведи комплимент</string>
+    <string name="title_activity_like_hated">Намразени комплименти </string>
+    <string name="enter_compliment">Моля, въведи комлимент!</string>
+    <string name="compliment_added">Твоя комплимент беше включен!</string>
+    <string name="no_hated_compliments_text">Няма намразени комплименти!</string>
+    <string name="surprise_option_every_day">Веднъж на ден</string>
+    <string name="surprise_option_every_week">Веднъж на седмица</string>
+    <string name="no_loadable_compliments">Много си красива, но няма комплименти за показване!\nХаресай някой намразен или въведи свой!</string>
+    <string name="like_hated_title">Харесай намразен комплимент</string>
+    <string name="like_hated_message">Искатели да харесате комплимента?\n</string>
+    <string name="yes">Да</string>
+    <string name="no">Не</string>
+    <string name="action_failed">Действието небеше изпълнено!\n</string>
+    <string name="hated_was_removed">беше премахнат от списъка с нехаресвани комплименти!</string>
+    <string name="back_text">Назад</string>
+    <string name="like_compliment_text">Харесай комплимента</string>
+    <string name="dislike_compliment_text">Намрази комплимента</string>
+    <string name="was_written_in_hated_list">Комплимента: \"%s\" беше намразен!</string>
+    <string name="notify_unread_compliment_text">Имам комплимент за теб!</string>
+    <string name="minimum_waiting_time_text">"Времето трябва да е минимум: "</string>
+    <string name="please_wait">Моля, изчакайте . . .</string>
+
+
+    <!-- the compliment`s texts -->
+    <string-array name="compliments_array">
+        <item>"Ти си красива, това е истината!"</item>
+        <item>"Твоята усмивка е за мен е като изгрева за цветята!"</item>
+        <item>"Твоята красота ме остави без дъх!"</item>
+        <item>"Ти си по-красива от розите, защото розите имат бодли!"</item>
+        <item>"Ако трябва да кажа колко те обичам от едно до десет, аз ще кажа тринадесет"</item>
+        <item>"Бог те е създал да покаже, че може да прави чудеса!"</item>
+        <item>"Без теб се чувствам половин човек!"</item>
+        <item>"Завинаги не е достатъчно за да те обичам!"</item>
+        <item>"Без теб не виждам причина да живея!"</item>
+        <item>"Ако някой ми дава една стотинка за всеки път когато си мисля за теб, щях да съм милиардер!"</item>
+        <item>"Когато си около мен нищо друго няма значение!"</item>
+        <item>"Аз съм пристрастен към теб и не мога да спра да те обичам!"</item>
+        <item>"Мисля, че ще остареем заедно!"</item>
+        <item>"Чувствам се благодарен когато видя, че гледаш към мен!"</item>
+        <item>"Изглеждаш страхотно без значение дали си облечена с нещо или не!"</item>
+        <item>"Ти си определение за жена!"</item>
+        <item>"Моля те, кажи ми как се влюбвам в теб всеки път като те видя!"</item>
+        <item>"Обичам всяка секунда прекарана с теб!"</item>
+        <item>"Осъзнах, че държа най-хубавото нещо когато те прегърна!"</item>
+        <item>"Нямам търпение да се събудя за да видя лицето ти!"</item>
+        <item>"Ти си красива по милион различни начини!"</item>
+        <item>"Всичко, което искам от живота си ти!"</item>
+        <item>"Ти си толкова уникална!"</item>
+        <item>"Ти си най-добрата версия на себе си!"</item>
+        <item>"Ти си най-добрата жена, за която някой може да иска!"</item>
+        <item>"Иска ми се да бях на половина добър колкото теб!"</item>
+        <item>"Ако ме попиташ кое нещо най-много харесвам в теб. Аз ще отговоря ВСИЧКО!"</item>
+        <item>"Най-добрите идеи идват от теб!"</item>
+        <item>"Всичко изглежда добре когато си облечена с него!"</item>
+        <item>"Би трябвало да си уморена защото непрекъснато тичаш в мислите ми!"</item>
+        <item>"Ако замръзна не е от болест, просто съм зашеметен от красотата ти!"</item>
+        <item>"Имаш две от най-хубавите ръце, които някога съм виждал!"</item>
+        <item>"По-сладка си от огромна кофа с шоколад!"</item>
+        <item>"Твърде горещо ли е тук или просто се сгорещявам като си наоколо!"</item>
+        <item>"Да си страхотна е толкова трудно, но ти пък се справяш толкова добре!"</item>
+        <item>"Твоята усмивка може да освети цялата вселена!"</item>
+        <item>"Ти си слънцето в мечтите ми!"</item>
+        <item>"Невъзможно е да се измисли комплимент, който си е достоен за теб!"</item>
+        <item>"Аз без теб съм като връзка без обувка и като изречениеБезИнтервали!"</item>
+        <item>"Твоя глас е музика за ушите ми!"</item>
+        <item>"Нуждая се от теб повече от колкото от въздух!"</item>
+        <item>"Ти заслужаваш всичките комплименти на света!"</item>
+        <item>"Светът щеше да е по-добро място ако повече хора бяха като теб!"</item>
+        <item>"Цветята ухаят по добре когато са в ръката ти!"</item>
+        <item>"Ти си моята причина да се чувствам влюбен!"</item>
+        <item>"Ти си по приятна от приказка с щастлив край!"</item>
+        <item>"Нека бъда твоя герой за теб съм готов да умра в бой!"</item>
+        <item>"Немога да сваля очи от теб!"</item>
+        <item>"Твоята усмивка блести по-ярко от диамант!"</item>
+        <item>"Ти взе моето сърце и моите мисли. Моля грижи се за тях добре!"</item>
+    </string-array>
+
+    <!-- not translated -->
+    <string name="service_restarted"> беше рестартирано!</string>
+    <string name="hated_was_deleted">беше изтрит!</string>
+    <string name="sms_was_send">Съобщението беше изпратено!</string>
+    <string name="chose_number">избери номер</string>
+    <string name="name">име</string>
+    <string name="empty_input_values">Горните полета не може да са празни!</string>
+    <string name="btn_chose_num_text">избери номер</string>
+    <string name="title_activity_sms_activity">Изпращане на съобщение</string>
+    <string name="sms_did_not_save">Не успях да запазя съобщението в изпратени!</string>
+    <string name="surprise_option_every_6_hours">Всеки шест часа</string>
+    <string name="surprise_option_every_8_hours">Всеки осем часа</string>
+    <string name="surprise_option_every_12_hours">Всеки дванадесет часа</string>
+    <string name="delete">Изтрий</string>
+    <string name="sms_icon">sms_icon</string>
+    <string name="cancel_icon">cancel_icon</string>
+    <string name="app_not_installed">Приложението не е инсталирано!</string>
+    <string name="not_connected">Нямате връзка с интернернет!</string>
+    <string name="chose_application">Изберете приложение!</string>
+    <string name="message">Съобщение:</string>
+    <string name="permission_needed">Необходимо е разрешение</string>
+    <string name="sms_permission_needed">Необходимо е разрешение за изпращане на съобщения!</string>
+
+    <string-array name="surprises">
+        <item>@string/surprise_option_every_day</item>
+        <item>@string/surprise_option_every_6_hours</item>
+        <item>@string/surprise_option_every_8_hours</item>
+        <item>@string/surprise_option_every_12_hours</item>
+        <item>@string/surprise_option_every_week</item>
+    </string-array>
+
+    <string name="ads_user_id">3815845016477716</string>
+    <string name="action_settings">Настройки</string>
+    <string name="default_end_time">08:30</string>
+    <string name="default_start_time">21:30</string>
+    <string name="logo_icon">икона лого</string>
+    <string name="sp_show_compliment_only">sp_show_compliment_only</string>
+    <string name="sp_start_time">GS_SP_spinner_timeOne</string>
+    <string name="sp_surprise_time_max_value">GS_SP_time_max_value</string>
+    <string name="sp_time_wait_value">GS_SP_time_waiting_period</string>
+    <string name="vibration">Вибрация</string>
+    <string name="sp_end_time">GS_SP_spinner_timeTwo</string>
+    <string name="navigation_drawer_close">Затвори навигационната лента</string>
+    <string name="navigation_drawer_open">Орвори навигационната лента</string>
+</resources>

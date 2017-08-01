@@ -1,0 +1,156 @@
+<resources>
+    <!-- values that have no need to be translated to locale language-->
+    <string name="smart_banner_ad_unit_id">ca-app-pub-6177746105485183/5817094357</string>
+    <string name="interstitial_ad_unit_id">ca-app-pub-6177746105485183/8072556755</string>
+
+    <!-- sharedPreferences values -->
+    <string name="sp_name">GS_SP_GentleServiceLocalData</string>
+    <string name="sp_timeWaiting">GS_SP_time</string>
+    <string name="sp_do_not_disturb">GS_SP_disturb</string>
+    <string name="sp_is_service_running">GS_SP_isRunning</string>
+    <string name="sp_is_scheduled">GS_SP_isScheduled</string>
+    <string name="sp_locale">GS_SP_app_locale</string>
+    <string name="sp_contact_name">GS_SP_contact_name</string>
+    <string name="sp_contact_phone_num">GS_SP_phone_number</string>
+    <string name="sp_sms_text">GS_SP_sms_text</string>
+    <string name="sp_timeEndPeriod">GS_SP_end_Period</string>
+    <string name="sp_locale_has_changed">GS_SP_locale_has_changed</string>
+    <string name="sp_surprise_spinner_value">GS_SP_sniper_value</string>
+    <string name="sp_restart_complimenting">GS_SP_restart_complimenting</string>
+    <string name="sms">SMS</string>
+    <string name="i_do_not_know_what_to_do">I don not know what to do!</string>
+
+    <string name="exit_text"> выход</string>
+    <string name="do_not_disturb_label"> Просьба не беспокоить</string>
+    <string name="btnStart_text"> Начало комплименты</string>
+    <string name="btnStop_text"> Стоп комплименты</string>
+    <string name="time_hint"> Введите время в минутах</string>
+    <string name="invalid_number_text"> Неверный ввод!\nВремя должно быть положительным целым числом!</string>
+    <string name="timePicker_between_text"> Между</string>
+    <string name="timePicker_and_text">И</string>
+    <string name="title_activity_complimenter">Кавалер</string>
+    <string name="title_activity_compliment">комплимент</string>
+    <string name="random_period_text"> Удиви меня</string>
+    <string name="time_scheduler_text"> В определенное время</string>
+    <string name="add_new_compliment"> Введите новый комплимент</string>
+    <string name="action_like_hated"> Закладка ненавидели комплимент</string>
+    <string name="title_activity_add_new_compliment"> Введите новый комплимент</string>
+    <string name="add_compliment_hint"> Введите комплимент здесь</string>
+    <string name="add_compliment_btn_text"> Введите комплимент</string>
+    <string name="title_activity_like_hated"> ненавистные комплименты</string>
+    <string name="enter_compliment"> Пожалуйста, введите комплимент</string>
+    <string name="compliment_added">Ваш комплимент был включен!</string>
+    <string name="no_hated_compliments_text"> Нет ненавидели комплименты!</string>
+    <string name="surprise_option_every_day"> Один раз в день</string>
+    <string name="surprise_option_every_week"> Раз в неделю</string>
+    <string name="no_loadable_compliments"> Тъй есть очень красивая, но нет комплименты на дисплее!\n</string>
+    <string name="like_hated_title"> Люби ненавиденны комплимент</string>
+    <string name="like_hated_message"> Вы хочете любить комплимента?\n</string>
+    <string name="yes"> Да</string>
+    <string name="no"> Нет</string>
+    <string name="action_failed">Действие не было выполнено!\n</string>
+    <string name="hated_was_removed"> Он был удален из списка ненавистных комплименты!</string>
+    <string name="back_text"> назад</string>
+    <string name="like_compliment_text">Любью комплимент</string>
+    <string name="dislike_compliment_text"> Ненавижу комплимент</string>
+    <string name="was_written_in_hated_list"> Комплимента \"%s\" был ненавидим</string>
+    <string name="notify_unread_compliment_text"> У меня есть комплимент для тебя</string>
+    <string name="minimum_waiting_time_text"> Время должно быть по крайней мере: </string>
+    <string name="please_wait"> Пожалуйста, подождите . . .</string>
+    <string-array name="compliments_array"><item>"Ты прекрасна, это правда!"</item>
+        <item>"Твоя улыбка для меня, как восход солнца для цветов!"</item>
+        <item>"Твоя красота оставила меня перехватило дыхание!"</item>
+        <item>"Ты более красивая, чем розы, потому что у розы есть шипы!"</item>
+        <item>"Если мне нужно сказать, как я люблю тебя одного до десяти, я скажу тринадцать"</item>
+        <item>"Бог создал тебя, поточу что он может творить чудеса!"</item>
+        <item>"Без тебя я чувствую себя половину лица!"</item>
+        <item>"Навсегда не достаточно, чтобы любить тебя!"</item>
+        <item>"Без тебя, я не вижу причин, чтобы жить!"</item>
+        <item>"Если кто-то дает мне ни копейки за каждый раз, когда я думаю о тебе, я был бы миллиардером!"</item>
+        <item>"Когда ты рядом со мной, ничто не имеет значения!"</item>
+        <item>"Я пристрастился к вам, и я не могу перестать любить тебя!"</item>
+        <item>"Я думаю, что мы будем стареть вместе!"</item>
+        <item>"Я чувствую благодарность, когда я вижу, ты смотришь на меня!"</item>
+        <item>"Ты выглядишь великолепно будь то ты носишь что-то или нет!"</item>
+        <item>"Ты определение женщины!"</item>
+        <item>"Пожалуйста, скажи мне, как можна влюбиться каждый раз, когда я вижу тебя!"</item>
+        <item>"Я люблю каждую секунду что я провел с тобой!"</item>
+        <item>"Я понял, что-то, когда я обнимаю тебя я держу самое лучшее!"</item>
+        <item>"Я не могу ждать, чтобы проснуться, чтобы увидеть лице твое!"</item>
+        <item>"Ты красивая в миллион различных способов! "</item>
+        <item>"Все, что я хочу в жизни, это ты!"</item>
+        <item>"Ты самая уникальная"</item>
+        <item>"Ты самой лучший вариант себя!"</item>
+        <item>"Ты самая лучшая женщина, что кто-то может хотеть!"</item>
+        <item>"Жаль, что я был наполовину так же хорошо, как ты!"</item>
+        <item>"Если ты спросишь меня, что я люблю больше всего о тебе. Я буду отвечать ВСЕ!"</item>
+        <item>"Ты даешь лучшие идеи! "</item>
+        <item>"Все выглядит хорошо, когда ты носишь его! "</item>
+        <item>"Ты должна быть уставшима, потому что ты постоянно бегаеш через мой разум "</item>
+        <item>"Я не замерзает из-за болезни, а потому, что я поражен твоей красотой!"</item>
+        <item>"У тебя есть две из самых красивых руках котор я всегда видел!"</item>
+        <item>"Ты сладостнее чем огромное ведро с шоколадом! "</item>
+        <item>"Это так жарко, или я просто чувствую себя жарко, когда ты рядом!"</item>
+        <item>"Быть сказочная так трудно, но ты делаешь этого очень хорошо!"</item>
+        <item>"Твоя улыбка можно осветить весь универсум!"</item>
+        <item>"Ты солнце в моих мечтах!"</item>
+        <item>"Невозможно придумать комплимент достойный для тебя!"</item>
+        <item>"Без тебя я, как обуви без связи и как приговор без пробелов!"</item>
+        <item>"Твой голос как музыка для моих ушей!"</item>
+        <item>"Я нуждаются от тебе больше, чем воздух!"</item>
+        <item>"Ты заслужила все комплименты в мире! "</item>
+        <item>"Мир был быть лучший, если бы больше людей были, как тебя!"</item>
+        <item>"Цветы пахнут лучше, когда они находятся в твоих руках!"</item>
+        <item>"Ты моя причина чувствовать любовь! "</item>
+        <item>"Ты больше приятная, чем сказка со счастливым концом!"</item>
+        <item>"Позволь мне быть твоим героем, для тебя я буду умереть в бою! "</item>
+        <item>"Я не могу отвести взгляд от тебя!"</item>
+        <item>"Твоя улыбка сияет ярче, чем алмаз!"</item>
+        <item>"Ты забралa мое сердце и мои мысли. Пожалуйста, заботитесь о них хорошо!"</item>
+    </string-array>
+    <string name="service_restarted"> было возобновлено</string>
+    <string name="hated_was_deleted"> было удалено</string>
+    <string name="sms_was_send"> Сообщение было отправлено</string>
+    <string name="chose_number"> Выберите номер</string>
+    <string name="name"> Имя</string>
+    <string name="empty_input_values"> Вышеуказанные поля не может быть пустым</string>
+    <string name="btn_chose_num_text">Выберите номер</string>
+    <string name="title_activity_sms_activity"> Отправить текст</string>
+    <string name="sms_did_not_save"> Не могу сохранить текст в Отправленные</string>
+    <string name="surprise_option_every_6_hours"> Каждые шесть часов</string>
+    <string name="surprise_option_every_8_hours"> Каждые восемь часов</string>
+    <string name="surprise_option_every_12_hours"> Каждые двенадцать часов</string>
+    <string name="delete">Удалить</string>
+    <string name="app_name">Нежные комплименты </string>
+    <string name="sms_icon">sms_icon</string>
+    <string name="cancel_icon">cancel_icon</string>
+    <string name="app_not_installed">Приложение не установлено!</string>
+    <string name="not_connected">Нет подключения к Интернету!</string>
+    <string name="chose_application">Выберите приложение!</string>
+    <string name="message">Сообщение:</string>
+    <string name="permission_needed">Разрешение необходимо</string>
+    <string name="sms_permission_needed">Отправить сообщение разрешения необходимо!</string>
+
+
+    <string-array name="surprises">
+        <item>@string/surprise_option_every_day</item>
+        <item>@string/surprise_option_every_6_hours</item>
+        <item>@string/surprise_option_every_8_hours</item>
+        <item>@string/surprise_option_every_12_hours</item>
+        <item>@string/surprise_option_every_week</item>
+    </string-array>
+    <string name="ads_user_id">3815845016477716</string>
+    <string name="action_settings">Настройки</string>
+    <string name="default_end_time">08:30</string>
+    <string name="default_start_time">21:30</string>
+    <string name="sp_show_compliment_only">sp_show_compliment_only</string>
+    <string name="sp_start_time">GS_SP_spinner_timeOne</string>
+    <string name="sp_surprise_time_max_value">GS_SP_time_max_value</string>
+    <string name="sp_time_wait_value">GS_SP_time_waiting_period</string>
+    <string name="vibration">Вибрация</string>
+    <string name="sp_end_time">GS_SP_spinner_timeTwo</string>
+    <string name="logo_icon">значок логотипа</string>
+    <string name="navigation_drawer_close">Закрыть навигационный ящик</string>
+    <string name="navigation_drawer_open">Открыть навигационный ящик</string>
+    <string name="sp_surprise_me">GS_SP_isSurpriseMe</string>
+</resources>

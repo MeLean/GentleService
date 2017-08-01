@@ -3,9 +3,8 @@ package com.meline.gentleservice.services;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
-import com.meline.gentleservice.ProjectConstants;
+import com.meline.gentleservice.constants.ProjectConstants;
 import com.meline.gentleservice.R;
 import com.meline.gentleservice.api.database.AsyncTaskManageDbAfterLocaleChanges;
 import com.meline.gentleservice.ui.activities.ComplimentActivity;
@@ -18,6 +17,7 @@ public class GentleSystemActionReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
+        //Log.d("AppDebug","got action:" + action);
 
         switch (action) {
             case Intent.ACTION_LOCALE_CHANGED:
@@ -32,7 +32,7 @@ public class GentleSystemActionReceiver extends BroadcastReceiver {
 
             case ACTION_MANAGE_AFTER_LOCALE_CHANGED:
                 //Log.d("AppDebug", "GentleSystemActionReceiver get ACTION_MANAGE_AFTER_LOCALE_CHANGED");
-                handleAction(context);
+                manageAction(context);
                 break;
 
             default:
@@ -53,11 +53,11 @@ public class GentleSystemActionReceiver extends BroadcastReceiver {
 
         //to insure we get the fireAtMilliseconds one second less
         if(fireAtMilliseconds - 1000 > System.currentTimeMillis()){
-            //Log.d("AppDebug","GentleSystemActionReceiver ACTION_BOOT_COMPLETED must wait more");
+            //Log.d("AppDebug","GentleSystemActionReceiver must wait more");
             AlarmsProvider alarmsProvider = new AlarmsProvider();
             alarmsProvider.setAlarm(context, fireAtMilliseconds);
         } else {
-            //Log.d("AppDebug","GentleSystemActionReceiver ACTION_BOOT_COMPLETED must should fire activity");
+            //Log.d("AppDebug","GentleSystemActionReceiver  must should fire activity");
             Intent startingCompliment = new Intent(context, ComplimentActivity.class);
             startingCompliment.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(startingCompliment);

@@ -28,7 +28,7 @@ import java.util.Random;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
-import com.meline.gentleservice.ProjectConstants;
+import com.meline.gentleservice.constants.ProjectConstants;
 import com.meline.gentleservice.api.database.DBHelper;
 import com.meline.gentleservice.utils.CalendarUtils;
 import com.meline.gentleservice.api.objects_model.Compliment;

@@ -82,7 +82,9 @@
 
         <receiver android:name=".services.GentleSystemActionReceiver"
             android:enabled="true"
-            android:process=":remote"><!--android:exported="false"-->
+            android:process=":remote"
+            android:exported="true"
+            ><!--android:exported="false"-->
             <intent-filter>
                 <action android:name="android.intent.action.LOCALE_CHANGED" />
                 <action android:name="android.intent.action.BOOT_COMPLETED" />

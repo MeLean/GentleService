@@ -1,0 +1,155 @@
+<resources>
+    <!-- values that have no need to be translated to locale language-->
+    <string name="smart_banner_ad_unit_id">ca-app-pub-6177746105485183/5817094357</string>
+    <string name="interstitial_ad_unit_id">ca-app-pub-6177746105485183/8072556755</string>
+
+    <!-- sharedPreferences values -->
+    <string name="sp_name">GS_SP_GentleServiceLocalData</string>
+    <string name="sp_timeWaiting">GS_SP_time</string>
+    <string name="sp_do_not_disturb">GS_SP_disturb</string>
+    <string name="sp_is_service_running">GS_SP_isRunning</string>
+    <string name="sp_is_scheduled">GS_SP_isScheduled</string>
+    <string name="sp_surprise_me">GS_SP_isSurpriseMe</string>
+    <string name="sp_locale">GS_SP_app_locale</string>
+    <string name="sp_contact_name">GS_SP_contact_name</string>
+    <string name="sp_contact_phone_num">GS_SP_phone_number</string>
+    <string name="sp_sms_text">GS_SP_sms_text</string>
+    <string name="sp_timeEndPeriod">GS_SP_end_Period</string>
+    <string name="sp_locale_has_changed">GS_SP_locale_has_changed</string>
+    <string name="sp_surprise_spinner_value">GS_SP_sniper_value</string>
+    <string name="sp_restart_complimenting">GS_SP_restart_complimenting</string>
+    <string name="sms">SMS</string>
+    <string name="i_do_not_know_what_to_do">I don not know what to do!</string>
+
+    <string name="exit_text">salida</string>
+    <string name="do_not_disturb_label">No molestar</string>
+    <string name="btnStart_text">Inicie cumplidos</string>
+    <string name="btnStop_text">Pare cumplidos</string>
+    <string name="time_hint">Introduzca el tiempo en minutos</string>
+    <string name="invalid_number_text">Entrada no válida!\nEl tiempo debe ser un número entero positivo!</string>
+    <string name="timePicker_between_text">entre</string>
+    <string name="timePicker_and_text">y</string>
+    <string name="title_activity_complimenter">galán</string>
+    <string name="title_activity_compliment">cumplido</string>
+    <string name="random_period_text">Sorprendeme!</string>
+    <string name="time_scheduler_text">En cierto tiempo</string>
+    <string name="add_new_compliment">Introducir nuevo cumplido</string>
+    <string name="action_like_hated">Guste a cumplido odiado</string>
+    <string name="title_activity_add_new_compliment">Introduzca la nueva cumplido</string>
+    <string name="add_compliment_hint">Introduzca cumplido aquí!</string>
+    <string name="add_compliment_btn_text">Introduzca cumplido</string>
+    <string name="title_activity_like_hated">cumplidos odiados</string>
+    <string name="enter_compliment">Por favor, introduzca cumplido!</string>
+    <string name="compliment_added">Su cumplido fue incluido!</string>
+    <string name="no_hated_compliments_text">No hay cumplidos odiados!</string>
+    <string name="surprise_option_every_day">Una vez al día</string>
+    <string name="surprise_option_every_week">Una vez por semana</string>
+    <string name="no_loadable_compliments">Usted es muy bonita, pero no hay cumplidos para mostrar! \n Guste a un cumplido odiado o entre un nuevo en su cuenta!</string>
+    <string name="like_hated_title">Guste a  un cumplido odiado</string>
+    <string name="like_hated_message">¿Tu quieres gustar al cumplido? \n</string>
+    <string name="yes">Sí</string>
+    <string name="no">No</string>
+    <string name="action_failed">La acción no se cumplió! \n</string>
+    <string name="hated_was_removed">Se elimino de la lista de loscumplidos odiados!</string>
+    <string name="back_text">atrás</string>
+    <string name="like_compliment_text">Guste cumplido</string>
+    <string name="dislike_compliment_text">Odie cumplido</string>
+    <string name="was_written_in_hated_list">Odie cumplido: \"%s\" </string>
+    <string name="notify_unread_compliment_text">Tengo un cumplido para ti!</string>
+    <string name="minimum_waiting_time_text">El tiempo debe ser al menos: </string>
+    <string name="please_wait">Por favor espera…</string>
+    <string-array name="compliments_array"><item>"Eres hermosa, es verdad!"</item>
+        <item>"Tu sonrisa para mí es como la salida del sol para las flores!"</item>
+        <item>"Tu belleza me dejó sin aliento!"</item>
+        <item>"Eres más bella que las rosas, porque las rosas tienen espinas!"</item>
+        <item>"Si tengo que decir cuánto Te amo del uno al diez, diría trece"</item>
+        <item>"Dios te ha creado para demostrar que puede hacer maravillas!"</item>
+        <item>"Sin ti me siento la mitad de una persona!"</item>
+        <item>"Para siempre no es suficiente para amarte!"</item>
+        <item>"Sin ti, no veo ninguna razón para vivir!"</item>
+        <item>"Si alguien me da un centavo cada vez que pienso en ti, yo sería un multimillonario!"</item>
+        <item>"Cuando estás alrededor de mí, no importa nada más!"</item>
+        <item>"Soy adicto a ti y no puedo dejar de amarte!"</item>
+        <item>"Creo que vamos a envejecer juntos!"</item>
+        <item>"Me siento agradecido cuando veo que me mira!"</item>
+        <item>"Te ves muy bien si usted está usando algo o no!"</item>
+        <item>"Eres la definición de una mujer!"</item>
+        <item>"Por favor, dígame cómo puedo enamorarme de ti cada vez que te veo!"</item>
+        <item>"Me encanta cada segundo que paso contigo!"</item>
+        <item>"Me di cuenta de que cuando te abrazo tengo lo mejor!"</item>
+        <item>"Estoy impaciente a despertar para ver tu cara!"</item>
+        <item>"Eres hermosa en un millón de maneras diferentes!"</item>
+        <item>"Tú es todo lo que quiero en la vida!"</item>
+        <item>"Eres tan único!"</item>
+        <item>"Eres la mejor versión de ti mismo!"</item>
+        <item>"Eres la mejor mujer que alguien podría querer!"</item>
+        <item>"Me gustaría ser medio tan bueno que tú!"</item>
+        <item>"Si me preguntas lo que más me gusta de ti? Voy a responder que es todo!"</item>
+        <item>"Tú das las mejores ideas!"</item>
+        <item>"Todo parece bueno cuando lo llevas!"</item>
+        <item>"Debes estar cansado, ya que estas constantemente corriendo en mi mente!"</item>
+        <item>"Voy a congelar no por causa de una enfermedad, sino porque estoy aturdido por tu belleza!"</item>
+        <item>"Tiene las manos más hermosas que he visto!"</item>
+        <item>"Eres más dulce que un enorme cubo de chocolate!"</item>
+        <item>"¿Es tan caliente aquí o yo estoy caliente cuando estás cerca?"</item>
+        <item>"Ser fabuloso es tan difícil, pero lo estás haciendo muy bien!"</item>
+        <item>"Tu sonrisa puede iluminar todo el universo!"</item>
+        <item>"Eres el sol de mis sueños!"</item>
+        <item>"Es imposible pensar en un cumplido suficientemente digno para ti!"</item>
+        <item>"Sin ti yo soy como los lazos del zapato sin zapatos y como una frase sin espacios!"</item>
+        <item>"Tu voz es música para mis oídos!"</item>
+        <item>"Te necesito más que el aire!"</item>
+        <item>"Tú mereces todos los cumplidos en el mundo!"</item>
+        <item>"El mundo sería un lugar mejor si había más gente como ti!"</item>
+        <item>"Las flores huelen mejor cuando están en tu mano!"</item>
+        <item>"Eres mi razón para sentir el amor!"</item>
+        <item>"Eres más agradable que un cuento con un final feliz!"</item>
+        <item>"Déjame ser tu héroe, por ti yo voy a morir en la batalla!"</item>
+        <item>"No puedo dejar de verte!"</item>
+        <item>"Tu sonrisa brilla más que un diamante!"</item>
+        <item>"Tomaste mi corazón y mis pensamientos. Por favor, ten cuidado de ellos también!"</item>
+    </string-array>
+    <string name="service_restarted"> Se reinició la aplicación!</string>
+    <string name="hated_was_deleted"> Fue suprimido</string>
+    <string name="sms_was_send"> El mensaje fue enviado!</string>
+    <string name="chose_number"> Elije un numero</string>
+    <string name="name"> nombre</string>
+    <string name="empty_input_values"> Los campos anteriores no pueden estar vacios!</string>
+    <string name="btn_chose_num_text"> Elije un numero</string>
+    <string name="title_activity_sms_activity"> Enviar mensaje</string>
+    <string name="sms_did_not_save"> No puedo guarder el mensaje en enviados</string>
+    <string name="surprise_option_every_6_hours"> Cada seis horas</string>
+    <string name="surprise_option_every_8_hours"> Cada ocho horas</string>
+    <string name="surprise_option_every_12_hours"> Cada doce horas</string>
+    <string name="delete"> Borrar</string>
+    <string name="app_name">Cumplidos tiernos</string>
+    <string name="sms_icon">sms_icon</string>
+    <string name="cancel_icon">cancel_icon</string>
+    <string name="app_not_installed">La aplicación no está instalada!</string>
+    <string name="not_connected">Sin conexión a Internet!</string>
+    <string name="chose_application">Elija una aplicación!</string>
+    <string name="message">Mensaje:</string>
+    <string name="permission_needed">El permiso necesario</string>
+    <string name="sms_permission_needed">Enviar mensaje de permiso es necesario!</string>
+
+    <string-array name="surprises">
+        <item>@string/surprise_option_every_day</item>
+        <item>@string/surprise_option_every_6_hours</item>
+        <item>@string/surprise_option_every_8_hours</item>
+        <item>@string/surprise_option_every_12_hours</item>
+        <item>@string/surprise_option_every_week</item>
+    </string-array>
+    <string name="ads_user_id">3815845016477716</string>
+    <string name="action_settings">Ajustes</string>
+    <string name="default_end_time">08:30</string>
+    <string name="default_start_time">21:30</string>
+    <string name="sp_show_compliment_only">sp_show_compliment_only</string>
+    <string name="sp_start_time">GS_SP_spinner_timeOne</string>
+    <string name="sp_surprise_time_max_value">GS_SP_time_max_value</string>
+    <string name="sp_time_wait_value">GS_SP_time_waiting_period</string>
+    <string name="vibration">Vibración</string>
+    <string name="sp_end_time">GS_SP_spinner_timeTwo</string>
+    <string name="logo_icon">Icono de logotipo</string>
+    <string name="navigation_drawer_close">Cerrar el cajón de navegación</string>
+    <string name="navigation_drawer_open">Abrir el cajón de navegación</string>
+</resources>
