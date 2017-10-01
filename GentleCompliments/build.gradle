@@ -8,12 +8,12 @@ android {
         applicationId "milen.com.gentleservice"
         minSdkVersion 9
         targetSdkVersion 25
-        versionCode 9
-        versionName "2.09"
+        versionCode 11
+        versionName "2.11"
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }

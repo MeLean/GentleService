@@ -62,8 +62,17 @@ public class ComplimentSetupFragment extends Fragment implements View.OnClickLis
 
     private void initComponents(View view) {
         mActivity = getActivity();
+        //manage preview set options
+        isServiceRunning = SharedPreferencesUtils.loadBoolean(mActivity, getString(R.string.sp_is_service_running), false);
+
         mFabStartStop = (FloatingActionButton) view.findViewById(R.id.fab_start_stop);
         mFabStartStop.setOnClickListener(this);
+
+        if(isServiceRunning){
+            mFabStartStop.setImageResource(android.R.drawable.alert_light_frame);
+        }else{
+            mFabStartStop.setImageResource(android.R.drawable.ic_media_play);
+        }
 
         mTimeWait = new EditText(mActivity);
         mSpinner = new Spinner(mActivity);
@@ -80,9 +89,6 @@ public class ComplimentSetupFragment extends Fragment implements View.OnClickLis
         waitingTimeArea.setOnCheckedChangeListener(this);
         mScheduleRadio = (RadioButton) view.findViewById(R.id.rb_schedule);
         mSurpriseMeRadio = (RadioButton) view.findViewById(R.id.rb_surpriseMe);
-
-        //manage preview set options
-        isServiceRunning = SharedPreferencesUtils.loadBoolean(mActivity, getString(R.string.sp_is_service_running), false);
 
         managePreviouslyChosenValues();
         manageStartingValues(isServiceRunning);
@@ -112,6 +118,7 @@ public class ComplimentSetupFragment extends Fragment implements View.OnClickLis
 
                 } else {
                     //button start is pressed
+                    SharedPreferencesUtils.saveBoolean(mActivity, getString(R.string.sp_is_service_running), true);
                     startService();
                 }
                 break;
@@ -232,7 +239,6 @@ public class ComplimentSetupFragment extends Fragment implements View.OnClickLis
             String inputValue = mTimeWait.getText().toString();
             String errorMessage = SchedulingUtils.checkForErrors(mActivity, inputValue);
             if (errorMessage == null) {
-                SharedPreferencesUtils.saveString(mActivity, getString(R.string.sp_time_wait_value), inputValue);
                 startComplimentingJob();
             } else {
                 Toast.makeText(mActivity, errorMessage, Toast.LENGTH_SHORT).show();
