@@ -1,9 +1,12 @@
 package com.meline.gentleservice.ui.activities;
 
+
+import android.app.KeyguardManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.v4.app.NotificationCompat;
@@ -25,11 +28,14 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Random;
 
-import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.reward.RewardItem;
+import com.google.android.gms.ads.reward.RewardedVideoAd;
+import com.google.android.gms.ads.reward.RewardedVideoAdListener;
 import com.meline.gentleservice.constants.ProjectConstants;
 import com.meline.gentleservice.api.database.DBHelper;
+import com.meline.gentleservice.utils.AdManager;
 import com.meline.gentleservice.utils.CalendarUtils;
 import com.meline.gentleservice.api.objects_model.Compliment;
 import com.meline.gentleservice.R;
@@ -40,32 +46,48 @@ public class ComplimentActivity extends AppCompatActivity implements View.OnClic
     private Compliment mCompliment;
     private Vibrator mVibrator = null;
     private TextView mComplimentContainer;
-    private InterstitialAd mInterstitialAd;
+    private RewardedVideoAd mRewardedAd;
 
     private static final String SHOW_COMPLIMENT_ONLY = "was_started_from_notification";
     private static final String SAVED_COMPLIMENT_TEXT = "saved_compliment_text";
     private static final String SAVED_BACKGROUND_ID = "saved_background_id";
     private int mBackgroundId = 0;
-
+    private boolean isShareClicked = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD |
-                WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
-                WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            setShowWhenLocked(true);
+            setTurnScreenOn(true);
+            KeyguardManager keyguardManager = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
+            if (keyguardManager != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                keyguardManager.requestDismissKeyguard(this, null);
+            }
+        } else {
+            //noinspection deprecation
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD |
+                    WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
+                    WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+        }
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_compliment);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        mInterstitialAd = new InterstitialAd(this);
-        mInterstitialAd.setAdUnitId(getString(R.string.interstitial_ad_unit_id));
-        mInterstitialAd.loadAd(new AdRequest.Builder().build());
-        mInterstitialAd.setAdListener(getAddListener());
+
+        if (AdManager.shouldLaunchAd(this)) {
+            MobileAds.initialize(this, "pub-" + getString(R.string.ads_user_id));
+            mRewardedAd = MobileAds.getRewardedVideoAdInstance(this);
+            mRewardedAd.setRewardedVideoAdListener(getAddListener());
+
+            loadNewAd();
+        }
 
         boolean mustOnlyLaunchCompliment = getIntent().getBooleanExtra(SHOW_COMPLIMENT_ONLY, false);
-               //when you are in not disturbMode but the activity is launched by notification
+        //when you are in not disturbMode but the activity is launched by notification
         //it will vibrate, it also will vibrate if doNotDisturb mode is off
         //it wont vibrate if doNotDisturb mode is on and activity is started from ComplimentService
         if (mustOnlyLaunchCompliment) {
@@ -74,7 +96,7 @@ public class ComplimentActivity extends AppCompatActivity implements View.OnClic
             //first check if activity has to show or has to add a Notification
             SchedulingUtils.startComplimentingJob(this);
             boolean isDoNotDisturbMode = SharedPreferencesUtils.loadBoolean(this, getString(R.string.sp_do_not_disturb), true);
-            if(isDoNotDisturbMode){
+            if (isDoNotDisturbMode) {
                 checkForDisturbPeriod();
             }
 
@@ -119,8 +141,7 @@ public class ComplimentActivity extends AppCompatActivity implements View.OnClic
         switch (item.getItemId()) {
             // Respond to the action bar's Up/Home button
             case R.id.action_return:
-                launchAd();
-                finish();
+                onBackPressed();
                 return true;
             case R.id.action_settings:
                 startActivity(new Intent(ComplimentActivity.this, StartActivity.class));
@@ -139,23 +160,22 @@ public class ComplimentActivity extends AppCompatActivity implements View.OnClic
             return;
         }
 
+        isShareClicked = false;
+
         switch (view.getId()) {
             case R.id.imgLike:
-                launchAd();
+                launchAdOrDoAction();
                 this.cancelVibrator();
-                this.finish();
                 break;
 
-            case R.id.imgSMS:
-                launchAd();
+            case R.id.share:
+                isShareClicked = true;
+                launchAdOrDoAction();
                 this.cancelVibrator();
-                Intent intentSms = new Intent(this, ShareComplimentActivity.class);
-                intentSms.putExtra(getString(R.string.sp_sms_text), mComplimentContainer.getText().toString());
-                this.startActivity(intentSms);
                 break;
 
             case R.id.imgDislike:
-                launchAd();
+                launchAdOrDoAction();
                 DBHelper db = DBHelper.getInstance(this);
 
 
@@ -167,19 +187,24 @@ public class ComplimentActivity extends AppCompatActivity implements View.OnClic
 
                 Toast toast = Toast.makeText(this, String.format(getString(R.string.was_written_in_hated_list),
                         mCompliment.getContent()), Toast.LENGTH_SHORT);
-                TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
+                TextView v = toast.getView().findViewById(android.R.id.message);
                 if (v != null) {
                     v.setGravity(Gravity.CENTER);
                 }
                 toast.show();
-
                 this.cancelVibrator();
-                this.finish();
                 break;
             default:
                 Toast.makeText(ComplimentActivity.this, R.string.i_do_not_know_what_to_do, Toast.LENGTH_SHORT).show();
                 break;
         }
+    }
+
+    private void share() {
+        isShareClicked = false;
+        Intent intentSms = new Intent(this, ShareComplimentActivity.class);
+        intentSms.putExtra(getString(R.string.sp_sms_text), mComplimentContainer.getText().toString());
+        this.startActivity(intentSms);
     }
 
     @Override
@@ -191,24 +216,27 @@ public class ComplimentActivity extends AppCompatActivity implements View.OnClic
 
     @Override
     public void onBackPressed() {
-        launchAd();
-        super.onBackPressed();
+        if (AdManager.shouldLaunchAd(this)) {
+            launchAdOrDoAction();
+        } else {
+            super.onBackPressed();
+        }
+
     }
 
     private void launchCompliment(Bundle savedInstanceState) {
         makeHeartBeatVibrate();
-        ImageView imgLike = (ImageView) findViewById(R.id.imgLike);
+        ImageView imgLike = findViewById(R.id.imgLike);
         imgLike.setOnClickListener(this);
-        ImageView imgSMS = (ImageView) findViewById(R.id.imgSMS);
-        imgSMS.setOnClickListener(this);
-        ImageView imgDislike = (ImageView) findViewById(R.id.imgDislike);
+        ImageView share = findViewById(R.id.share);
+        share.setOnClickListener(this);
+        ImageView imgDislike = findViewById(R.id.imgDislike);
         imgDislike.setOnClickListener(this);
 
-        mComplimentContainer = (TextView) findViewById(R.id.tw_compliment_conteiner);
+        mComplimentContainer = findViewById(R.id.tw_compliment_conteiner);
 
-        RelativeLayout rlContainer = (RelativeLayout) findViewById(R.id.rlContainer);
+        RelativeLayout rlContainer = findViewById(R.id.rlContainer);
         int[] backgroundIds = getBackgrounds();
-
 
 
         if (savedInstanceState == null) {
@@ -224,10 +252,10 @@ public class ComplimentActivity extends AppCompatActivity implements View.OnClic
 
     private void makeHeartBeatVibrate() {
         Object getVibrator = this.getSystemService(Context.VIBRATOR_SERVICE);
-        boolean isVibratorOn = SharedPreferencesUtils.loadBoolean(this,ProjectConstants.SAVED_VIBRATION_STATUS, true);
+        boolean isVibratorOn = SharedPreferencesUtils.loadBoolean(this, ProjectConstants.SAVED_VIBRATION_STATUS, true);
         if (getVibrator != null && isVibratorOn) {
             mVibrator = (Vibrator) getVibrator;
-            long[] heartBeatPattern = {0,100,250,125,700,100,250,125};//old {0,100,50,125,600,100,50,125,600,100,50,125}; //heartbeat interval constants
+            long[] heartBeatPattern = {0, 100, 250, 125, 700, 100, 250, 125};//old {0,100,50,125,600,100,50,125,600,100,50,125}; //heartbeat interval constants
             mVibrator.vibrate(heartBeatPattern, -1);
         }
     }
@@ -240,7 +268,7 @@ public class ComplimentActivity extends AppCompatActivity implements View.OnClic
 
     private void addNotificationOnPane(int notificationId) {
         NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(this)
+                new NotificationCompat.Builder(this, getString(R.string.default_notification_channel_id))
                         .setSmallIcon(R.drawable.gentle_service)
                         .setContentTitle(getString(R.string.app_name))
                         .setContentText(getString(R.string.notify_unread_compliment_text));
@@ -261,17 +289,81 @@ public class ComplimentActivity extends AppCompatActivity implements View.OnClic
         // Gets an instance of the NotificationManager service
         NotificationManager mNotifyMgr = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         // Builds the notification and issues it.
+        assert mNotifyMgr != null;
         mNotifyMgr.notify(notificationId, mBuilder.build());
 
     }
 
-    public AdListener getAddListener() {
-        return new AdListener() {
+    public RewardedVideoAdListener getAddListener() {
+        return new RewardedVideoAdListener() {
+
             @Override
-            public void onAdClosed() {
-                super.onAdClosed();
+            public void onRewardedVideoAdLoaded() {
+                //Log.d("AppDebug", "ad has been loaded");
+                //do nothing
+            }
+
+            @Override
+            public void onRewardedVideoAdOpened() {
+                //Log.d("AppDebug", "ad has been opened");
+                //do nothing
+            }
+
+            @Override
+            public void onRewardedVideoStarted() {
+                //do nothing
+            }
+
+            @Override
+            public void onRewardedVideoAdClosed() {
+                //Log.d("AppDebug", "ad has been onRewardedVideoAdClosed");
+                loadNewAd();
+                adFinishedDoAction();
+                //do nothing
+            }
+
+            @Override
+            public void onRewarded(RewardItem rewardItem) {
+                AdManager.reward(ComplimentActivity.this);
+                Toast.makeText(ComplimentActivity.this, R.string.reward_message, Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onRewardedVideoAdLeftApplication() {
+                //Log.d("AppDebug", "ad onRewardedVideoAdLeftApplication");
+                //do nothing
+            }
+
+            @Override
+            public void onRewardedVideoAdFailedToLoad(int i) {
+                adFinishedDoAction();
+                //do nothing
+            }
+
+            @Override
+            public void onRewardedVideoCompleted() {
+                //Log.d("AppDebug", "ad onRewardedVideoCompleted");
+                //do nothing
+                adFinishedDoAction();
             }
         };
+    }
+
+    private void loadNewAd() {
+        mRewardedAd.loadAd(
+                getString(R.string.reward_ad_unit_id),
+                new AdRequest.Builder().build()
+        );
+        //Log.d("AppDebug", "ad loading started");
+    }
+
+    private void adFinishedDoAction() {
+        if (isShareClicked){
+            share();
+            return;
+        }
+
+        finish();
     }
 
     public String getComplimentFromDatabase() {
@@ -324,12 +416,30 @@ public class ComplimentActivity extends AppCompatActivity implements View.OnClic
         };
     }
 
-    private void launchAd() {
-        int num = SchedulingUtils.generateRandom(100);
-        if (num <= 50) {//50% chance to fire a interstitial mInterstitialAd
-            if (mInterstitialAd != null && mInterstitialAd.isLoaded()) {
-                mInterstitialAd.show();
-            }
+    private void launchAdOrDoAction() {
+        if (mRewardedAd != null && mRewardedAd.isLoaded()) {
+            mRewardedAd.show();
+        }else {
+            adFinishedDoAction();
         }
     }
+
+    @Override
+    public void onResume() {
+        mRewardedAd.resume(this);
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        mRewardedAd.pause(this);
+        super.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        mRewardedAd.destroy(this);
+        super.onDestroy();
+    }
 }
+

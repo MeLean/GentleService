@@ -1,28 +1,26 @@
 package com.meline.gentleservice.utils;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-
 //static class
 public final class CalendarUtils {
-    private static final SimpleDateFormat DATE_FORMAT =
-            new SimpleDateFormat("yyyy MM dd HH:mm:ss Z", Locale.getDefault());
+/*    private static final SimpleDateFormat DATE_FORMAT =
+            new SimpleDateFormat("yyyy MM dd HH:mm:ss Z", Locale.getDefault());*/
 
     private CalendarUtils() {
     }
 
-    public static String stringifyDateInFormat(Date date){
+/*    public static String stringifyDateInFormat(Date date){
         return DATE_FORMAT.format(date);
-    }
+    }*/
 
-    public static long minutesToMilliseconds(long minutes){
+    private static long minutesToMilliseconds(long minutes){
         return minutes * 1000 * 60;
     }
 
+/*
     public static long millisecondsToMinutes(long milliseconds){
         return milliseconds / 1000 / 60;
     }
+*/
 
     public static long getMillisecondsFromTime(int hours, int minutes){
         return 60 * minutesToMilliseconds(hours) + minutesToMilliseconds(minutes);

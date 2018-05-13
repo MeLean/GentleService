@@ -3,29 +3,29 @@
     <string name="default_start_time">21:30</string>
     <string name="default_end_time">08:30</string>
     <string name="ads_user_id">3815845016477716</string>
-    <string name="smart_banner_ad_unit_id">ca-app-pub-6177746105485183/5817094357 </string><!--test: ca-app-pub-3940256099942544/6300978111-->
-    <string name="interstitial_ad_unit_id">ca-app-pub-6177746105485183/8072556755 </string><!--test: ca-app-pub-3940256099942544/1033173712 -->
+    <string name="smart_banner_ad_unit_id" translatable="false">ca-app-pub-6177746105485183/5817094357</string>
+    <string name="reward_ad_unit_id" translatable="false">ca-app-pub-6177746105485183/8114920325</string>
 
     <!-- sharedPreferences values -->
-    <string name="sp_name">GS_SP_GentleServiceLocalData</string>
-    <string name="sp_timeWaiting">GS_SP_time</string>
-    <string name="sp_do_not_disturb">GS_SP_disturb</string>
-    <string name="sp_is_service_running">GS_SP_isRunning</string>
-    <string name="sp_is_scheduled">GS_SP_isScheduled</string>
-    <string name="sp_surprise_me">GS_SP_isSurpriseMe</string>
-    <string name="sp_start_time">GS_SP_spinner_timeOne</string>
-    <string name="sp_end_time">GS_SP_spinner_timeTwo</string>
-    <string name="sp_locale">GS_SP_app_locale</string>
-    <string name="sp_contact_name">GS_SP_contact_name</string>
-    <string name="sp_contact_phone_num">GS_SP_phone_number</string>
-    <string name="sp_sms_text">GS_SP_sms_text</string>
-    <string name="sp_timeEndPeriod">GS_SP_end_Period</string>
-    <string name="sp_locale_has_changed">GS_SP_locale_has_changed</string>
-    <string name="sp_surprise_spinner_value">GS_SP_sniper_value</string>
-    <string name="sp_surprise_time_max_value">GS_SP_time_max_value</string>
-    <string name="sp_time_wait_value">GS_SP_time_waiting_period</string>
-    <string name="sp_show_compliment_only">sp_show_compliment_only</string>
-    <string name="sp_restart_complimenting">GS_SP_restart_complimenting</string>
+    <string translatable="false" name="sp_name">GS_SP_GentleServiceLocalData</string>
+    <string translatable="false" name="sp_timeWaiting">GS_SP_time</string>
+    <string translatable="false" name="sp_do_not_disturb">GS_SP_disturb</string>
+    <string translatable="false" name="sp_is_service_running">GS_SP_isRunning</string>
+    <string translatable="false" name="sp_is_scheduled">GS_SP_isScheduled</string>
+    <string translatable="false" name="sp_surprise_me">GS_SP_isSurpriseMe</string>
+    <string translatable="false" name="sp_start_time">GS_SP_spinner_timeOne</string>
+    <string translatable="false" name="sp_end_time">GS_SP_spinner_timeTwo</string>
+    <string translatable="false" name="sp_locale">GS_SP_app_locale</string>
+    <string translatable="false" name="sp_contact_name">GS_SP_contact_name</string>
+    <string translatable="false" name="sp_contact_phone_num">GS_SP_phone_number</string>
+    <string translatable="false" name="sp_sms_text">GS_SP_sms_text</string>
+    <string translatable="false" name="sp_timeEndPeriod">GS_SP_end_Period</string>
+    <string translatable="false" name="sp_locale_has_changed">GS_SP_locale_has_changed</string>
+    <string translatable="false" name="sp_surprise_spinner_value">GS_SP_sniper_value</string>
+    <string translatable="false" name="sp_surprise_time_max_value">GS_SP_time_max_value</string>
+    <string translatable="false" name="sp_time_wait_value">GS_SP_time_waiting_period</string>
+    <string translatable="false" name="sp_show_compliment_only">sp_show_compliment_only</string>
+    <string translatable="false" name="sp_restart_complimenting">GS_SP_restart_complimenting</string>
 
     <string name="sms">SMS</string>
     <string name="i_do_not_know_what_to_do">I don not know what to do!</string>
@@ -143,6 +143,7 @@
     <string name="message">Message:</string>
     <string name="permission_needed">Permission necessary</string>
     <string name="sms_permission_needed">Message send permission necessary</string>
+    <string name="reward_message">You have been rewarded. You will see no ads for a week.</string>
 
 
     <string-array name="surprises">
@@ -161,4 +162,7 @@
     <string name="logo_icon">logo icon</string>
     <string name="sms_icon">sms icon</string>
     <string name="vibration">Vibration</string>
+
+    <string name="default_notification_channel_id" translatable="false">default</string>
+
 </resources>

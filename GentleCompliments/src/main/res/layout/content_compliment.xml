@@ -45,7 +45,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/imgSMS"
+            android:id="@+id/share"
             android:src="@drawable/sms_pic"
             android:layout_alignTop="@+id/imgLike"
             android:layout_centerHorizontal="true"

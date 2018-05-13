@@ -3,6 +3,7 @@ package com.meline.gentleservice.ui.fragments;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.view.Gravity;
@@ -39,7 +40,7 @@ public class LikeHatedComplimentFragment extends Fragment implements AdapterView
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_like_hated_compliment, container, false);
         mActivity = getActivity();
@@ -97,7 +98,7 @@ public class LikeHatedComplimentFragment extends Fragment implements AdapterView
     }
 
     private void loadList(ArrayList<String> hatedComplimentsStr,View view) {
-        ListView listView = (ListView) view.findViewById(R.id.lv_like_hated);
+        ListView listView = view.findViewById(R.id.lv_like_hated);
 
         if (hatedComplimentsStr.size() > 0) {
             listView.setOnItemClickListener(this);
@@ -128,7 +129,7 @@ public class LikeHatedComplimentFragment extends Fragment implements AdapterView
 
         String msg = isItForDelete ? getString(R.string.hated_was_deleted) : getString(R.string.hated_was_removed);
         Toast toast = Toast.makeText(mActivity, String.format("\"%s\" %s", complimentText, msg), Toast.LENGTH_SHORT);
-        TextView textView = (TextView) toast.getView().findViewById(android.R.id.message);
+        TextView textView = toast.getView().findViewById(android.R.id.message);
         if (textView != null) {
             textView.setGravity(Gravity.CENTER);
         }

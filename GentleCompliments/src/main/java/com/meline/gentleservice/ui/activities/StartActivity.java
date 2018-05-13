@@ -16,6 +16,7 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 import com.meline.gentleservice.R;
 import com.meline.gentleservice.ui.adapters.MainViewPagerAdapter;
+import com.meline.gentleservice.utils.AdManager;
 
 public class StartActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, ViewPager.OnPageChangeListener {
@@ -26,26 +27,27 @@ public class StartActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar =  findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        mNavigationView = (NavigationView) findViewById(R.id.nav_view);
+        mNavigationView = findViewById(R.id.nav_view);
         mNavigationView.setNavigationItemSelectedListener(this);
 
-        mViewPager = (ViewPager) findViewById(R.id.start_view_pager);
+        mViewPager = findViewById(R.id.start_view_pager);
         mViewPager.setAdapter(new MainViewPagerAdapter(this));
         mViewPager.addOnPageChangeListener(this);
         //index 1 is SetupFragment
         mViewPager.setCurrentItem(1, false);
 
+        if(AdManager.shouldLaunchAd(this)) {
+            MobileAds.initialize(this, "pub-" + getString(R.string.ads_user_id));
 
-        MobileAds.initialize(this, "pub-" + getString(R.string.ads_user_id));
+            AdView mAdView = findViewById(R.id.ad_view);
+            AdRequest adRequest = new AdRequest.Builder().build();
+            mAdView.loadAd(adRequest);
+        }
 
-        AdView mAdView = (AdView) findViewById(R.id.ad_view);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -54,7 +56,7 @@ public class StartActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -82,7 +84,7 @@ public class StartActivity extends AppCompatActivity
             System.exit(0);
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }

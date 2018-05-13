@@ -4,6 +4,7 @@ package com.meline.gentleservice.ui.fragments;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -52,7 +53,7 @@ public class ComplimentSetupFragment extends Fragment implements View.OnClickLis
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_compliment_setup, container, false);
@@ -65,7 +66,7 @@ public class ComplimentSetupFragment extends Fragment implements View.OnClickLis
         //manage preview set options
         isServiceRunning = SharedPreferencesUtils.loadBoolean(mActivity, getString(R.string.sp_is_service_running), false);
 
-        mFabStartStop = (FloatingActionButton) view.findViewById(R.id.fab_start_stop);
+        mFabStartStop = view.findViewById(R.id.fab_start_stop);
         mFabStartStop.setOnClickListener(this);
 
         if(isServiceRunning){
@@ -76,25 +77,25 @@ public class ComplimentSetupFragment extends Fragment implements View.OnClickLis
 
         mTimeWait = new EditText(mActivity);
         mSpinner = new Spinner(mActivity);
-        mDontDisturb = (CheckBox) view.findViewById(R.id.chb_dont_disturb);
+        mDontDisturb = view.findViewById(R.id.chb_dont_disturb);
         mDontDisturb.setOnClickListener(this);
 
-        mStartTime = (EditText) view.findViewById(R.id.et_start_time);
+        mStartTime = view.findViewById(R.id.et_start_time);
         mStartTime.setOnFocusChangeListener(this);
-        mEndTime = (EditText) view.findViewById(R.id.et_end_time);
+        mEndTime =  view.findViewById(R.id.et_end_time);
         mEndTime.setOnFocusChangeListener(this);
 
-        mAreaInput = (LinearLayout) view.findViewById(R.id.ll_input_area);
-        RadioGroup waitingTimeArea = (RadioGroup) view.findViewById(R.id.rgWaitingTimeArea);
+        mAreaInput = view.findViewById(R.id.ll_input_area);
+        RadioGroup waitingTimeArea = view.findViewById(R.id.rgWaitingTimeArea);
         waitingTimeArea.setOnCheckedChangeListener(this);
-        mScheduleRadio = (RadioButton) view.findViewById(R.id.rb_schedule);
-        mSurpriseMeRadio = (RadioButton) view.findViewById(R.id.rb_surpriseMe);
+        mScheduleRadio = view.findViewById(R.id.rb_schedule);
+        mSurpriseMeRadio = view.findViewById(R.id.rb_surpriseMe);
 
         managePreviouslyChosenValues();
         manageStartingValues(isServiceRunning);
 
         //vibration on/off checkbox
-        CheckBox vibratorCheck = (CheckBox) view.findViewById(R.id.vibrator_check);
+        CheckBox vibratorCheck = view.findViewById(R.id.vibrator_check);
         vibratorCheck.setChecked(
                 SharedPreferencesUtils.loadBoolean(mActivity, ProjectConstants.SAVED_VIBRATION_STATUS, true)
         );

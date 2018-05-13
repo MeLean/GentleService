@@ -34,7 +34,7 @@ public class ShareComplimentActivity extends AppCompatActivity implements View.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sms_activity);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         if (getSupportActionBar() != null) {
@@ -48,14 +48,14 @@ public class ShareComplimentActivity extends AppCompatActivity implements View.O
             smsText = savedInstanceState.getString(getString(R.string.sp_sms_text));
         }
 
-        mShareComplimentText = (EditText) findViewById(R.id.et_share_text);
+        mShareComplimentText = findViewById(R.id.et_share_text);
         mShareComplimentText.setText(smsText);
         mShareComplimentText.clearFocus();
 
         mShareComplimentText.setOnKeyListener(this);
 
 
-        ImageButton btnSms = (ImageButton) findViewById(R.id.btnSms);
+        ImageButton btnSms =  findViewById(R.id.btnSms);
 
         btnSms.setOnClickListener(this);
     }

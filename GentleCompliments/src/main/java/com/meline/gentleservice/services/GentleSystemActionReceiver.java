@@ -18,25 +18,26 @@ public class GentleSystemActionReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
         //Log.d("AppDebug","got action:" + action);
+        if(action != null) {
+            switch (action) {
+                case Intent.ACTION_LOCALE_CHANGED:
+                    //Log.d("AppDebug","GentleSystemActionReceiver ACTION_LOCALE_CHANGED");
+                    manageLocaleChanges(context);
+                    break;
 
-        switch (action) {
-            case Intent.ACTION_LOCALE_CHANGED:
-                //Log.d("AppDebug","GentleSystemActionReceiver ACTION_LOCALE_CHANGED");
-                manageLocaleChanges(context);
-                break;
+                case Intent.ACTION_BOOT_COMPLETED:
+                    //Log.d("AppDebug","GentleSystemActionReceiver ACTION_BOOT_COMPLETED");
+                    handleAction(context);
+                    break;
 
-            case Intent.ACTION_BOOT_COMPLETED:
-                //Log.d("AppDebug","GentleSystemActionReceiver ACTION_BOOT_COMPLETED");
-                handleAction(context);
-                break;
+                case ACTION_MANAGE_AFTER_LOCALE_CHANGED:
+                    //Log.d("AppDebug", "GentleSystemActionReceiver get ACTION_MANAGE_AFTER_LOCALE_CHANGED");
+                    manageAction(context);
+                    break;
 
-            case ACTION_MANAGE_AFTER_LOCALE_CHANGED:
-                //Log.d("AppDebug", "GentleSystemActionReceiver get ACTION_MANAGE_AFTER_LOCALE_CHANGED");
-                manageAction(context);
-                break;
-
-            default:
-                break;
+                default:
+                    break;
+            }
         }
 }
 

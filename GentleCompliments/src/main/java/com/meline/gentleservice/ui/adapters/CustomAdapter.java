@@ -26,7 +26,7 @@ public class CustomAdapter extends ArrayAdapter<String> {
         View customView = inflater.inflate(R.layout.cutom_row_string, parent, false);
 
         String rowText = getItem(position);
-        TextView twCustomRow = (TextView) customView.findViewById(R.id.tw_custom_row);
+        TextView twCustomRow =  customView.findViewById(R.id.tw_custom_row);
         twCustomRow.setText(rowText);
 
         return customView;

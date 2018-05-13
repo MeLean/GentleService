@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "901033253243",
+    "firebase_url": "https://gentle-compliments.firebaseio.com",
+    "project_id": "gentle-compliments",
+    "storage_bucket": "gentle-compliments.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:901033253243:android:b6cf3a2ae8974ca8",
+        "android_client_info": {
+          "package_name": "milen.com.gentleservice"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "901033253243-0nvtvi1n0s7hqrcrgv5ocl6uoljft548.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDPqEDNueg4CPLeUn8ToC3PSz6eVzwAkrg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

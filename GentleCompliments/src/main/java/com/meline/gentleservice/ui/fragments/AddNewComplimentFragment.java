@@ -3,6 +3,7 @@ package com.meline.gentleservice.ui.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -32,19 +33,19 @@ public class AddNewComplimentFragment extends Fragment implements View.OnClickLi
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_add_new_compliment, container, false);
 
-        etAddCompliment = (EditText)view.findViewById(R.id.etAddCompliment);
+        etAddCompliment = view.findViewById(R.id.etAddCompliment);
         etAddCompliment.setOnKeyListener(new SoftInputManager());
 
         if(savedInstanceState != null){
             etAddCompliment.setText(savedInstanceState.getString(SAVED_COMPLIMENT_VALUE));
         }
 
-        FloatingActionButton btnAddCompliment = (FloatingActionButton) view.findViewById(R.id.fab_add_compliment);
+        FloatingActionButton btnAddCompliment = view.findViewById(R.id.fab_add_compliment);
         btnAddCompliment.setOnClickListener(this);
         return view;
     }
@@ -83,7 +84,7 @@ public class AddNewComplimentFragment extends Fragment implements View.OnClickLi
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString(SAVED_COMPLIMENT_VALUE, etAddCompliment.getText().toString());
     }
