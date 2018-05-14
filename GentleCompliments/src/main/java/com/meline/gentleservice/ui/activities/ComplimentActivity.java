@@ -83,6 +83,7 @@ public class ComplimentActivity extends AppCompatActivity implements View.OnClic
             mRewardedAd = MobileAds.getRewardedVideoAdInstance(this);
             mRewardedAd.setRewardedVideoAdListener(getAddListener());
 
+            mRewardedAd.setImmersiveMode(true); //todo just check
             loadNewAd();
         }
 
