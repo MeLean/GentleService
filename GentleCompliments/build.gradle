@@ -31,6 +31,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-measurement-base:15.0.2'
     implementation 'com.google.firebase:firebase-ads:15.0.1'
     implementation 'com.android.support.constraint:constraint-layout:1.1.0'
+    implementation 'com.firebase:firebase-jobdispatcher:0.8.5'
 
     testImplementation 'junit:junit:4.12'
 }

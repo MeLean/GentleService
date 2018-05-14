@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.meline.gentleservice.ui.fragments.LikeHatedComplimentFragment">
+    tools:context="meline.com.gentleservice.ui.fragments.LikeHatedComplimentFragment">
 
     <ListView
         android:id="@+id/lv_like_hated"

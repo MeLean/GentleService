@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.meline.gentleservice">
+    package="meline.com.gentleservice">
 
     <uses-permission android:name="android.permission.VIBRATE" />
 
@@ -38,7 +38,7 @@
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="@string/default_notification_channel_id" />
 
-        <activity android:name=".ui.activities.ComplimentActivity"
+        <activity android:name="meline.com.gentleservice.ui.activities.ComplimentActivity"
             android:label="@string/title_activity_compliment"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -47,9 +47,9 @@
             </intent-filter>
         </activity>
 
-        <activity  android:name=".ui.activities.ShareComplimentActivity"
+        <activity  android:name="meline.com.gentleservice.ui.activities.ShareComplimentActivity"
             android:label="@string/title_activity_sms_activity"
-            android:parentActivityName=".ui.activities.ComplimentActivity"
+            android:parentActivityName="meline.com.gentleservice.ui.activities.ComplimentActivity"
             android:theme="@style/AppTheme.NoActionBar"
             tools:targetApi="jelly_bean">
             <intent-filter>
@@ -61,7 +61,7 @@
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.activities.ComplimentActivity" />
+                android:value="meline.com.gentleservice.ui.activities.ComplimentActivity" />
         </activity>
         <!-- Include the AdActivity configChanges and theme. -->
 
@@ -69,7 +69,7 @@
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
             android:theme="@android:style/Theme.Translucent" />
 
-        <activity android:name=".ui.activities.StartActivity"
+        <activity android:name="meline.com.gentleservice.ui.activities.StartActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -79,7 +79,7 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".services.GentleSystemActionReceiver"
+        <receiver android:name="meline.com.gentleservice.services.GentleSystemActionReceiver"
             android:enabled="true"
             android:process=":remote"
             android:exported="true"
@@ -87,13 +87,17 @@
             <intent-filter>
                 <action android:name="android.intent.action.LOCALE_CHANGED" />
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="com.meline.gentleservice.action.MANAGE_LOCALE_CHANGE" />
+                <action android:name="meline.com.gentleservice.action.MANAGE_LOCALE_CHANGE" />
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".services.AlarmsProvider"/>
-
-        <service android:name=".services.GentleSchedulingService" /> <!--android:exported="false"-->
+        <service
+            android:exported="false"
+            android:name="meline.com.gentleservice.services.AlarmsProvider">
+            <intent-filter>
+                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE"/>
+            </intent-filter>
+        </service>
 
     </application>
 

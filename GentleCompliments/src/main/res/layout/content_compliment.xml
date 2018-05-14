@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:showIn="@layout/activity_compliment"
-    tools:context=".ui.activities.ComplimentActivity"
+    tools:context="meline.com.gentleservice.ui.activities.ComplimentActivity"
     style="@style/customActivity">
     <RelativeLayout
         android:id="@+id/rlContainer"
@@ -34,7 +34,6 @@
         android:id="@+id/imgLike"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:clickable="true"
         android:src="@drawable/like"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
@@ -59,9 +58,8 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:contentDescription="@string/dislike_compliment_text"
-        android:clickable="true"
-        android:src="@drawable/dislike"
-            android:layout_marginBottom="@dimen/middle_margin" />
+        android:layout_marginBottom="@dimen/middle_margin"
+        android:src="@drawable/dislike"     />
 
     </RelativeLayout>
 </RelativeLayout>
