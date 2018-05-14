@@ -28,7 +28,7 @@ public class AlarmsProvider extends JobService {
 
     @Override
     public boolean onStopJob(JobParameters job) {
-        Log.d("AppDebug", "onStopJob:  " + new Date(System.currentTimeMillis()));
+        //Log.d("AppDebug", "onStopJob:  " + new Date(System.currentTimeMillis()));
         return false;// Answers the question: "Should this job be retried?"
     }
 

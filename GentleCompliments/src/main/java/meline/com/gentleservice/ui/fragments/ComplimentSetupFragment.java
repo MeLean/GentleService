@@ -2,6 +2,7 @@ package meline.com.gentleservice.ui.fragments;
 
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -27,6 +28,7 @@ import android.widget.Toast;
 
 import meline.com.gentleservice.constants.ProjectConstants;
 import meline.com.gentleservice.R;
+import meline.com.gentleservice.ui.activities.ComplimentActivity;
 import meline.com.gentleservice.ui.fragments.dialogs.TimePickerFragment;
 import meline.com.gentleservice.utils.SchedulingUtils;
 import meline.com.gentleservice.utils.SharedPreferencesUtils;
@@ -237,8 +239,9 @@ public class ComplimentSetupFragment extends Fragment implements View.OnClickLis
         if (mScheduleRadio.isChecked()) {
             String inputValue = mTimeWait.getText().toString();
             String errorMessage = SchedulingUtils.InputValidator.validate(mActivity, inputValue);
+
             if (errorMessage == null) {
-                startComplimentingJob(SchedulingUtils.SCHEDULE, Integer.parseInt(inputValue));
+                startComplimentingJob(SchedulingUtils.SCHEDULE, Integer.parseInt(inputValue) / 2); // todo change / 2 to * 60 converts minutes in seconds
             } else {
                 Toast.makeText(mActivity, errorMessage, Toast.LENGTH_SHORT).show();
             }
@@ -269,16 +272,16 @@ public class ComplimentSetupFragment extends Fragment implements View.OnClickLis
         int surpriseTimeMaxValue;
 
         if (spinValue.equals(getString(R.string.surprise_option_every_day))) {
-            //pattern days * hours * minutes  * seconds *  milliseconds
-            surpriseTimeMaxValue = 24 * 60 * 60 * 1000;
+            //pattern days * hours * minutes  * seconds //*  milliseconds
+            surpriseTimeMaxValue = 60; //todo 24 * 60 * 60; // * 1000;
         } else if (spinValue.equals(getString(R.string.surprise_option_every_12_hours))) {
-            surpriseTimeMaxValue = 12 * 60 * 60 * 1000;
+            surpriseTimeMaxValue = 12 * 60 * 60; // * 1000;
         } else if (spinValue.equals(getString(R.string.surprise_option_every_8_hours))) {
-            surpriseTimeMaxValue = 8 * 60 * 60 * 1000;
+            surpriseTimeMaxValue = 8 * 60 * 60 ; // * 1000;
         } else if (spinValue.equals(getString(R.string.surprise_option_every_6_hours))) {
-            surpriseTimeMaxValue = 6 * 60 * 60* 1000;
+            surpriseTimeMaxValue = 6 * 60 * 60; // * 1000;
         } else if (spinValue.equals(getString(R.string.surprise_option_every_week))) {
-            surpriseTimeMaxValue = 7 * 24 * 60 * 60 * 1000;
+            surpriseTimeMaxValue = 7 * 24 * 60 * 60; // * 1000;
         } else {
             throw new NullPointerException("Unimplemented option!");
         }
@@ -304,13 +307,11 @@ public class ComplimentSetupFragment extends Fragment implements View.OnClickLis
         extras.putInt(SchedulingUtils.TYPE_KEY, scheduleType);
         extras.putInt(SchedulingUtils.PERIOD_KEY, period);
         extras.putLong(SchedulingUtils.LAST_STARTED_ON_KEY, System.currentTimeMillis());
-        //if surprise random value must be calculated
-        int fireAfter = scheduleType == SchedulingUtils.SCHEDULE ? period : SchedulingUtils.generateRandom(period);
-        extras.putInt(SchedulingUtils.FIRE_AFTER_KEY, fireAfter);
+        extras.putInt(SchedulingUtils.FIRE_AFTER_KEY, period);
 
         //noinspection ConstantConditions
         SchedulingUtils.startComplimentingJob(getActivity().getApplicationContext(), extras);
-        //todo startActivity(new Intent(mActivity, ComplimentActivity.class));
+        startActivity(new Intent(mActivity, ComplimentActivity.class));
         mActivity.finish();
     }
 

@@ -28,6 +28,7 @@ public class SchedulingUtils {
     public static final String LAST_STARTED_ON_KEY = "started_on";
 
     private static final String TAG = "meline.com.gentleservice.SchedulingUtils_TAG";
+    private static final int ONE_DAY = 86400000; //default value one day
 
     public static void startComplimentingJob(Context context, Bundle extras) {
         Log.d("AppDebug", "startComplimentingJob called " + new Date(System.currentTimeMillis()));
@@ -120,6 +121,23 @@ public class SchedulingUtils {
 
 
     private static Job makeJob(FirebaseJobDispatcher dispatcher, Bundle extras) {
+        //default value
+        int type = SURPRISE;
+        int period = ONE_DAY;
+        int fireAfter = ONE_DAY;
+
+        if (extras != null) {
+            type = extras.getInt(TYPE_KEY);
+            period = extras.getInt(PERIOD_KEY);
+            fireAfter = extras.getInt(FIRE_AFTER_KEY);
+        }
+
+        int frequency = period;
+
+        if (type == SURPRISE) {
+            frequency = calculateFrequency(period, fireAfter, extras);
+        }
+
         return dispatcher.newJobBuilder()
                 // the JobService that will be called
                 .setService(AlarmsProvider.class)
@@ -130,7 +148,7 @@ public class SchedulingUtils {
                 // don't persist past a device reboot
                 .setLifetime(Lifetime.FOREVER)
                 // start between 0 and 60 seconds from now
-                .setTrigger(JobDispatcherUtils.periodicTrigger(30, 1))
+                .setTrigger(JobDispatcherUtils.periodicTrigger(frequency, 40))
                 // don't overwrite an existing job with the same tag
                 .setReplaceCurrent(false)
                 // retry with exponential backoff
@@ -144,6 +162,22 @@ public class SchedulingUtils {
                 )  */
                 .setExtras(extras)
                 .build();
+    }
+
+    private static int calculateFrequency(int period, int fireAfter, Bundle extras) {
+        if (period > 0 && fireAfter > 0 && extras != null){
+            int nextFireAfter = generateRandom(period);
+            int timeUntilPeriodIsEnded = period - fireAfter;
+
+            Log.d("AppDebug", "nextFireAfter " + nextFireAfter + " timeUntilPeriodIsEnded " + timeUntilPeriodIsEnded);
+
+
+            extras.putInt(FIRE_AFTER_KEY, nextFireAfter);
+
+            return timeUntilPeriodIsEnded + nextFireAfter;
+        }
+
+        return ONE_DAY;
     }
 
     public static class InputValidator {
@@ -172,10 +206,9 @@ public class SchedulingUtils {
 
 
     private static class JobDispatcherUtils {
-        public static JobTrigger periodicTrigger(int frequency, int tolerance) {
+        @SuppressWarnings("SameParameterValue")
+        static JobTrigger periodicTrigger(int frequency, int tolerance) {
             return Trigger.executionWindow(frequency - tolerance, frequency);
         }
     }
-
-
 }
