@@ -25,7 +25,7 @@ public class AppNotificationManager {
                         context,
                         notificationId,
                         intentLoad,
-                        PendingIntent.FLAG_ONE_SHOT
+                        PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_UPDATE_CURRENT
                 );
 
         mBuilder.setContentIntent(resultPendingIntent);
