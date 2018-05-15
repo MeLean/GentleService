@@ -10,7 +10,7 @@
     <item
     android:id="@+id/action_return"
     android:title="@string/back_text"
-    android:icon="@android:drawable/ic_menu_close_clear_cancel"
+    android:icon="@drawable/ic_cancel"
     android:orderInCategory="1001"
     app:showAsAction="ifRoom|withText" />
 </menu>

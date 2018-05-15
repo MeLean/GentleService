@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="meline.com.gentleservice.ui.activities.ShareComplimentActivity"
+    tools:context="milen.com.gentleservice.ui.activities.ShareComplimentActivity"
     tools:showIn="@layout/activity_sms_activity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -20,6 +20,8 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:orientation="vertical"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
        >
 
         <TextView
@@ -42,14 +44,15 @@
 
 
         <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/btnSms"
-            android:src="@drawable/sms_pic"
+            android:layout_width="@dimen/heard_buttons_size"
+            android:layout_height="@dimen/heard_buttons_size"
+            android:id="@+id/btn_sms"
+            android:src="@drawable/ic_sms"
             android:contentDescription="@string/sms_icon"
-            style="@style/imageButton"
+            android:scaleType="fitXY"
             android:layout_gravity="center"
             android:layout_marginTop="@dimen/middle_margin"
+            android:background="@android:color/transparent"
             />
     </LinearLayout>
 </ScrollView>

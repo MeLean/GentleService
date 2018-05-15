@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="meline.com.gentleservice">
+    package="milen.com.gentleservice">
 
     <uses-permission android:name="android.permission.VIBRATE" />
 
@@ -38,18 +38,24 @@
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="@string/default_notification_channel_id" />
 
-        <activity android:name="meline.com.gentleservice.ui.activities.ComplimentActivity"
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/colorAccent" />
+
+        <activity
+            android:name="milen.com.gentleservice.ui.activities.ComplimentActivity"
             android:label="@string/title_activity_compliment"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.QUICK_VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
-        <activity  android:name="meline.com.gentleservice.ui.activities.ShareComplimentActivity"
+        <activity
+            android:name="milen.com.gentleservice.ui.activities.ShareComplimentActivity"
             android:label="@string/title_activity_sms_activity"
-            android:parentActivityName="meline.com.gentleservice.ui.activities.ComplimentActivity"
+            android:parentActivityName="milen.com.gentleservice.ui.activities.ComplimentActivity"
             android:theme="@style/AppTheme.NoActionBar"
             tools:targetApi="jelly_bean">
             <intent-filter>
@@ -61,15 +67,16 @@
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="meline.com.gentleservice.ui.activities.ComplimentActivity" />
+                android:value="milen.com.gentleservice.ui.activities.ComplimentActivity" />
         </activity>
         <!-- Include the AdActivity configChanges and theme. -->
 
-        <activity android:name="com.google.android.gms.ads.AdActivity"
+        <activity
+            android:name="com.google.android.gms.ads.AdActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
             android:theme="@android:style/Theme.Translucent" />
-
-        <activity android:name="meline.com.gentleservice.ui.activities.StartActivity"
+        <activity
+            android:name="milen.com.gentleservice.ui.activities.StartActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -79,11 +86,11 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name="meline.com.gentleservice.services.GentleSystemActionReceiver"
+        <receiver
+            android:name="milen.com.gentleservice.services.GentleSystemActionReceiver"
             android:enabled="true"
-            android:process=":remote"
             android:exported="true"
-            ><!--android:exported="false"-->
+            android:process=":remote"> <!-- android:exported="false" -->
             <intent-filter>
                 <action android:name="android.intent.action.LOCALE_CHANGED" />
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
@@ -92,13 +99,23 @@
         </receiver>
 
         <service
-            android:exported="false"
-            android:name="meline.com.gentleservice.services.AlarmsProvider">
+            android:name="milen.com.gentleservice.services.AlarmsProvider"
+            android:exported="false">
             <intent-filter>
-                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE"/>
+                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE" />
             </intent-filter>
         </service>
+        <service android:name="milen.com.gentleservice.services.TokenService">
+            <intent-filter>milen.com.gentleservice.
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
+        <service android:name="milen.com.gentleservice.services.MessagingServices">
 
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

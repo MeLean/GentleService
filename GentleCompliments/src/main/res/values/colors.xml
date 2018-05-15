@@ -9,9 +9,9 @@
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorTransparentWhite">#99FFFFFF</color>
     <!-- main view background gradients -->
-    <color name="mainBackgroundStartColor">#DDFF0DFF</color>
-    <color name="mainBackgroundCenterColor">#DDFFFFFF</color>
-    <color name="mainBackgroundEndColor">#DDFF40FF</color>
+    <color name="mainBackgroundStartColor">#FF0DFF</color>
+    <color name="mainBackgroundCenterColor">#FFFFFF</color>
+    <color name="mainBackgroundEndColor">#FF40FF</color>
     <!-- color buttons gradient -->
     <color name="btnNormalStartColor">#BF5FFF</color>
     <color name="btnNormalCenterColor">#DDFFFFFF</color>
@@ -20,4 +20,6 @@
     <color name="btnClickedStartColor">#800080</color>
     <color name="btnClickedCenterColor">#DDFFFFFF</color>
     <color name="btnClickedEndColor">#800080</color>
+
+    <color name="icons_color">#DD838383</color>
 </resources>
