@@ -8,7 +8,7 @@
     android:orientation="vertical"
     android:background="@drawable/activity_gradient_background"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="milen.com.gentleservice.ui.activities.StartActivity"
+    tools:context="milen.com.gentleservice.ui.activities.StartingActivity"
     tools:showIn="@layout/app_bar_start">
 
     <android.support.v4.view.ViewPager

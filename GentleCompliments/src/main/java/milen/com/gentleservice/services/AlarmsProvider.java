@@ -1,5 +1,6 @@
 package milen.com.gentleservice.services;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -26,9 +27,9 @@ public class AlarmsProvider extends JobService {
     @Override
     public boolean onStartJob(JobParameters job) {
         Log.d("AppDebug", "onStartJob:  " + new Date(System.currentTimeMillis()));
-        fireComplimentActivity();
+        fireComplimentActivity(getApplicationContext());
         startNextJobFrom(job);
-        return false;// Answers the question: "Is there still work going on?"
+        return true;// Answers the question: "Is there still work going on?"
     }
 
     @Override
@@ -37,17 +38,17 @@ public class AlarmsProvider extends JobService {
         return false;// Answers the question: "Should this job be retried?"
     }
 
-    private void fireComplimentActivity(){
-        Intent complimentIntent = new Intent(this, ComplimentActivity.class);
+    public static void fireComplimentActivity(Context context){
+        Intent complimentIntent = new Intent(context, ComplimentActivity.class);
         complimentIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        fireCompliment(complimentIntent);
+        fireCompliment(context, complimentIntent);
     }
 
-    private void fireCompliment(Intent complimentIntent) {
-        if (checkForDisturbPeriod()){
-            AppNotificationManager.addNotificationOnPane(getApplicationContext(), complimentIntent);
+    private static void fireCompliment(Context context , Intent complimentIntent) {
+        if (checkForDisturbPeriod(context)){
+            AppNotificationManager.addNotificationOnPane(context, complimentIntent);
         }else{
-            startActivity(complimentIntent);
+            context.startActivity(complimentIntent);
         }
     }
 
@@ -57,11 +58,12 @@ public class AlarmsProvider extends JobService {
         SchedulingUtils.startComplimentingJob(getApplicationContext(), extras);
     }
 
-    private boolean checkForDisturbPeriod() {
-        boolean isDoNotDisturbMode = SharedPreferencesUtils.loadBoolean(getApplicationContext(), getString(R.string.sp_do_not_disturb), false);
+    private static boolean checkForDisturbPeriod(Context context) {
+        boolean isDoNotDisturbMode = SharedPreferencesUtils.loadBoolean(context, context.getString(R.string.sp_do_not_disturb), true);
+        Log.d("AppDebug", "checkForDisturbPeriod isDoNotDisturbMode " + isDoNotDisturbMode);
         if (isDoNotDisturbMode){
-            String firstTime = SharedPreferencesUtils.loadString(this, getString(R.string.sp_start_time), getString(R.string.default_start_time));
-            String secondTime = SharedPreferencesUtils.loadString(this, getString(R.string.sp_end_time), getString(R.string.default_end_time));
+            String firstTime = SharedPreferencesUtils.loadString(context, context.getString(R.string.sp_start_time), context.getString(R.string.default_start_time));
+            String secondTime = SharedPreferencesUtils.loadString(context, context.getString(R.string.sp_end_time), context.getString(R.string.default_end_time));
             String TIME_SEPARATOR = ":";
             String[] firstTimeArr = firstTime.split(TIME_SEPARATOR);
             String[] secondTimeArr = secondTime.split(TIME_SEPARATOR);
@@ -75,7 +77,8 @@ public class AlarmsProvider extends JobService {
             long currentHoursInMilliseconds = CalendarUtils.getMillisecondsFromTime(currentHours, currentMinutes);
             long endTimeInMilliseconds =
                     CalendarUtils.getMillisecondsFromTime(Integer.parseInt(secondTimeArr[0]), Integer.parseInt(secondTimeArr[1]));
-
+            Log.d("AppDebug", "checkForDisturbPeriod result: " +
+                    CalendarUtils.checkIsBetween(startTimeInMilliseconds, currentHoursInMilliseconds, endTimeInMilliseconds));
             return CalendarUtils.checkIsBetween(startTimeInMilliseconds, currentHoursInMilliseconds, endTimeInMilliseconds);
         } else {
             return false;

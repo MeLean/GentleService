@@ -31,7 +31,7 @@ public class SchedulingUtils {
     private static final int ONE_DAY = 86400000; //default value one day
 
     public static void startComplimentingJob(Context context, Bundle extras) {
-        //Log.d("AppDebug", "startComplimentingJob called " + new Date(System.currentTimeMillis()));
+        Log.d("AppDebug", "startComplimentingJob called " + new Date(System.currentTimeMillis()));
         FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(context));
 
         boolean isSurpriseMe = SharedPreferencesUtils.loadBoolean(context, context.getString(R.string.sp_surprise_me), true);
@@ -141,7 +141,7 @@ public class SchedulingUtils {
                 // don't persist past a device reboot
                 .setLifetime(Lifetime.FOREVER)
                 // start between 0 and 60 seconds from now
-                .setTrigger(JobDispatcherUtils.periodicTrigger(frequency, 40))
+                .setTrigger(JobDispatcherUtils.periodicTrigger(frequency, 10))
                 // don't overwrite an existing job with the same tag
                 .setReplaceCurrent(false)
                 // retry with exponential backoff
@@ -174,7 +174,7 @@ public class SchedulingUtils {
     public static class InputValidator {
         public static String validate(Context context, String enteredInt) {
             //time constants should be in minutes
-            int MINIMUM_WAITING_TIME = 60; //one hour in minutes is a minimum time
+            int MINIMUM_WAITING_TIME = 1; //one hour in minutes is a minimum time //todo
             int MAX_WAITING_TIME = 35790;
             try {
                 int inputNum = (Integer.parseInt(String.valueOf(enteredInt)));
@@ -194,7 +194,6 @@ public class SchedulingUtils {
             return null;
         }
     }
-
 
     private static class JobDispatcherUtils {
         @SuppressWarnings("SameParameterValue")

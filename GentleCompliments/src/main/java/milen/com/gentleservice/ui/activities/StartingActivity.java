@@ -20,7 +20,7 @@ import milen.com.gentleservice.R;
 import milen.com.gentleservice.ui.adapters.MainViewPagerAdapter;
 import milen.com.gentleservice.utils.AdManager;
 
-public class StartActivity extends AppCompatActivity
+public class StartingActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, ViewPager.OnPageChangeListener {
     NavigationView mNavigationView;
     private ViewPager mViewPager;
@@ -28,7 +28,7 @@ public class StartActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_start);
+        setContentView(R.layout.activity_starting);
         Toolbar toolbar =  findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 

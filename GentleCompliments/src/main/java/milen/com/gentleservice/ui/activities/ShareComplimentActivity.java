@@ -120,7 +120,7 @@ public class ShareComplimentActivity extends AppCompatActivity implements View.O
                 finish();
                 return true;
             case R.id.action_settings:
-                startActivity(new Intent(ShareComplimentActivity.this, StartActivity.class));
+                startActivity(new Intent(ShareComplimentActivity.this, StartingActivity.class));
                 return true;
         }
         return super.onOptionsItemSelected(item);

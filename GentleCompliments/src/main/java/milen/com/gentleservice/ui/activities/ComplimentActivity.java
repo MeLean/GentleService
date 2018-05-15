@@ -106,7 +106,7 @@ public class ComplimentActivity extends AppCompatActivity implements View.OnClic
                 onBackPressed();
                 return true;
             case R.id.action_settings:
-                startActivity(new Intent(ComplimentActivity.this, StartActivity.class));
+                startActivity(new Intent(ComplimentActivity.this, StartingActivity.class));
                 return true;
         }
 
