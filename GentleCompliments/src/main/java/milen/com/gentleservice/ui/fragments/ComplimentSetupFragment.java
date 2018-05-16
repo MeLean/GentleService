@@ -26,10 +26,14 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.evernote.android.job.util.support.PersistableBundleCompat;
+
 import milen.com.gentleservice.constants.ProjectConstants;
 import milen.com.gentleservice.R;
+import milen.com.gentleservice.services.evernote_job.AlarmsProvider;
 import milen.com.gentleservice.ui.activities.ComplimentActivity;
 import milen.com.gentleservice.ui.fragments.dialogs.TimePickerFragment;
+import milen.com.gentleservice.utils.AppNotificationManager;
 import milen.com.gentleservice.utils.SchedulingUtils;
 import milen.com.gentleservice.utils.SharedPreferencesUtils;
 import milen.com.gentleservice.utils.SoftInputManager;
@@ -241,7 +245,7 @@ public class ComplimentSetupFragment extends Fragment implements View.OnClickLis
             String errorMessage = SchedulingUtils.InputValidator.validate(mActivity, inputValue);
 
             if (errorMessage == null) {
-                startComplimentingJob(SchedulingUtils.SCHEDULE, Integer.parseInt(inputValue) * 60); // converts minutes in seconds
+                startComplimentingJob(SchedulingUtils.SCHEDULE, Integer.parseInt(inputValue) * 60 * 1000); // converts minutes in milliseconds
             } else {
                 Toast.makeText(mActivity, errorMessage, Toast.LENGTH_SHORT).show();
             }
@@ -259,7 +263,7 @@ public class ComplimentSetupFragment extends Fragment implements View.OnClickLis
     }
 
     private void stopService() {
-        SchedulingUtils.stopComplimenting(mActivity);
+        SchedulingUtils.stopComplimenting();
         SharedPreferencesUtils.removeValue(mActivity, ProjectConstants.SAVED_NEXT_LAUNCH_MILLISECONDS);
         SharedPreferencesUtils.removeValue(mActivity, ProjectConstants.SAVED_SURPRISE_ENDING_MILLISECONDS);
         setDefaultComponentsValues();
@@ -271,16 +275,16 @@ public class ComplimentSetupFragment extends Fragment implements View.OnClickLis
         int surpriseTimeMaxValue;
 
         if (spinValue.equals(getString(R.string.surprise_option_every_day))) {
-            //pattern days * hours * minutes  * seconds //*  milliseconds
-            surpriseTimeMaxValue = 24 * 60 * 60; // * 1000;
+            //pattern days * hours * minutes  * seconds *  milliseconds
+            surpriseTimeMaxValue = 24 * 60 * 60 * 1000;
         } else if (spinValue.equals(getString(R.string.surprise_option_every_12_hours))) {
-            surpriseTimeMaxValue = 12 * 60 * 60; // * 1000;
+            surpriseTimeMaxValue = 12 * 60 * 60 * 1000;
         } else if (spinValue.equals(getString(R.string.surprise_option_every_8_hours))) {
-            surpriseTimeMaxValue = 8 * 60 * 60 ; // * 1000;
+            surpriseTimeMaxValue = 8 * 60 * 60 * 1000;
         } else if (spinValue.equals(getString(R.string.surprise_option_every_6_hours))) {
-            surpriseTimeMaxValue = 60*60;//6 * 60 * 60; // * 1000; //todo remove value wit comment
+            surpriseTimeMaxValue = 60 * 60 * 1000; //6 * 60 * 60 * 1000; //todo replace value whit comment
         } else if (spinValue.equals(getString(R.string.surprise_option_every_week))) {
-            surpriseTimeMaxValue = 7 * 24 * 60 * 60; // * 1000;
+            surpriseTimeMaxValue = 7 * 24 * 60 * 60 * 1000;
         } else {
             throw new NullPointerException("Unimplemented option!");
         }
@@ -302,15 +306,21 @@ public class ComplimentSetupFragment extends Fragment implements View.OnClickLis
     private void startComplimentingJob(int scheduleType, int period) {
         setStartingComponentsValues();
 
-        Bundle extras = new Bundle();
+        PersistableBundleCompat extras = new PersistableBundleCompat();
         extras.putInt(SchedulingUtils.TYPE_KEY, scheduleType);
         extras.putInt(SchedulingUtils.PERIOD_KEY, period);
-        extras.putLong(SchedulingUtils.LAST_STARTED_ON_KEY, System.currentTimeMillis());
-        extras.putInt(SchedulingUtils.FIRE_AFTER_KEY, period);
+        extras.putInt(SchedulingUtils.FIRE_AFTER_KEY, period); //on start fire at must be equals on period
 
         //noinspection ConstantConditions
-        SchedulingUtils.startComplimentingJob(getActivity().getApplicationContext(), extras);
-        startActivity(new Intent(getActivity(), ComplimentActivity.class));
+        SchedulingUtils.startComplimentingJob(extras);
+
+        Intent intent = new Intent(getActivity(), ComplimentActivity.class);
+        if (AlarmsProvider.shouldAddNotification(getContext())){
+            AppNotificationManager.addNotificationOnPane(getContext(), intent);
+        }else {
+            startActivity(intent);
+        }
+
         mActivity.finish();
     }
 

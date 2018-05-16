@@ -1,15 +1,17 @@
-package milen.com.gentleservice.services;
+package milen.com.gentleservice.services.evernote_job;
+
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.firebase.jobdispatcher.JobParameters;
-import com.firebase.jobdispatcher.JobService;
+import com.evernote.android.job.Job;
+import com.evernote.android.job.JobManager;
+import com.evernote.android.job.JobRequest;
+import com.evernote.android.job.util.support.PersistableBundleCompat;
 
 import java.util.Calendar;
-import java.util.Date;
 
 import milen.com.gentleservice.R;
 import milen.com.gentleservice.ui.activities.ComplimentActivity;
@@ -18,46 +20,76 @@ import milen.com.gentleservice.utils.CalendarUtils;
 import milen.com.gentleservice.utils.SchedulingUtils;
 import milen.com.gentleservice.utils.SharedPreferencesUtils;
 
-/**
- * When the alarm fires, this WakefulBroadcastReceiver receives the broadcast Intent
- * and then starts the IntentService {@code GentleSchedulingService} to do some work.
- */
-public class AlarmsProvider extends JobService {
+
+public class AlarmsProvider extends Job {
+    static final String TAG = "job_alarm_tag";
 
     @Override
-    public boolean onStartJob(JobParameters job) {
-        Log.d("AppDebug", "onStartJob:  " + new Date(System.currentTimeMillis()));
-        fireComplimentActivity(getApplicationContext());
-        startNextJobFrom(job);
-        return true;// Answers the question: "Is there still work going on?"
+    @NonNull
+    protected Result onRunJob(@NonNull Params params) {
+        fireComplimentActivity(getContext());
+        SchedulingUtils.startComplimentingJob(params.getExtras());
+        return Result.SUCCESS;
     }
 
     @Override
-    public boolean onStopJob(JobParameters job) {
-        //Log.d("AppDebug", "onStopJob:  " + new Date(System.currentTimeMillis()));
-        return false;// Answers the question: "Should this job be retried?"
+    protected void onCancel() {
+        Log.d("AppDebug", "onCancel");
+        SchedulingUtils.currentJobId = -1;
+        super.onCancel();
     }
 
-    public static void fireComplimentActivity(Context context){
+
+
+/*     extras.putInt(SchedulingUtils.TYPE_KEY, scheduleType);
+     extras.putInt(SchedulingUtils.PERIOD_KEY, period);
+     extras.putInt(SchedulingUtils.FIRE_AFTER_KEY, period);*/
+
+    public static int scheduleExactJob(PersistableBundleCompat extras) {
+        extras = SchedulingUtils.makeNewExtras(extras);
+
+        Log.d("AppDebug", "scheduleExactJob extras:\n" +
+                " type: " + extras.getInt(SchedulingUtils.TYPE_KEY, -1) +
+                " period: " + extras.getInt(SchedulingUtils.PERIOD_KEY, -1) +
+                " fire: " + extras.getInt(SchedulingUtils.FIRE_AFTER_KEY, -1)
+        );
+
+
+        return new JobRequest.Builder(TAG)
+                .setExact(extras.getInt(SchedulingUtils.FIRE_AFTER_KEY, 86400000))//default one day
+                .setUpdateCurrent(true)
+                .setRequiresDeviceIdle(false)
+                .setExtras(extras)
+                .build()
+                .schedule();
+    }
+
+    public static void cancelJob(int jobId) {
+        JobManager.instance().cancel(jobId);
+    }
+
+    private static void fireComplimentActivity(Context context) {
+
         Intent complimentIntent = new Intent(context, ComplimentActivity.class);
         complimentIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+        if (AlarmsProvider.shouldAddNotification(context)) {
+            AppNotificationManager.addNotificationOnPane(context, complimentIntent);
+            return;
+        }
+
+
         fireCompliment(context, complimentIntent);
     }
 
-    private static void fireCompliment(Context context , Intent complimentIntent) {
+    private static void fireCompliment(Context context, Intent complimentIntent) {
         context.startActivity(complimentIntent);
-    }
-
-
-    private void startNextJobFrom(JobParameters job) {
-        Bundle extras = job.getExtras();
-        SchedulingUtils.startComplimentingJob(getApplicationContext(), extras);
     }
 
     public static boolean shouldAddNotification(Context context) {
         boolean isDoNotDisturbMode = SharedPreferencesUtils.loadBoolean(context, context.getString(R.string.sp_do_not_disturb), true);
-        Log.d("AppDebug", "checkForDisturbPeriod isDoNotDisturbMode " + isDoNotDisturbMode);
-        if (isDoNotDisturbMode){
+        //Log.d("AppDebug", "checkForDisturbPeriod isDoNotDisturbMode " + isDoNotDisturbMode);
+        if (isDoNotDisturbMode) {
             String firstTime = SharedPreferencesUtils.loadString(context, context.getString(R.string.sp_start_time), context.getString(R.string.default_start_time));
             String secondTime = SharedPreferencesUtils.loadString(context, context.getString(R.string.sp_end_time), context.getString(R.string.default_end_time));
             String TIME_SEPARATOR = ":";
@@ -73,8 +105,7 @@ public class AlarmsProvider extends JobService {
             long currentHoursInMilliseconds = CalendarUtils.getMillisecondsFromTime(currentHours, currentMinutes);
             long endTimeInMilliseconds =
                     CalendarUtils.getMillisecondsFromTime(Integer.parseInt(secondTimeArr[0]), Integer.parseInt(secondTimeArr[1]));
-            Log.d("AppDebug", "checkForDisturbPeriod result: " +
-                    CalendarUtils.checkIsBetween(startTimeInMilliseconds, currentHoursInMilliseconds, endTimeInMilliseconds));
+
             return CalendarUtils.checkIsBetween(startTimeInMilliseconds, currentHoursInMilliseconds, endTimeInMilliseconds);
         } else {
             return false;
@@ -202,4 +233,4 @@ public class AlarmsProvider extends JobService {
                 PendingIntent.FLAG_UPDATE_CURRENT
         );
     }*/
-    // END_INCLUDE(cancel_alarm)
+// END_INCLUDE(cancel_alarm)

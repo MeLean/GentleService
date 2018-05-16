@@ -39,9 +39,7 @@ public class AsyncTaskManageDbAfterLocaleChanges extends AsyncTask<Context, Void
     private static void broadcastManageLoacaleChangesAction(Context context) {
         Intent intent = new Intent();
         intent.setAction(GentleSystemActionReceiver.ACTION_MANAGE_AFTER_LOCALE_CHANGED);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
-            intent.setFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-        }
+        intent.setFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
         context.sendBroadcast(intent);
     }
 }

@@ -12,7 +12,7 @@ import milen.com.gentleservice.R;
 public class AppNotificationManager {
 
     public static void addNotificationOnPane(Context context, Intent intentLoad, String message) {
-        Log.d("AppDebug", "Notification must be added");
+        //Log.d("AppDebug", "Notification must be added");
         int notificationId = (int)(System.currentTimeMillis() / 1000);
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(context, context.getString(R.string.default_notification_channel_id))
