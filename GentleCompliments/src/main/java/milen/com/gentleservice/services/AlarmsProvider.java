@@ -45,11 +45,7 @@ public class AlarmsProvider extends JobService {
     }
 
     private static void fireCompliment(Context context , Intent complimentIntent) {
-        if (checkForDisturbPeriod(context)){
-            AppNotificationManager.addNotificationOnPane(context, complimentIntent);
-        }else{
-            context.startActivity(complimentIntent);
-        }
+        context.startActivity(complimentIntent);
     }
 
 
@@ -58,7 +54,7 @@ public class AlarmsProvider extends JobService {
         SchedulingUtils.startComplimentingJob(getApplicationContext(), extras);
     }
 
-    private static boolean checkForDisturbPeriod(Context context) {
+    public static boolean shouldAddNotification(Context context) {
         boolean isDoNotDisturbMode = SharedPreferencesUtils.loadBoolean(context, context.getString(R.string.sp_do_not_disturb), true);
         Log.d("AppDebug", "checkForDisturbPeriod isDoNotDisturbMode " + isDoNotDisturbMode);
         if (isDoNotDisturbMode){

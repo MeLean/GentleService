@@ -33,9 +33,11 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 
 import milen.com.gentleservice.constants.ProjectConstants;
 import milen.com.gentleservice.api.database.DBHelper;
+import milen.com.gentleservice.services.AlarmsProvider;
 import milen.com.gentleservice.utils.AdManager;
 import milen.com.gentleservice.api.objects_model.Compliment;
 import milen.com.gentleservice.R;
+import milen.com.gentleservice.utils.AppNotificationManager;
 import milen.com.gentleservice.utils.SchedulingUtils;
 import milen.com.gentleservice.utils.SharedPreferencesUtils;
 
@@ -53,6 +55,17 @@ public class ComplimentActivity extends AppCompatActivity implements View.OnClic
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Intent startingIntent = getIntent();
+        if(shouldSkipNotificationCheck(startingIntent)) {
+            if (AlarmsProvider.shouldAddNotification(this)) {
+                Intent intent = new Intent(this, ComplimentActivity.class);
+                intent.putExtra(ProjectConstants.SKIP_NOTIFICATION_KEY, true);
+                AppNotificationManager.addNotificationOnPane(this, intent);
+                finish();
+            }
+            ;
+        }
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             setShowWhenLocked(true);
             setTurnScreenOn(true);
@@ -88,6 +101,10 @@ public class ComplimentActivity extends AppCompatActivity implements View.OnClic
         }
 
         launchCompliment(savedInstanceState);
+    }
+
+    private boolean shouldSkipNotificationCheck(Intent startingIntent) {
+        return startingIntent.hasExtra(ProjectConstants.SKIP_NOTIFICATION_KEY);
     }
 
 

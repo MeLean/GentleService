@@ -2,7 +2,6 @@ package milen.com.gentleservice.ui.fragments;
 
 
 import android.app.Activity;
-import android.app.AlarmManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -29,7 +28,6 @@ import android.widget.Toast;
 
 import milen.com.gentleservice.constants.ProjectConstants;
 import milen.com.gentleservice.R;
-import milen.com.gentleservice.services.AlarmsProvider;
 import milen.com.gentleservice.ui.activities.ComplimentActivity;
 import milen.com.gentleservice.ui.fragments.dialogs.TimePickerFragment;
 import milen.com.gentleservice.utils.SchedulingUtils;
@@ -280,7 +278,7 @@ public class ComplimentSetupFragment extends Fragment implements View.OnClickLis
         } else if (spinValue.equals(getString(R.string.surprise_option_every_8_hours))) {
             surpriseTimeMaxValue = 8 * 60 * 60 ; // * 1000;
         } else if (spinValue.equals(getString(R.string.surprise_option_every_6_hours))) {
-            surpriseTimeMaxValue = 30;//6 * 60 * 60; // * 1000; //todo
+            surpriseTimeMaxValue = 60*60;//6 * 60 * 60; // * 1000; //todo remove value wit comment
         } else if (spinValue.equals(getString(R.string.surprise_option_every_week))) {
             surpriseTimeMaxValue = 7 * 24 * 60 * 60; // * 1000;
         } else {
@@ -312,7 +310,7 @@ public class ComplimentSetupFragment extends Fragment implements View.OnClickLis
 
         //noinspection ConstantConditions
         SchedulingUtils.startComplimentingJob(getActivity().getApplicationContext(), extras);
-        AlarmsProvider.fireComplimentActivity(mActivity);
+        startActivity(new Intent(getActivity(), ComplimentActivity.class));
         mActivity.finish();
     }
 

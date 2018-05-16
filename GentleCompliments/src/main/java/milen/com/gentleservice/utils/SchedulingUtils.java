@@ -174,7 +174,7 @@ public class SchedulingUtils {
     public static class InputValidator {
         public static String validate(Context context, String enteredInt) {
             //time constants should be in minutes
-            int MINIMUM_WAITING_TIME = 1; //one hour in minutes is a minimum time //todo
+            int MINIMUM_WAITING_TIME = 60; //one hour in minutes is a minimum time
             int MAX_WAITING_TIME = 35790;
             try {
                 int inputNum = (Integer.parseInt(String.valueOf(enteredInt)));
