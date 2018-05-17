@@ -107,6 +107,15 @@
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
+
+        <service
+            android:exported="false"
+            android:name=".services.AlarmsProvider">
+            <intent-filter>
+                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE"/>
+            </intent-filter>
+        </service>
+
         <service android:name="milen.com.gentleservice.services.MessagingServices"
             android:exported="false">
 

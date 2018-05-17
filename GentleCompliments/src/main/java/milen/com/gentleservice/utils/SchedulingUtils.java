@@ -1,12 +1,11 @@
 package milen.com.gentleservice.utils;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.util.Log;
 
-import com.evernote.android.job.util.support.PersistableBundleCompat;
-
 import milen.com.gentleservice.R;
-import milen.com.gentleservice.services.evernote_job.AlarmsProvider;
+import milen.com.gentleservice.services.AlarmsProvider;
 
 import java.util.Random;
 
@@ -20,11 +19,9 @@ public class SchedulingUtils {
 
     private static final int ONE_DAY = 86400000; //default value one day
 
-    public  static int currentJobId;
 
-    public static void startComplimentingJob(PersistableBundleCompat extras) {
-        currentJobId = AlarmsProvider.scheduleExactJob(extras);
-        Log.d("AppDebug", "currentJobId: " + currentJobId);
+    public static void startComplimentingJob(Context context, Bundle extras) {
+        AlarmsProvider.scheduleJob(context, extras);
     }
 
     public static int generateRandom(int num) {
@@ -36,17 +33,16 @@ public class SchedulingUtils {
         return num;
     }
 
-    public static void stopComplimenting() {
+    public static void stopComplimenting(Context context) {
         //Log.d("AppDebug", "SchedulingUtils stopComplimenting called");
-        AlarmsProvider.cancelJob(currentJobId);
-        currentJobId = -1;
+        AlarmsProvider.cancelJob(context);
     }
 
 
-    private static int calculateNextFireAfter(int period, int fireAfter) {
-        if (period > 0 && fireAfter > 0) {
+    public static int calculateNextFireAfter(int period, int currentfireAfter) {
+        if (period > 0 && currentfireAfter > 0) {
             int nextFireAfter = generateRandom(period);
-            int timeUntilPeriodIsEnded = period - fireAfter;
+            int timeUntilPeriodIsEnded = period - currentfireAfter;
 
             Log.d("AppDebug", "nextFireAfter " + nextFireAfter + " timeUntilPeriodIsEnded " + timeUntilPeriodIsEnded);
             int time = timeUntilPeriodIsEnded + nextFireAfter;
@@ -80,10 +76,10 @@ public class SchedulingUtils {
         }
     }
 
-    public static PersistableBundleCompat makeNewExtras(PersistableBundleCompat extras) {
+    public static Bundle makeNewExtras(Bundle extras) {
         if (extras == null){
             Log.d("AppDebug", "PersistableBundleCompat extras: is null");
-            extras = new PersistableBundleCompat();
+            extras = new Bundle();
         }
 
         //if no value set default value
