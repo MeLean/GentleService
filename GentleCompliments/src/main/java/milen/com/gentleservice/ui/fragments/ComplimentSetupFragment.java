@@ -280,7 +280,7 @@ public class ComplimentSetupFragment extends Fragment implements View.OnClickLis
         } else if (spinValue.equals(getString(R.string.surprise_option_every_8_hours))) {
             surpriseTimeMaxValue = 8 * 60 * 60; // * 1000;
         } else if (spinValue.equals(getString(R.string.surprise_option_every_6_hours))) {
-            surpriseTimeMaxValue = 60 * 60; //6 * 60 * 60; //* 1000; //todo replace value whit comment
+            surpriseTimeMaxValue = 20 * 60; //6 * 60 * 60; //* 1000; //todo replace value whit comment
         } else if (spinValue.equals(getString(R.string.surprise_option_every_week))) {
             surpriseTimeMaxValue = 7 * 24 * 60 * 60; // * 1000;
         } else {

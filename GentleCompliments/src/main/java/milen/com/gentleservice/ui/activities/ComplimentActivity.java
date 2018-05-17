@@ -36,7 +36,6 @@ import milen.com.gentleservice.api.database.DBHelper;
 import milen.com.gentleservice.utils.AdManager;
 import milen.com.gentleservice.api.objects_model.Compliment;
 import milen.com.gentleservice.R;
-import milen.com.gentleservice.utils.SchedulingUtils;
 import milen.com.gentleservice.utils.SharedPreferencesUtils;
 
 public class ComplimentActivity extends AppCompatActivity implements View.OnClickListener {
@@ -89,11 +88,6 @@ public class ComplimentActivity extends AppCompatActivity implements View.OnClic
 
         launchCompliment(savedInstanceState);
     }
-
-    private boolean shouldSkipNotificationCheck(Intent startingIntent) {
-        return startingIntent.hasExtra(ProjectConstants.SKIP_NOTIFICATION_KEY);
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

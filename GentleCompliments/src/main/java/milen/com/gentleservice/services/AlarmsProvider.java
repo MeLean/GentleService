@@ -1,6 +1,7 @@
 package milen.com.gentleservice.services;
 
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,7 +16,9 @@ import com.firebase.jobdispatcher.Lifetime;
 import com.firebase.jobdispatcher.RetryStrategy;
 import com.firebase.jobdispatcher.Trigger;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 import milen.com.gentleservice.R;
 import milen.com.gentleservice.ui.activities.ComplimentActivity;
@@ -30,45 +33,50 @@ public class AlarmsProvider extends JobService {
     @Override
     public boolean onStartJob(JobParameters job) {
         fireComplimentActivity(getApplicationContext());
+        scheduleJob(getApplicationContext(), job.getExtras());
+        jobFinished(job, isNeedToReschedule(job));
         return false; // Answers the question: "Is there still work going on?"
+    }
+
+    private boolean isNeedToReschedule(JobParameters job) {
+        return job.getExtras() != null &&
+                job.getExtras().getInt(SchedulingUtils.TYPE_KEY) == SchedulingUtils.SCHEDULE;
+
     }
 
     @Override
     public boolean onStopJob(JobParameters job) {
-        Log.d("AppDebug", "onStopJob");
-        scheduleJob(getApplicationContext(), job.getExtras());
-        return job.isRecurring(); // Answers the question: "Should this job be retried?"
+        //Log.d("AppDebug", "onStopJob");
+        //todo remove me
+        todoRemoveMeJustLogging("onStopJob", getApplicationContext(), job.getExtras());
+        return false; // Answers the question: "Should this job be retried?"
     }
-
-/*    @Override
-    @NonNull
-    protected Result onRunJob(@NonNull Params params) {
-        fireComplimentActivity(getContext());
-        SchedulingUtils.startComplimentingJob(params.getExtras());
-        return Result.SUCCESS;
-    }
-
-    @Override
-    protected void onCancel() {
-        Log.d("AppDebug", "onCancel");
-        SchedulingUtils.currentJobId = -1;
-        super.onCancel();
-    }
-*/
-
-
-
-/*
-     extras.putInt(SchedulingUtils.TYPE_KEY, scheduleType);
-     extras.putInt(SchedulingUtils.PERIOD_KEY, period);
-     extras.putInt(SchedulingUtils.FIRE_AFTER_KEY, period);
-*/
 
     public static void scheduleJob(Context context, Bundle extras) {
         FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(context));
         extras = SchedulingUtils.makeNewExtras(extras);
 
+        //todo remove me
+        todoRemoveMeJustLogging("scheduleJob" , context, extras);
+
+
         dispatcher.mustSchedule(makeJob(extras, dispatcher));
+    }
+
+    private static void todoRemoveMeJustLogging(String schedule, Context context, Bundle extras) {
+        int type =  extras.getInt(SchedulingUtils.TYPE_KEY, -1);
+        int period = extras.getInt(SchedulingUtils.PERIOD_KEY, -1);
+        int fireAfter =  extras.getInt(SchedulingUtils.FIRE_AFTER_KEY, -1);
+        @SuppressLint("SimpleDateFormat")
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String dateKey = df.format(System.currentTimeMillis());
+        context.getSharedPreferences("SHEDULING DEBUG", MODE_PRIVATE)
+                .edit()
+                .putString(dateKey, schedule + " extras:\n" +
+                        " type: " + type +
+                        " period: " + period +
+                        " fire after: " + fireAfter)
+                .apply();
     }
 
     private static Job makeJob(Bundle extras, FirebaseJobDispatcher dispatcher) {
@@ -76,11 +84,13 @@ public class AlarmsProvider extends JobService {
         int period = extras.getInt(SchedulingUtils.PERIOD_KEY, -1);
         int fireAfter =  extras.getInt(SchedulingUtils.FIRE_AFTER_KEY, -1);
 
-        Log.d("AppDebug", "scheduleJob extras:\n" +
+       /* Log.d("AppDebug", "scheduleJob extras:\n" +
                 " type: " + type +
                 " period: " + period +
                 " fire after: " + fireAfter
-        );
+        );*/
+
+
 
         boolean isRecurring = true;
         if (type == SchedulingUtils.SURPRISE){
