@@ -1,13 +1,17 @@
 package milen.com.gentleservice.utils;
 
 
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 
+
 import milen.com.gentleservice.R;
+
 
 public class AppNotificationManager {
 
@@ -18,23 +22,27 @@ public class AppNotificationManager {
                 new NotificationCompat.Builder(context, context.getString(R.string.default_notification_channel_id))
                         .setSmallIcon(R.mipmap.ic_launcher)
                         .setContentTitle(context.getString(R.string.app_name))
-                        .setContentText(message);
+                        .setContentText(message)
+                        .setAutoCancel(true)
+                        .setWhen(System.currentTimeMillis())
+                        .setPriority(NotificationCompat.PRIORITY_HIGH)
+                        .setDefaults(NotificationCompat.DEFAULT_ALL);
+                ;
 
         PendingIntent resultPendingIntent =
                 PendingIntent.getActivity(
                         context,
                         notificationId,
                         intentLoad,
-                        PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_UPDATE_CURRENT
+                        PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_ONE_SHOT
                 );
 
         mBuilder.setContentIntent(resultPendingIntent);
         // Sets remove after click
         mBuilder.setAutoCancel(true);
         // Gets an instance of the AppNotificationManager service
-        android.app.NotificationManager mNotifyMgr = (android.app.NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationManagerCompat mNotifyMgr = NotificationManagerCompat.from(context);
         // Builds the notification and issues it.
-        assert mNotifyMgr != null;
         mNotifyMgr.notify(notificationId, mBuilder.build());
     }
 

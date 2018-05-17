@@ -67,6 +67,7 @@ public class AlarmsProvider extends JobService {
     public static void scheduleJob(Context context, Bundle extras) {
         FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(context));
         extras = SchedulingUtils.makeNewExtras(extras);
+
         dispatcher.mustSchedule(makeJob(extras, dispatcher));
     }
 
@@ -91,7 +92,6 @@ public class AlarmsProvider extends JobService {
            isRecurring = false;
         }
 
-
         return dispatcher.newJobBuilder()
                 // the JobService that will be called
                 .setService(AlarmsProvider.class)
@@ -102,7 +102,7 @@ public class AlarmsProvider extends JobService {
                 // don't persist past a device reboot
                 .setLifetime(Lifetime.FOREVER)
                 // start between 0 and 60 seconds from now
-                .setTrigger(Trigger.executionWindow(fireAfter - 20, fireAfter))
+                .setTrigger(Trigger.executionWindow(fireAfter - 1, fireAfter))
                 // don't overwrite an existing job with the same tag
                 .setReplaceCurrent(true)
                 // retry with exponential backoff

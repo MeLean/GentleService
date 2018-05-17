@@ -229,7 +229,7 @@ public class ComplimentActivity extends AppCompatActivity implements View.OnClic
 
         if (savedInstanceState == null) {
             mComplimentContainer.setText(getComplimentFromDatabase());
-            mBackgroundId = SchedulingUtils.generateRandom(backgroundIds.length);
+            mBackgroundId = new Random().nextInt(backgroundIds.length);
         } else {
             mComplimentContainer.setText(savedInstanceState.getString(SAVED_COMPLIMENT_TEXT));
             mBackgroundId = savedInstanceState.getInt(SAVED_BACKGROUND_ID);

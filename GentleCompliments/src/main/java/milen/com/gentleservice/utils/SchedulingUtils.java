@@ -24,13 +24,16 @@ public class SchedulingUtils {
         AlarmsProvider.scheduleJob(context, extras);
     }
 
-    public static int generateRandom(int num) {
-        if (num != 0) {
-            Random random = new Random();
-            return random.nextInt(num);
-        }
+    private static int generateRandomMinutes(int num) {
+        //min minutes are needed to ensure that
+        //window for the periodic job is more then 15 minutes.
+        int MIN_MINUTES = 15;
+        int result;
 
-        return num;
+        Random random = new Random();
+        result = random.nextInt(num);
+
+        return result > MIN_MINUTES ? result : MIN_MINUTES;
     }
 
     public static void stopComplimenting(Context context) {
@@ -41,7 +44,7 @@ public class SchedulingUtils {
 
     public static int calculateNextFireAfter(int period, int currentfireAfter) {
         if (period > 0 && currentfireAfter > 0) {
-            int nextFireAfter = generateRandom(period);
+            int nextFireAfter = generateRandomMinutes(period);
             int timeUntilPeriodIsEnded = period - currentfireAfter;
 
             Log.d("AppDebug", "nextFireAfter " + nextFireAfter + " timeUntilPeriodIsEnded " + timeUntilPeriodIsEnded);
@@ -55,7 +58,7 @@ public class SchedulingUtils {
     public static class InputValidator {
         public static String validate(Context context, String enteredInt) {
             //time constants should be in minutes
-            int MINIMUM_WAITING_TIME = 1; //todo one hour in minutes is a minimum time
+            int MINIMUM_WAITING_TIME = 60; //todo one hour in minutes is a minimum time
             int MAX_WAITING_TIME = 35790;
             try {
                 int inputNum = (Integer.parseInt(String.valueOf(enteredInt)));

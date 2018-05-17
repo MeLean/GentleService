@@ -191,7 +191,7 @@ public class ComplimentSetupFragment extends Fragment implements View.OnClickLis
                     //do nothing
                 }
             });
-            //in order to save firstly selected valie
+            //in order to save firstly selected value
             mSpinner.setSelection(position);
             areaInput.addView(mSpinner);
 
@@ -280,7 +280,7 @@ public class ComplimentSetupFragment extends Fragment implements View.OnClickLis
         } else if (spinValue.equals(getString(R.string.surprise_option_every_8_hours))) {
             surpriseTimeMaxValue = 8 * 60 * 60; // * 1000;
         } else if (spinValue.equals(getString(R.string.surprise_option_every_6_hours))) {
-            surpriseTimeMaxValue = 60 ; //6 * 60 * 60; //* 1000; //todo replace value whit comment
+            surpriseTimeMaxValue = 60 * 60; //6 * 60 * 60; //* 1000; //todo replace value whit comment
         } else if (spinValue.equals(getString(R.string.surprise_option_every_week))) {
             surpriseTimeMaxValue = 7 * 24 * 60 * 60; // * 1000;
         } else {
