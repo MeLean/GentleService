@@ -16,15 +16,17 @@ public class SchedulingUtils {
     public static final String TYPE_KEY = "type";
     public static final String PERIOD_KEY = "period";
     public static final String FIRE_AFTER_KEY = "waiting_key_fire";
+    public static final String RANDOM_VALUE_KEY = "random_key_fire";
 
     private static final int ONE_DAY = 86400000; //default value one day
+
 
 
     public static void startComplimentingJob(Context context, Bundle extras) {
         AlarmsProvider.scheduleJob(context, extras);
     }
 
-    private static int generateRandomMinutes(int num) {
+    public static int generateRandomMinutes(int num) {
         //min minutes are needed to ensure that
         //window for the periodic job is more then 15 minutes.
         int MIN_MINUTES = 15;
@@ -42,13 +44,12 @@ public class SchedulingUtils {
     }
 
 
-    public static int calculateNextFireAfter(int period, int currentfireAfter) {
-        if (period > 0 && currentfireAfter > 0) {
-            int nextFireAfter = generateRandomMinutes(period);
-            int timeUntilPeriodIsEnded = period - currentfireAfter;
+    public static int calculateNextFireAfter(int period, int currentRandom, int nextRandom) {
+        if (period > 0 && currentRandom > 0 && nextRandom > 0) {
+            int timeUntilPeriodIsEnded = period - currentRandom;
 
-            Log.d("AppDebug", "nextFireAfter " + nextFireAfter + " timeUntilPeriodIsEnded " + timeUntilPeriodIsEnded);
-            int time = timeUntilPeriodIsEnded + nextFireAfter;
+            Log.d("AppDebug", " timeUntilPeriodIsEnded " + timeUntilPeriodIsEnded + "nextRandom " + nextRandom);
+            int time = timeUntilPeriodIsEnded + nextRandom;
             return time > 0 ? time : (time * -1);
         }
 
@@ -58,8 +59,8 @@ public class SchedulingUtils {
     public static class InputValidator {
         public static String validate(Context context, String enteredInt) {
             //time constants should be in minutes
-            int MINIMUM_WAITING_TIME = 20; //todo one hour in minutes is a minimum time
-            int MAX_WAITING_TIME = 35790;
+            int MINIMUM_WAITING_TIME = 60; // an hour
+            int MAX_WAITING_TIME = 10080; //a week
             try {
                 int inputNum = (Integer.parseInt(String.valueOf(enteredInt)));
 
@@ -69,7 +70,7 @@ public class SchedulingUtils {
                         throw new NumberFormatException("");
                     }
 
-                    return context.getString(R.string.minimum_waiting_time_text) + MINIMUM_WAITING_TIME;
+                    return context.getString(R.string.minimum_waiting_time_text) + MINIMUM_WAITING_TIME ;
                 }
             } catch (NumberFormatException e) {
                 return context.getString(R.string.invalid_number_text);
@@ -88,12 +89,16 @@ public class SchedulingUtils {
         //if no value set default value
         int type = extras.getInt(TYPE_KEY, SURPRISE);
         int period = extras.getInt(PERIOD_KEY, ONE_DAY);
-        int fireAfter =  extras.getInt(FIRE_AFTER_KEY, ONE_DAY);
 
+        int currentRandom = extras.getInt(RANDOM_VALUE_KEY, ONE_DAY);
 
+        int nextRandom = generateRandomMinutes(period);
+
+        int fireAfter;
         if (type == SURPRISE) {
-            fireAfter = calculateNextFireAfter(period, fireAfter);
+            fireAfter = calculateNextFireAfter(period, currentRandom, nextRandom);
             extras.putInt(FIRE_AFTER_KEY, fireAfter);
+            extras.putInt(RANDOM_VALUE_KEY, nextRandom);
         }
 
         return extras;

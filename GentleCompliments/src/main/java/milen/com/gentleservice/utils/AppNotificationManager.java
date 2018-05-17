@@ -6,9 +6,7 @@ import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 
-
 import milen.com.gentleservice.R;
-
 
 public class AppNotificationManager {
 
@@ -23,7 +21,8 @@ public class AppNotificationManager {
                         .setAutoCancel(true)
                         .setWhen(System.currentTimeMillis())
                         .setPriority(NotificationCompat.PRIORITY_HIGH)
-                        .setDefaults(NotificationCompat.DEFAULT_ALL);
+                        //set no defaults values
+                        .setDefaults(0);
                 ;
 
         PendingIntent resultPendingIntent =

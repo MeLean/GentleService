@@ -18,7 +18,6 @@ import com.firebase.jobdispatcher.Trigger;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 
 import milen.com.gentleservice.R;
 import milen.com.gentleservice.ui.activities.ComplimentActivity;
@@ -30,6 +29,7 @@ import milen.com.gentleservice.utils.SharedPreferencesUtils;
 
 public class AlarmsProvider extends JobService {
     static final String TAG = "milen.com.gentleservice.job_alarm_tag";
+
     @Override
     public boolean onStartJob(JobParameters job) {
         fireComplimentActivity(getApplicationContext());
@@ -47,8 +47,7 @@ public class AlarmsProvider extends JobService {
     @Override
     public boolean onStopJob(JobParameters job) {
         //Log.d("AppDebug", "onStopJob");
-        //todo remove me
-        todoRemoveMeJustLogging("onStopJob", getApplicationContext(), job.getExtras());
+        //todoRemoveMeJustLogging("onStopJob", getApplicationContext(), job.getExtras());
         return false; // Answers the question: "Should this job be retried?"
     }
 
@@ -57,32 +56,37 @@ public class AlarmsProvider extends JobService {
         extras = SchedulingUtils.makeNewExtras(extras);
 
         //todo remove me
-        todoRemoveMeJustLogging("scheduleJob" , context, extras);
+        todoRemoveMeJustLogging(context, extras);
 
 
         dispatcher.mustSchedule(makeJob(extras, dispatcher));
     }
 
-    private static void todoRemoveMeJustLogging(String schedule, Context context, Bundle extras) {
-        int type =  extras.getInt(SchedulingUtils.TYPE_KEY, -1);
+    private static void todoRemoveMeJustLogging(Context context, Bundle extras) {
+        int type = extras.getInt(SchedulingUtils.TYPE_KEY, -1);
         int period = extras.getInt(SchedulingUtils.PERIOD_KEY, -1);
-        int fireAfter =  extras.getInt(SchedulingUtils.FIRE_AFTER_KEY, -1);
+        int fireAfter = extras.getInt(SchedulingUtils.FIRE_AFTER_KEY, -1);
+        int currentRandom = extras.getInt(SchedulingUtils.RANDOM_VALUE_KEY, -1);
+
         @SuppressLint("SimpleDateFormat")
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String dateKey = df.format(System.currentTimeMillis());
         context.getSharedPreferences("SHEDULING DEBUG", MODE_PRIVATE)
                 .edit()
-                .putString(dateKey, schedule + " extras:\n" +
+                .putString(dateKey, "scheduleJob extras:\n" +
                         " type: " + type +
                         " period: " + period +
-                        " fire after: " + fireAfter)
+                        " fire after: " + fireAfter +
+                        " random: " + currentRandom
+                )
                 .apply();
     }
 
     private static Job makeJob(Bundle extras, FirebaseJobDispatcher dispatcher) {
-        int type =  extras.getInt(SchedulingUtils.TYPE_KEY, -1);
+        int type = extras.getInt(SchedulingUtils.TYPE_KEY, -1);
         int period = extras.getInt(SchedulingUtils.PERIOD_KEY, -1);
-        int fireAfter =  extras.getInt(SchedulingUtils.FIRE_AFTER_KEY, -1);
+        int fireAfter = extras.getInt(SchedulingUtils.FIRE_AFTER_KEY, -1);
+        int currentRandom = extras.getInt(SchedulingUtils.RANDOM_VALUE_KEY, -1);
 
        /* Log.d("AppDebug", "scheduleJob extras:\n" +
                 " type: " + type +
@@ -90,16 +94,17 @@ public class AlarmsProvider extends JobService {
                 " fire after: " + fireAfter
         );*/
 
-
-
         boolean isRecurring = true;
-        if (type == SchedulingUtils.SURPRISE){
-           extras.putInt(
-                   SchedulingUtils.FIRE_AFTER_KEY,
-                   SchedulingUtils.calculateNextFireAfter(period, fireAfter)
-           );
+        if (type == SchedulingUtils.SURPRISE) {
+            int nextRandom = SchedulingUtils.generateRandomMinutes(period);
 
-           isRecurring = false;
+            extras.putInt(SchedulingUtils.RANDOM_VALUE_KEY,nextRandom);
+            extras.putInt(
+                    SchedulingUtils.FIRE_AFTER_KEY,
+                    SchedulingUtils.calculateNextFireAfter(period, currentRandom, nextRandom)
+            );
+
+            isRecurring = false;
         }
 
         return dispatcher.newJobBuilder()

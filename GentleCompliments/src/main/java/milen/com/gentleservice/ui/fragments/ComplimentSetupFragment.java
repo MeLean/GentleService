@@ -280,7 +280,7 @@ public class ComplimentSetupFragment extends Fragment implements View.OnClickLis
         } else if (spinValue.equals(getString(R.string.surprise_option_every_8_hours))) {
             surpriseTimeMaxValue = 8 * 60 * 60; // * 1000;
         } else if (spinValue.equals(getString(R.string.surprise_option_every_6_hours))) {
-            surpriseTimeMaxValue = 20 * 60; //6 * 60 * 60; //* 1000; //todo replace value whit comment
+            surpriseTimeMaxValue = 6 * 60 * 60; //* 1000;
         } else if (spinValue.equals(getString(R.string.surprise_option_every_week))) {
             surpriseTimeMaxValue = 7 * 24 * 60 * 60; // * 1000;
         } else {
@@ -307,8 +307,8 @@ public class ComplimentSetupFragment extends Fragment implements View.OnClickLis
         Bundle extras = new Bundle();
         extras.putInt(SchedulingUtils.TYPE_KEY, scheduleType);
         extras.putInt(SchedulingUtils.PERIOD_KEY, period);
-        extras.putInt(SchedulingUtils.FIRE_AFTER_KEY, period); //on start fire at must be equals on period
-
+        extras.putInt(SchedulingUtils.FIRE_AFTER_KEY, period);
+        extras.putInt(SchedulingUtils.RANDOM_VALUE_KEY, period);
 
         //noinspection ConstantConditions
         SchedulingUtils.startComplimentingJob(getContext(), extras);
