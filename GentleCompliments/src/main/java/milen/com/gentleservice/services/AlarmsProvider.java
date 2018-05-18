@@ -38,18 +38,18 @@ public class AlarmsProvider extends JobService {
         return false; // Answers the question: "Is there still work going on?"
     }
 
-    private boolean isNeedToReschedule(JobParameters job) {
-        return job.getExtras() != null &&
-                job.getExtras().getInt(SchedulingUtils.TYPE_KEY) == SchedulingUtils.SCHEDULE;
-
-    }
-
     @Override
     public boolean onStopJob(JobParameters job) {
         //Log.d("AppDebug", "onStopJob");
         //todoRemoveMeJustLogging("onStopJob", getApplicationContext(), job.getExtras());
-        return false; // Answers the question: "Should this job be retried?"
+        return true; // Answers the question: "Should this job be retried?"
     }
+
+    private boolean isNeedToReschedule(JobParameters job) {
+        return job.getExtras() != null &&
+                job.getExtras().getInt(SchedulingUtils.TYPE_KEY) == SchedulingUtils.SCHEDULE;
+    }
+
 
     public static void scheduleJob(Context context, Bundle extras) {
         FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(context));
