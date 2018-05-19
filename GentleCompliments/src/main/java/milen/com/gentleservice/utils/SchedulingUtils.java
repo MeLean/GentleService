@@ -20,12 +20,6 @@ public class SchedulingUtils {
 
     private static final int ONE_DAY = 86400000; //default value one day
 
-
-
-    public static void startComplimentingJob(Context context, Bundle extras) {
-        AlarmsProvider.scheduleJob(context, extras);
-    }
-
     public static int generateRandomMinutes(int num) {
         //min minutes are needed to ensure that
         //window for the periodic job is more then 15 minutes.
@@ -59,7 +53,7 @@ public class SchedulingUtils {
     public static class InputValidator {
         public static String validate(Context context, String enteredInt) {
             //time constants should be in minutes
-            int MINIMUM_WAITING_TIME = 60; // an hour
+            int MINIMUM_WAITING_TIME = 60; //an hour
             int MAX_WAITING_TIME = 10080; //a week
             try {
                 int inputNum = (Integer.parseInt(String.valueOf(enteredInt)));

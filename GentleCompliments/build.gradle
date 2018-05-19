@@ -35,7 +35,7 @@ dependencies {
     implementation 'com.android.support.constraint:constraint-layout:1.1.0'
 
     implementation 'com.firebase:firebase-jobdispatcher:0.8.5'
-
+    //implementation 'com.firebase:firebase-jobdispatcher-with-gcm-dep:0.6.0'
 
 
     testImplementation 'junit:junit:4.12'

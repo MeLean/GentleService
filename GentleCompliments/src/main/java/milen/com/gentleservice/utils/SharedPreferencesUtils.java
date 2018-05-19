@@ -47,7 +47,7 @@ public class SharedPreferencesUtils {
         return getSharedPreferences(context, PREF_NAME).getString(key, defValue);
     }
 
-    static int loadInt(Context context, String key, int defValue) {
+    public static int loadInt(Context context, String key, int defValue) {
         return getSharedPreferences(context, PREF_NAME).getInt(key, defValue);
     }
 
