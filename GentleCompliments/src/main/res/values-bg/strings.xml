@@ -139,4 +139,6 @@
     <string name="vibration">Вибрация</string>
     <string name="navigation_drawer_close">Затвори навигационната лента</string>
     <string name="navigation_drawer_open">Орвори навигационната лента</string>
+
+    <string name="system_compliment">Вие сте толкова красива, че системата желае да ви направи комплимент!</string>
 </resources>

@@ -22,7 +22,7 @@ public class SharedPreferencesUtils {
                 .apply();
     }
 
-    static  void saveLong(Context context, String key, long value) {
+    public static  void saveLong(Context context, String key, long value) {
         getSharedPreferences(context, PREF_NAME)
                 .edit()
                 .putLong(key, value)
@@ -51,7 +51,8 @@ public class SharedPreferencesUtils {
         return getSharedPreferences(context, PREF_NAME).getInt(key, defValue);
     }
 
-    static long loadLong(Context context, String key, long defValue) {
+    @SuppressWarnings("SameParameterValue")
+    public static long loadLong(Context context, String key, long defValue) {
         return getSharedPreferences(context, PREF_NAME).getLong(key, defValue);
     }
 

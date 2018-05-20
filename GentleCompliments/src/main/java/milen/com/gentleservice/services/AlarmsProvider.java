@@ -21,9 +21,7 @@ public class AlarmsProvider extends JobService {
     public boolean onStartJob(JobParameters job) {
         Log.d("AppDebug", "onStartJob at " + new Date());
         broadcastComplimentIntent(getApplicationContext());
-
-        jobFinished(job, true);
-        return true; // Answers the question: "Is there still work going on?"
+        return false; // Answers the question: "Is there still work going on?"
     }
 
 

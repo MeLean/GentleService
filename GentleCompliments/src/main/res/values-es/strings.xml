@@ -127,4 +127,6 @@
     <string name="logo_icon">Icono de logotipo</string>
     <string name="navigation_drawer_close">Cerrar el cajón de navegación</string>
     <string name="navigation_drawer_open">Abrir el cajón de navegación</string>
+
+    <string name="system_compliment">¡Eres tan bonita que el sistema desea hacerte un cumplido!</string>
 </resources>

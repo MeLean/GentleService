@@ -165,4 +165,6 @@
 
     <string name="default_notification_channel_id" translatable="false">default</string>
 
+    <string name="system_compliment">You are so pretty that system desires to make you a compliment!</string>
+
 </resources>

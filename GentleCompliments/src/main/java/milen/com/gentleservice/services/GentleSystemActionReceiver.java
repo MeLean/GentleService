@@ -1,8 +1,10 @@
 package milen.com.gentleservice.services;
 
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 
 import com.firebase.jobdispatcher.FirebaseJobDispatcher;
@@ -24,7 +26,6 @@ import milen.com.gentleservice.utils.SharedPreferencesUtils;
 
 
 public class GentleSystemActionReceiver extends BroadcastReceiver {
-    public static final String ACTION_MANAGE_AFTER_LOCALE_CHANGED = "milen.com.gentleservice.action.MANAGE_LOCALE_CHANGE";
     public static final String ACTION_START_COMPLIMENT = "milen.com.gentleservice.action.START_COMPLIMENT";
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -35,16 +36,26 @@ public class GentleSystemActionReceiver extends BroadcastReceiver {
 
             scheduleNextTask(context);
 
-            Intent complimentIntent = new Intent(context, ComplimentActivity.class);
-            complimentIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
             if (shouldAddNotification(context)) {
-                AppNotificationManager.addNotificationOnPane(context, complimentIntent);
+                // Create an Intent for the activity you want to start
+                Intent resultIntent = new Intent(context, ComplimentActivity.class);
+                // Create the TaskStackBuilder and add the intent, which inflates the back stack
+                TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
+                stackBuilder.addNextIntentWithParentStack(resultIntent);
+
+                // Get the PendingIntent containing the entire back stack
+                PendingIntent resultPendingIntent =  stackBuilder.getPendingIntent(
+                        AppNotificationManager.getUnusedInt(),
+                        PendingIntent.FLAG_UPDATE_CURRENT
+                );
+
+                AppNotificationManager.addNotificationOnPane(context, resultPendingIntent);
+
                 return;
             }
 
 
-            fireCompliment(context, complimentIntent);
+            fireCompliment(context);
         }
         /*if(action != null) {
             switch (action) {
@@ -71,6 +82,7 @@ public class GentleSystemActionReceiver extends BroadcastReceiver {
 
     private void scheduleNextTask(Context context) {
         FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(context));
+        dispatcher.cancel(AlarmsProvider.TAG);
         dispatcher.schedule(makeJob(context, dispatcher));
     }
 
@@ -88,13 +100,18 @@ public class GentleSystemActionReceiver extends BroadcastReceiver {
             SharedPreferencesUtils.saveInt(context, SchedulingUtils.FIRE_AFTER_KEY, fireAfter);
         }
 
+        Long shuldFire= System.currentTimeMillis()+fireAfter;
         Log.d("AppDebug", "makeJob extras at:" + new Date(System.currentTimeMillis()) +
                 "\ntype: " + type +
                 " period: " + period +
                 " fire after: " + fireAfter +
                 " cur random: " + currentRandom +
-                " next random: " + nextRandom
+                " next random: " + nextRandom +
+                " SHOULD_FIRE " + new Date(shuldFire)
         );
+
+        SharedPreferencesUtils.saveLong(context, SchedulingUtils.SHOULD_FIRE_KEY,
+                (System.currentTimeMillis()+fireAfter));
 
         return dispatcher.newJobBuilder()
                 // the JobService that will be called
@@ -105,7 +122,7 @@ public class GentleSystemActionReceiver extends BroadcastReceiver {
                 .setRecurring(true)
                 // don't persist past a device reboot
                 .setLifetime(Lifetime.FOREVER)
-                // start between 0 and 60 seconds from now
+                // start between fireAfter - 1 and fireAfter seconds from now
                 .setTrigger(Trigger.executionWindow(fireAfter - 1, fireAfter))
                 // don't overwrite an existing job with the same tag
                 .setReplaceCurrent(true)
@@ -148,11 +165,13 @@ public class GentleSystemActionReceiver extends BroadcastReceiver {
 
 
   /*  private void manageLocaleChanges(Context context){
-        AsyncTaskManageDbAfterLocaleChanges dbManager = new AsyncTaskManageDbAfterLocaleChanges();
+        DbLocaleTextChanger dbManager = new DbLocaleTextChanger();
         dbManager.execute(context);
     }*/
 
-    private static void fireCompliment(Context context, Intent complimentIntent) {
+    private static void fireCompliment(Context context) {
+        Intent complimentIntent = new Intent(context, ComplimentActivity.class);
+        complimentIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(complimentIntent);
     }
 

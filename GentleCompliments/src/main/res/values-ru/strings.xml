@@ -127,4 +127,6 @@
     <string name="logo_icon">значок логотипа</string>
     <string name="navigation_drawer_close">Закрыть навигационный ящик</string>
     <string name="navigation_drawer_open">Открыть навигационный ящик</string>
+
+    <string name="system_compliment">Приложение вам очень нравится и хочет вас похвалить!</string>
 </resources>

@@ -28,11 +28,8 @@ import android.widget.Toast;
 
 import milen.com.gentleservice.constants.ProjectConstants;
 import milen.com.gentleservice.R;
-import milen.com.gentleservice.services.AlarmsProvider;
 import milen.com.gentleservice.services.GentleSystemActionReceiver;
-import milen.com.gentleservice.ui.activities.ComplimentActivity;
 import milen.com.gentleservice.ui.fragments.dialogs.TimePickerFragment;
-import milen.com.gentleservice.utils.AppNotificationManager;
 import milen.com.gentleservice.utils.SchedulingUtils;
 import milen.com.gentleservice.utils.SharedPreferencesUtils;
 import milen.com.gentleservice.utils.SoftInputManager;
@@ -103,12 +100,9 @@ public class ComplimentSetupFragment extends Fragment implements View.OnClickLis
                 SharedPreferencesUtils.loadBoolean(mActivity, ProjectConstants.SAVED_VIBRATION_STATUS, true)
         );
 
-        vibratorCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                SharedPreferencesUtils.saveBoolean(mActivity, ProjectConstants.SAVED_VIBRATION_STATUS, isChecked);
-            }
-        });
+        vibratorCheck.setOnCheckedChangeListener(
+                (buttonView, isChecked) ->
+                        SharedPreferencesUtils.saveBoolean(mActivity, ProjectConstants.SAVED_VIBRATION_STATUS, isChecked));
     }
 
     @Override
@@ -213,13 +207,10 @@ public class ComplimentSetupFragment extends Fragment implements View.OnClickLis
 
             mTimeWait.setOnKeyListener(new SoftInputManager());
 
-            mTimeWait.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                @Override
-                public void onFocusChange(View view, boolean hasFocus) {
-                    if (!hasFocus) {
-                        //Log.d("AppDebug", "hasFocus saved string " + mTimeWait.getText().toString());
-                        SharedPreferencesUtils.saveString(mActivity, getString(R.string.sp_time_wait_value), mTimeWait.getText().toString());
-                    }
+            mTimeWait.setOnFocusChangeListener((view, hasFocus) -> {
+                if (!hasFocus) {
+                    //Log.d("AppDebug", "hasFocus saved string " + mTimeWait.getText().toString());
+                    SharedPreferencesUtils.saveString(mActivity, getString(R.string.sp_time_wait_value), mTimeWait.getText().toString());
                 }
             });
 
@@ -281,7 +272,7 @@ public class ComplimentSetupFragment extends Fragment implements View.OnClickLis
         } else if (spinValue.equals(getString(R.string.surprise_option_every_8_hours))) {
             surpriseTimeMaxValue = 8 * 60 * 60; // * 1000;
         } else if (spinValue.equals(getString(R.string.surprise_option_every_6_hours))) {
-            surpriseTimeMaxValue =  20 * 60; //todo 6 * 60 * 60; //* 1000;
+            surpriseTimeMaxValue =  2 * 60; //todo 6 * 60 * 60; //* 1000;
         } else if (spinValue.equals(getString(R.string.surprise_option_every_week))) {
             surpriseTimeMaxValue = 7 * 24 * 60 * 60; // * 1000;
         } else {
