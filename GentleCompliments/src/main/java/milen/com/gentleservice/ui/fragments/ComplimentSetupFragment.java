@@ -27,7 +27,7 @@ import android.widget.Toast;
 
 import milen.com.gentleservice.constants.ProjectConstants;
 import milen.com.gentleservice.R;
-import milen.com.gentleservice.services.firebase_dispatcher.GentleSystemActionReceiver;
+import milen.com.gentleservice.ui.activities.ComplimentActivity;
 import milen.com.gentleservice.ui.fragments.dialogs.TimePickerFragment;
 import milen.com.gentleservice.services.firebase_dispatcher.SchedulingUtils;
 import milen.com.gentleservice.utils.SharedPreferencesUtils;
@@ -301,10 +301,9 @@ public class ComplimentSetupFragment extends Fragment implements View.OnClickLis
         SharedPreferencesUtils.saveInt(getContext(), SchedulingUtils.FIRE_AFTER_KEY, period);
         SharedPreferencesUtils.saveInt(getContext(), SchedulingUtils.RANDOM_VALUE_KEY, period);
 
-        Intent broadCast = new Intent();
-        broadCast.setAction(GentleSystemActionReceiver.ACTION_START_COMPLIMENT);
+
         //noinspection ConstantConditions
-        getActivity().sendBroadcast(broadCast);
+        startActivity(new Intent(getActivity(), ComplimentActivity.class));
 
         mActivity.finish();
     }

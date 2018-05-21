@@ -1,13 +1,26 @@
 package milen.com.gentleservice.services.firebase_dispatcher;
 
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
+import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 
 import com.firebase.jobdispatcher.FirebaseJobDispatcher;
 import com.firebase.jobdispatcher.GooglePlayDriver;
+import com.firebase.jobdispatcher.Job;
+import com.firebase.jobdispatcher.Lifetime;
+import com.firebase.jobdispatcher.RetryStrategy;
+import com.firebase.jobdispatcher.Trigger;
 
 import milen.com.gentleservice.R;
+import milen.com.gentleservice.ui.activities.ComplimentActivity;
+import milen.com.gentleservice.utils.AppNotificationManager;
+import milen.com.gentleservice.utils.CalendarUtils;
+import milen.com.gentleservice.utils.SharedPreferencesUtils;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Random;
 
 public class SchedulingUtils {
@@ -23,7 +36,7 @@ public class SchedulingUtils {
 
     private static final int ONE_DAY = 86400000; //default value one day
 
-    public static int generateRandomMinutes(int num) {
+    private static int generateRandomMinutes(int num) {
         //min minutes are needed to ensure that
         //window for the periodic job is more then 15 minutes.
         int MIN_MINUTES = 15;
@@ -41,8 +54,7 @@ public class SchedulingUtils {
         dispatcher.cancel(JobProvider.TAG);
     }
 
-
-    public static int calculateNextFireAfter(int period, int currentRandom, int nextRandom) {
+    private static int calculateNextFireAfter(int period, int currentRandom, int nextRandom) {
         if (period > 0 && currentRandom > 0 && nextRandom > 0) {
             int timeUntilPeriodIsEnded = period - currentRandom;
 
@@ -78,27 +90,104 @@ public class SchedulingUtils {
         }
     }
 
-    /*public static Bundle makeNewExtras(Bundle extras) {
-        if (extras == null){
-            Log.d("AppDebug", "PersistableBundleCompat extras: is null");
-            extras = new Bundle();
+    public void scheduleNextTask(Context context) {
+        FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(context));
+        //cancel current task before run new
+        dispatcher.cancel(JobProvider.TAG);
+        Job newJob = makeJob(context, dispatcher);
+        dispatcher.schedule(newJob);
+    }
+
+
+    private Job makeJob(Context context,FirebaseJobDispatcher dispatcher) {
+        int type = SharedPreferencesUtils.loadInt(context, SchedulingUtils.TYPE_KEY, -1);
+        int period = SharedPreferencesUtils.loadInt(context, SchedulingUtils.PERIOD_KEY, -1);
+        int fireAfter = period;
+        int currentRandom = SharedPreferencesUtils.loadInt(context, SchedulingUtils.RANDOM_VALUE_KEY, -1);
+
+        int nextRandom = -1;
+        if (type == SchedulingUtils.SURPRISE) {
+            nextRandom = SchedulingUtils.generateRandomMinutes(period);
+            fireAfter = SchedulingUtils.calculateNextFireAfter(period, currentRandom, nextRandom);
+            SharedPreferencesUtils.saveInt(context, SchedulingUtils.RANDOM_VALUE_KEY, nextRandom);
+            SharedPreferencesUtils.saveInt(context, SchedulingUtils.FIRE_AFTER_KEY, fireAfter);
         }
 
-        //if no value set default value
-        int type = extras.getInt(TYPE_KEY, SURPRISE);
-        int period = extras.getInt(PERIOD_KEY, ONE_DAY);
+        Long shouldFire = System.currentTimeMillis()+fireAfter;
+        SharedPreferencesUtils.saveLong(context, SchedulingUtils.SHOULD_FIRE_KEY, shouldFire);
 
-        int currentRandom = extras.getInt(RANDOM_VALUE_KEY, ONE_DAY);
+        Log.d("AppDebug", "makeJob extras at:" + new Date(System.currentTimeMillis()) +
+                "\ntype: " + type +
+                " period: " + period +
+                " fire after: " + fireAfter +
+                " cur random: " + currentRandom +
+                " next random: " + nextRandom +
+                " SHOULD_FIRE " + new Date(shouldFire)
+        );
 
-        int nextRandom = generateRandomMinutes(period);
+        return dispatcher.newJobBuilder()
+                // the JobService that will be called
+                .setService(JobProvider.class)
+                // uniquely identifies the job
+                .setTag(JobProvider.TAG)
+                // one-off job
+                .setRecurring(true)
+                // don't persist past a device reboot
+                .setLifetime(Lifetime.FOREVER)
+                // start between fireAfter - 1 and fireAfter seconds from now
+                .setTrigger(Trigger.executionWindow(fireAfter - 1, fireAfter))
+                // don't overwrite an existing job with the same tag
+                .setReplaceCurrent(true)
+                // retry with exponential backoff
+                .setRetryStrategy(RetryStrategy.DEFAULT_LINEAR)
+                /*// constraints that need to be satisfied for the job to run
+                .setConstraints(
+                        // only run on an unmetered network
+                        Constraint.ON_UNMETERED_NETWORK,
+                        // only run when the device is charging
+                        Constraint.DEVICE_CHARGING
+                )*/
+                .build();
+    }
 
-        int fireAfter;
-        if (type == SURPRISE) {
-            fireAfter = calculateNextFireAfter(period, currentRandom, nextRandom);
-            extras.putInt(FIRE_AFTER_KEY, fireAfter);
-            extras.putInt(RANDOM_VALUE_KEY, nextRandom);
+    private void fireNotification(Context context) {
+        Intent resultIntent = new Intent(context, ComplimentActivity.class);
+        // Create the TaskStackBuilder and add the intent, which inflates the back stack
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
+        stackBuilder.addNextIntentWithParentStack(resultIntent);
+
+        // Get the PendingIntent containing the entire back stack
+        PendingIntent resultPendingIntent =  stackBuilder.getPendingIntent(
+                AppNotificationManager.getUnusedInt(),
+                PendingIntent.FLAG_UPDATE_CURRENT
+        );
+
+        AppNotificationManager.addNotificationOnPane(context, resultPendingIntent);
+    }
+
+    public boolean shouldAddNotification(Context context) {
+        boolean isDoNotDisturbMode = SharedPreferencesUtils.loadBoolean(context, context.getString(R.string.sp_do_not_disturb), true);
+        //Log.d("AppDebug", "checkForDisturbPeriod isDoNotDisturbMode " + isDoNotDisturbMode);
+        if (isDoNotDisturbMode) {
+            String firstTime = SharedPreferencesUtils.loadString(context, context.getString(R.string.sp_start_time), context.getString(R.string.default_start_time));
+            String secondTime = SharedPreferencesUtils.loadString(context, context.getString(R.string.sp_end_time), context.getString(R.string.default_end_time));
+            String TIME_SEPARATOR = ":";
+            String[] firstTimeArr = firstTime.split(TIME_SEPARATOR);
+            String[] secondTimeArr = secondTime.split(TIME_SEPARATOR);
+
+            Calendar calendar = Calendar.getInstance();
+            int currentHours = calendar.get(Calendar.HOUR_OF_DAY);
+            int currentMinutes = calendar.get(Calendar.MINUTE);
+
+            long startTimeInMilliseconds =
+                    CalendarUtils.getMillisecondsFromTime(Integer.parseInt(firstTimeArr[0]), Integer.parseInt(firstTimeArr[1]));
+            long currentHoursInMilliseconds = CalendarUtils.getMillisecondsFromTime(currentHours, currentMinutes);
+            long endTimeInMilliseconds =
+                    CalendarUtils.getMillisecondsFromTime(Integer.parseInt(secondTimeArr[0]), Integer.parseInt(secondTimeArr[1]));
+
+            return CalendarUtils.checkIsBetween(startTimeInMilliseconds, currentHoursInMilliseconds, endTimeInMilliseconds);
+        } else {
+            return false;
         }
-
-        return extras;
-    }*/
+    }
 }

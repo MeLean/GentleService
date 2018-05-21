@@ -89,19 +89,6 @@
             </intent-filter>
         </activity>
 
-        <receiver
-            android:name="milen.com.gentleservice.services.firebase_dispatcher.GentleSystemActionReceiver"
-            android:enabled="true"
-            android:exported="true"
-            > <!-- android:exported="false" -->
-            <intent-filter>
-                <action android:name="android.intent.action.LOCALE_CHANGED" />
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="milen.com.gentleservice.action.MANAGE_LOCALE_CHANGE" />
-                <action android:name="milen.com.gentleservice.action.START_COMPLIMENT" />
-            </intent-filter>
-        </receiver>
-
         <service android:name="milen.com.gentleservice.services.TokenService"
             android:exported="false"
             >

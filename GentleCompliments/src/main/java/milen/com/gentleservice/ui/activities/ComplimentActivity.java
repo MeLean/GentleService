@@ -50,13 +50,19 @@ public class ComplimentActivity extends AppCompatActivity implements View.OnClic
     private boolean isShareClicked = false;
     private FirebaseAnalytics mFirebaseAnalytics;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
+        if (getIntent() != null && getIntent().hasExtra(ProjectConstants.JUST_SHOW_COMPLIMENT)){
+
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
             setShowWhenLocked(true);
             setTurnScreenOn(true);
             KeyguardManager keyguardManager = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
-            if (keyguardManager != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            if (keyguardManager != null) {
                 keyguardManager.requestDismissKeyguard(this, null);
             }
         } else {
