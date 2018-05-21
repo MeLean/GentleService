@@ -1,9 +1,7 @@
 package milen.com.gentleservice.ui.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -26,10 +24,9 @@ import java.util.Locale;
 import milen.com.gentleservice.R;
 import milen.com.gentleservice.api.database.DbLocaleTextChanger;
 import milen.com.gentleservice.constants.ProjectConstants;
-import milen.com.gentleservice.services.PhoenixService;
 import milen.com.gentleservice.ui.adapters.MainViewPagerAdapter;
 import milen.com.gentleservice.utils.AdManager;
-import milen.com.gentleservice.utils.SchedulingUtils;
+import milen.com.gentleservice.services.firebase_dispatcher.SchedulingUtils;
 import milen.com.gentleservice.utils.SharedPreferencesUtils;
 
 public class StartingActivity extends AppCompatActivity
@@ -39,13 +36,6 @@ public class StartingActivity extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-        ContextCompat.startForegroundService(this, new Intent(this, PhoenixService.class));
-
-        if (getIntent() != null && getIntent().hasExtra(PhoenixService.REBIRTH_KEY)) {
-            return;
-        }
-
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_starting);

@@ -17,7 +17,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -28,9 +27,9 @@ import android.widget.Toast;
 
 import milen.com.gentleservice.constants.ProjectConstants;
 import milen.com.gentleservice.R;
-import milen.com.gentleservice.services.GentleSystemActionReceiver;
+import milen.com.gentleservice.services.firebase_dispatcher.GentleSystemActionReceiver;
 import milen.com.gentleservice.ui.fragments.dialogs.TimePickerFragment;
-import milen.com.gentleservice.utils.SchedulingUtils;
+import milen.com.gentleservice.services.firebase_dispatcher.SchedulingUtils;
 import milen.com.gentleservice.utils.SharedPreferencesUtils;
 import milen.com.gentleservice.utils.SoftInputManager;
 

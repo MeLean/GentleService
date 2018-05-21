@@ -1,4 +1,4 @@
-package milen.com.gentleservice.services;
+package milen.com.gentleservice.services.firebase_dispatcher;
 
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -21,7 +21,6 @@ import milen.com.gentleservice.R;
 import milen.com.gentleservice.ui.activities.ComplimentActivity;
 import milen.com.gentleservice.utils.AppNotificationManager;
 import milen.com.gentleservice.utils.CalendarUtils;
-import milen.com.gentleservice.utils.SchedulingUtils;
 import milen.com.gentleservice.utils.SharedPreferencesUtils;
 
 
@@ -37,56 +36,23 @@ public class GentleSystemActionReceiver extends BroadcastReceiver {
             scheduleNextTask(context);
 
             if (shouldAddNotification(context)) {
-                // Create an Intent for the activity you want to start
-                Intent resultIntent = new Intent(context, ComplimentActivity.class);
-                // Create the TaskStackBuilder and add the intent, which inflates the back stack
-                TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
-                stackBuilder.addNextIntentWithParentStack(resultIntent);
-
-                // Get the PendingIntent containing the entire back stack
-                PendingIntent resultPendingIntent =  stackBuilder.getPendingIntent(
-                        AppNotificationManager.getUnusedInt(),
-                        PendingIntent.FLAG_UPDATE_CURRENT
-                );
-
-                AppNotificationManager.addNotificationOnPane(context, resultPendingIntent);
-
+                fireNotification(context);
                 return;
             }
 
-
             fireCompliment(context);
         }
-        /*if(action != null) {
-            switch (action) {
-                case Intent.ACTION_LOCALE_CHANGED:
-                    //Log.d("AppDebug","GentleSystemActionReceiver ACTION_LOCALE_CHANGED");
-                    manageLocaleChanges(context);
-                    break;
-
-              *//*  case Intent.ACTION_BOOT_COMPLETED:
-                    //Log.d("AppDebug","GentleSystemActionReceiver ACTION_BOOT_COMPLETED");
-                    handleBootAction(context);
-                    break;*//*
-
-                case ACTION_MANAGE_AFTER_LOCALE_CHANGED:
-                    //Log.d("AppDebug", "GentleSystemActionReceiver get ACTION_MANAGE_AFTER_LOCALE_CHANGED");
-                    //manageAction(context);
-                    break;
-
-                default:
-                    break;
-            }
-        }*/
     }
 
     private void scheduleNextTask(Context context) {
         FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(context));
-        dispatcher.cancel(AlarmsProvider.TAG);
-        dispatcher.schedule(makeJob(context, dispatcher));
+        //cancel current task before run new
+        dispatcher.cancel(JobProvider.TAG);
+        Job newJob = makeJob(context, dispatcher);
+        dispatcher.schedule(newJob);
     }
 
-    private static Job makeJob(Context context,FirebaseJobDispatcher dispatcher) {
+    private Job makeJob(Context context,FirebaseJobDispatcher dispatcher) {
         int type = SharedPreferencesUtils.loadInt(context, SchedulingUtils.TYPE_KEY, -1);
         int period = SharedPreferencesUtils.loadInt(context, SchedulingUtils.PERIOD_KEY, -1);
         int fireAfter = period;
@@ -100,24 +66,23 @@ public class GentleSystemActionReceiver extends BroadcastReceiver {
             SharedPreferencesUtils.saveInt(context, SchedulingUtils.FIRE_AFTER_KEY, fireAfter);
         }
 
-        Long shuldFire= System.currentTimeMillis()+fireAfter;
+        Long shouldFire = System.currentTimeMillis()+fireAfter;
+        SharedPreferencesUtils.saveLong(context, SchedulingUtils.SHOULD_FIRE_KEY, shouldFire);
+
         Log.d("AppDebug", "makeJob extras at:" + new Date(System.currentTimeMillis()) +
                 "\ntype: " + type +
                 " period: " + period +
                 " fire after: " + fireAfter +
                 " cur random: " + currentRandom +
                 " next random: " + nextRandom +
-                " SHOULD_FIRE " + new Date(shuldFire)
+                " SHOULD_FIRE " + new Date(shouldFire)
         );
-
-        SharedPreferencesUtils.saveLong(context, SchedulingUtils.SHOULD_FIRE_KEY,
-                (System.currentTimeMillis()+fireAfter));
 
         return dispatcher.newJobBuilder()
                 // the JobService that will be called
-                .setService(AlarmsProvider.class)
+                .setService(JobProvider.class)
                 // uniquely identifies the job
-                .setTag(AlarmsProvider.TAG)
+                .setTag(JobProvider.TAG)
                 // one-off job
                 .setRecurring(true)
                 // don't persist past a device reboot
@@ -138,44 +103,28 @@ public class GentleSystemActionReceiver extends BroadcastReceiver {
                 .build();
     }
 
-    /*private void handleBootAction(Context context) {
-        boolean isServiceRunning = SharedPreferencesUtils
-                .loadBoolean(context, context.getString(R.string.sp_is_service_running), false);
-        if(isServiceRunning){
-            manageAction(context);
-        }
-    }*/
+    private void fireNotification(Context context) {
+        Intent resultIntent = new Intent(context, ComplimentActivity.class);
+        // Create the TaskStackBuilder and add the intent, which inflates the back stack
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
+        stackBuilder.addNextIntentWithParentStack(resultIntent);
 
-   /* private void manageAction(Context context) {
-        long fireAtMilliseconds = SharedPreferencesUtils.loadLong(context, ProjectConstants.SAVED_NEXT_LAUNCH_MILLISECONDS, System.currentTimeMillis());
+        // Get the PendingIntent containing the entire back stack
+        PendingIntent resultPendingIntent =  stackBuilder.getPendingIntent(
+                AppNotificationManager.getUnusedInt(),
+                PendingIntent.FLAG_UPDATE_CURRENT
+        );
 
-        //to insure we get the fireAtMilliseconds one second less
-        if(fireAtMilliseconds - 1000 > System.currentTimeMillis()){
-            //Log.d("AppDebug","GentleSystemActionReceiver must wait more");
-            SchedulingUtils.startComplimentingJob(context);
-            //alarmsProvider.(context, fireAtMilliseconds);
-        } else {
-            //Log.d("AppDebug","GentleSystemActionReceiver  must should fire activity");
-            Intent startingCompliment = new Intent(context, ComplimentActivity.class);
-            startingCompliment.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(startingCompliment);
-        }
-    }*/
+        AppNotificationManager.addNotificationOnPane(context, resultPendingIntent);
+    }
 
-
-
-  /*  private void manageLocaleChanges(Context context){
-        DbLocaleTextChanger dbManager = new DbLocaleTextChanger();
-        dbManager.execute(context);
-    }*/
-
-    private static void fireCompliment(Context context) {
+    private void fireCompliment(Context context) {
         Intent complimentIntent = new Intent(context, ComplimentActivity.class);
         complimentIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(complimentIntent);
     }
 
-    public static boolean shouldAddNotification(Context context) {
+    public boolean shouldAddNotification(Context context) {
         boolean isDoNotDisturbMode = SharedPreferencesUtils.loadBoolean(context, context.getString(R.string.sp_do_not_disturb), true);
         //Log.d("AppDebug", "checkForDisturbPeriod isDoNotDisturbMode " + isDoNotDisturbMode);
         if (isDoNotDisturbMode) {

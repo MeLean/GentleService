@@ -1,11 +1,12 @@
-package milen.com.gentleservice.utils;
+package milen.com.gentleservice.services.firebase_dispatcher;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.util.Log;
 
+import com.firebase.jobdispatcher.FirebaseJobDispatcher;
+import com.firebase.jobdispatcher.GooglePlayDriver;
+
 import milen.com.gentleservice.R;
-import milen.com.gentleservice.services.AlarmsProvider;
 
 import java.util.Random;
 
@@ -36,7 +37,8 @@ public class SchedulingUtils {
 
     public static void stopComplimenting(Context context) {
         //Log.d("AppDebug", "SchedulingUtils stopComplimenting called");
-        AlarmsProvider.cancelJob(context);
+        FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(context));
+        dispatcher.cancel(JobProvider.TAG);
     }
 
 
