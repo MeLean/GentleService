@@ -26,7 +26,7 @@ import milen.com.gentleservice.api.database.DbLocaleTextChanger;
 import milen.com.gentleservice.constants.ProjectConstants;
 import milen.com.gentleservice.ui.adapters.MainViewPagerAdapter;
 import milen.com.gentleservice.utils.AdManager;
-import milen.com.gentleservice.services.firebase_dispatcher.SchedulingUtils;
+import milen.com.gentleservice.services.task_sheduling.SchedulingUtils;
 import milen.com.gentleservice.utils.SharedPreferencesUtils;
 
 public class StartingActivity extends AppCompatActivity
@@ -45,6 +45,8 @@ public class StartingActivity extends AppCompatActivity
         checkLocale();
 
         FirebaseMessaging.getInstance().setAutoInitEnabled(true);
+
+        //ContextCompat.startForegroundService(this, new Intent(this, PhoenixService.class));
 
         mNavigationView = findViewById(R.id.nav_view);
         mNavigationView.setNavigationItemSelectedListener(this);

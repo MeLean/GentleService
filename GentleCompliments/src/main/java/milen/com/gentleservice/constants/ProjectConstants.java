@@ -7,5 +7,5 @@ public class ProjectConstants {
     public static final String SAVED_VIBRATION_STATUS = "saved_vibrator_status";
     public static final String SAVED_TOKEN = "saved_token";
     public static final String SAVED_LOCALE_KEY = "locale_str_key";
-    public static final String JUST_SHOW_COMPLIMENT = "just_notify";
+    //public static final String JUST_SHOW_COMPLIMENT = "just_notify";
 }

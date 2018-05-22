@@ -1,7 +1,6 @@
-package milen.com.gentleservice.services.firebase_dispatcher;
+package milen.com.gentleservice.services.task_sheduling;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -15,14 +14,16 @@ import java.util.Date;
 
 public class JobProvider extends JobService {
     static final String TAG = "milen.com.gentleservice.job_alarm_tag";
-    LaunchBroadcast launchBroadcast;
+    LaunchTaskAsync launchTaskAsync;
 
     @Override
     public boolean onStartJob(JobParameters job) {
         Log.d("AppDebug", "onStartJob at " + new Date());
-
-        launchBroadcast = new LaunchBroadcast(getApplicationContext(), (b) -> jobFinished(job, !b));
-        launchBroadcast.execute();
+        launchTaskAsync = new LaunchTaskAsync(getApplicationContext(), (b) ->{
+            jobFinished(job, !b);
+            startNextJob(getApplicationContext());
+        });
+        launchTaskAsync.execute();
         return true; // Answers the question: "Is there still work going on?"
     }
 
@@ -30,23 +31,24 @@ public class JobProvider extends JobService {
     @Override
     public boolean onStopJob(JobParameters job) {
         Log.d("AppDebug", "onStopJob at " + new Date());
-        return true; // Answers the question: "Should this job be retried?"
+        startNextJob(getApplicationContext());
+        return false; // Answers the question: "Should this job be retried?"
     }
 
-    private static class LaunchBroadcast extends AsyncTask<Void, Void, Boolean> {
+    private static class LaunchTaskAsync extends AsyncTask<Void, Void, Boolean> {
 
         private WeakReference<Context> applicationContextReference;
         private ResultListener listener;
 
         // only retain a weak reference to the activity
-        LaunchBroadcast(Context context, ResultListener resultListener) {
+        LaunchTaskAsync(Context context, ResultListener resultListener) {
             applicationContextReference = new WeakReference<>(context);
             listener = resultListener;
         }
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            broadcastComplimentIntent(applicationContextReference.get());
+            launchCompliment(applicationContextReference.get());
             return true;
         }
 
@@ -61,10 +63,15 @@ public class JobProvider extends JobService {
     }
 
 
-    private static void broadcastComplimentIntent(Context context) {
-        Intent broadCast = new Intent();
-        broadCast.setAction(GentleSystemActionReceiver.ACTION_START_COMPLIMENT);
-        context.sendBroadcast(broadCast);
+    private static void launchCompliment(Context context) {
+        SchedulingUtils schedulingUtils = new SchedulingUtils(context);
+        schedulingUtils.launchCompliment();
+    }
+
+    private static void startNextJob(Context context) {
+        Log.d("AppDebug","startNextJob at" + new Date());
+        SchedulingUtils schedulingUtils = new SchedulingUtils(context);
+        schedulingUtils.scheduleNextTask();
     }
 }
 

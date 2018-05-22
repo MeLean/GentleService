@@ -1,4 +1,4 @@
-package milen.com.gentleservice.services.firebase_dispatcher;
+package milen.com.gentleservice.services.task_sheduling;
 
 import android.app.PendingIntent;
 import android.content.Context;
@@ -19,8 +19,10 @@ import milen.com.gentleservice.utils.AppNotificationManager;
 import milen.com.gentleservice.utils.CalendarUtils;
 import milen.com.gentleservice.utils.SharedPreferencesUtils;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Random;
 
 public class SchedulingUtils {
@@ -35,8 +37,9 @@ public class SchedulingUtils {
     public static final String SHOULD_FIRE_KEY = "should_fire_key";
 
     private static final int ONE_DAY = 86400000; //default value one day
+    private Context mContext;
 
-    private static int generateRandomMinutes(int num) {
+    private int generateRandomMinutes(int num) {
         //min minutes are needed to ensure that
         //window for the periodic job is more then 15 minutes.
         int MIN_MINUTES = 15;
@@ -48,13 +51,13 @@ public class SchedulingUtils {
         return result > MIN_MINUTES ? result : MIN_MINUTES;
     }
 
-    public static void stopComplimenting(Context context) {
+    public void stopComplimenting() {
         //Log.d("AppDebug", "SchedulingUtils stopComplimenting called");
-        FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(context));
+        FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(mContext));
         dispatcher.cancel(JobProvider.TAG);
     }
 
-    private static int calculateNextFireAfter(int period, int currentRandom, int nextRandom) {
+    private int calculateNextFireAfter(int period, int currentRandom, int nextRandom) {
         if (period > 0 && currentRandom > 0 && nextRandom > 0) {
             int timeUntilPeriodIsEnded = period - currentRandom;
 
@@ -64,6 +67,13 @@ public class SchedulingUtils {
         }
 
         return ONE_DAY;
+    }
+
+    private void fireCompliment() {
+        Intent complimentingIntent = new Intent(mContext, ComplimentActivity.class);
+        complimentingIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        mContext.startActivity(complimentingIntent);
     }
 
     public static class InputValidator {
@@ -90,46 +100,49 @@ public class SchedulingUtils {
         }
     }
 
-    public void scheduleNextTask(Context context) {
-        FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(context));
+    public SchedulingUtils(Context context){
+        mContext = context;
+    }
+
+    public void scheduleNextTask() {
+        FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(mContext));
         //cancel current task before run new
         dispatcher.cancel(JobProvider.TAG);
-        Job newJob = makeJob(context, dispatcher);
-        dispatcher.schedule(newJob);
+        startNewJob(dispatcher, JobProvider.TAG);
     }
 
 
-    private Job makeJob(Context context,FirebaseJobDispatcher dispatcher) {
-        int type = SharedPreferencesUtils.loadInt(context, SchedulingUtils.TYPE_KEY, -1);
-        int period = SharedPreferencesUtils.loadInt(context, SchedulingUtils.PERIOD_KEY, -1);
+    private void startNewJob(FirebaseJobDispatcher dispatcher, String tag) {
+        int type = SharedPreferencesUtils.loadInt(mContext, SchedulingUtils.TYPE_KEY, -1);
+        int period = SharedPreferencesUtils.loadInt(mContext, SchedulingUtils.PERIOD_KEY, -1);
         int fireAfter = period;
-        int currentRandom = SharedPreferencesUtils.loadInt(context, SchedulingUtils.RANDOM_VALUE_KEY, -1);
+        int currentRandom = SharedPreferencesUtils.loadInt(mContext, SchedulingUtils.RANDOM_VALUE_KEY, -1);
 
         int nextRandom = -1;
         if (type == SchedulingUtils.SURPRISE) {
-            nextRandom = SchedulingUtils.generateRandomMinutes(period);
-            fireAfter = SchedulingUtils.calculateNextFireAfter(period, currentRandom, nextRandom);
-            SharedPreferencesUtils.saveInt(context, SchedulingUtils.RANDOM_VALUE_KEY, nextRandom);
-            SharedPreferencesUtils.saveInt(context, SchedulingUtils.FIRE_AFTER_KEY, fireAfter);
+            nextRandom = generateRandomMinutes(period);
+            fireAfter = calculateNextFireAfter(period, currentRandom, nextRandom);
+            SharedPreferencesUtils.saveInt(mContext, SchedulingUtils.RANDOM_VALUE_KEY, nextRandom);
+            SharedPreferencesUtils.saveInt(mContext, SchedulingUtils.FIRE_AFTER_KEY, fireAfter);
         }
 
-        Long shouldFire = System.currentTimeMillis()+fireAfter;
-        SharedPreferencesUtils.saveLong(context, SchedulingUtils.SHOULD_FIRE_KEY, shouldFire);
+        Long shouldFire = (fireAfter * 1000) + System.currentTimeMillis();
+        SharedPreferencesUtils.saveLong(mContext, SchedulingUtils.SHOULD_FIRE_KEY, shouldFire);
 
-        Log.d("AppDebug", "makeJob extras at:" + new Date(System.currentTimeMillis()) +
+        Log.d("AppDebug", "startNewJob extras at:" + new Date(System.currentTimeMillis()) +
                 "\ntype: " + type +
                 " period: " + period +
                 " fire after: " + fireAfter +
                 " cur random: " + currentRandom +
                 " next random: " + nextRandom +
-                " SHOULD_FIRE " + new Date(shouldFire)
+                " SHOULD_FIRE " + new SimpleDateFormat("yyyy MM dd HH:mm:ss", Locale.getDefault()).format(shouldFire)
         );
 
-        return dispatcher.newJobBuilder()
+         Job.Builder jobBuilder = dispatcher.newJobBuilder()
                 // the JobService that will be called
                 .setService(JobProvider.class)
                 // uniquely identifies the job
-                .setTag(JobProvider.TAG)
+                .setTag(tag)
                 // one-off job
                 .setRecurring(true)
                 // don't persist past a device reboot
@@ -139,21 +152,23 @@ public class SchedulingUtils {
                 // don't overwrite an existing job with the same tag
                 .setReplaceCurrent(true)
                 // retry with exponential backoff
-                .setRetryStrategy(RetryStrategy.DEFAULT_LINEAR)
+                .setRetryStrategy(RetryStrategy.DEFAULT_LINEAR);
                 /*// constraints that need to be satisfied for the job to run
                 .setConstraints(
                         // only run on an unmetered network
-                        Constraint.ON_UNMETERED_NETWORK,
+                       ,
                         // only run when the device is charging
                         Constraint.DEVICE_CHARGING
                 )*/
-                .build();
+
+        dispatcher.mustSchedule(jobBuilder.build());
     }
 
-    private void fireNotification(Context context) {
-        Intent resultIntent = new Intent(context, ComplimentActivity.class);
+    private void fireNotification() {
+        Intent resultIntent = new Intent(mContext, ComplimentActivity.class);
+        //resultIntent.putExtra(ProjectConstants.JUST_SHOW_COMPLIMENT, true);
         // Create the TaskStackBuilder and add the intent, which inflates the back stack
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(mContext);
         stackBuilder.addNextIntentWithParentStack(resultIntent);
 
         // Get the PendingIntent containing the entire back stack
@@ -162,15 +177,15 @@ public class SchedulingUtils {
                 PendingIntent.FLAG_UPDATE_CURRENT
         );
 
-        AppNotificationManager.addNotificationOnPane(context, resultPendingIntent);
+        AppNotificationManager.addNotificationOnPane(mContext, resultPendingIntent);
     }
 
-    public boolean shouldAddNotification(Context context) {
-        boolean isDoNotDisturbMode = SharedPreferencesUtils.loadBoolean(context, context.getString(R.string.sp_do_not_disturb), true);
+    private boolean shouldAddNotification() {
+        boolean isDoNotDisturbMode = SharedPreferencesUtils.loadBoolean(mContext, mContext.getString(R.string.sp_do_not_disturb), true);
         //Log.d("AppDebug", "checkForDisturbPeriod isDoNotDisturbMode " + isDoNotDisturbMode);
         if (isDoNotDisturbMode) {
-            String firstTime = SharedPreferencesUtils.loadString(context, context.getString(R.string.sp_start_time), context.getString(R.string.default_start_time));
-            String secondTime = SharedPreferencesUtils.loadString(context, context.getString(R.string.sp_end_time), context.getString(R.string.default_end_time));
+            String firstTime = SharedPreferencesUtils.loadString(mContext, mContext.getString(R.string.sp_start_time), mContext.getString(R.string.default_start_time));
+            String secondTime = SharedPreferencesUtils.loadString(mContext, mContext.getString(R.string.sp_end_time), mContext.getString(R.string.default_end_time));
             String TIME_SEPARATOR = ":";
             String[] firstTimeArr = firstTime.split(TIME_SEPARATOR);
             String[] secondTimeArr = secondTime.split(TIME_SEPARATOR);
@@ -188,6 +203,15 @@ public class SchedulingUtils {
             return CalendarUtils.checkIsBetween(startTimeInMilliseconds, currentHoursInMilliseconds, endTimeInMilliseconds);
         } else {
             return false;
+        }
+    }
+
+
+    public void launchCompliment() {
+        if (shouldAddNotification()){
+            fireNotification();
+        } else {
+            fireCompliment();
         }
     }
 }

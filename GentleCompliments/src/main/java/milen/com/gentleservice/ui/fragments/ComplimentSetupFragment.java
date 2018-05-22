@@ -2,7 +2,6 @@ package milen.com.gentleservice.ui.fragments;
 
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -27,9 +26,8 @@ import android.widget.Toast;
 
 import milen.com.gentleservice.constants.ProjectConstants;
 import milen.com.gentleservice.R;
-import milen.com.gentleservice.ui.activities.ComplimentActivity;
 import milen.com.gentleservice.ui.fragments.dialogs.TimePickerFragment;
-import milen.com.gentleservice.services.firebase_dispatcher.SchedulingUtils;
+import milen.com.gentleservice.services.task_sheduling.SchedulingUtils;
 import milen.com.gentleservice.utils.SharedPreferencesUtils;
 import milen.com.gentleservice.utils.SoftInputManager;
 
@@ -252,11 +250,11 @@ public class ComplimentSetupFragment extends Fragment implements View.OnClickLis
     }
 
     private void stopService() {
-        SchedulingUtils.stopComplimenting(getContext());
+        SchedulingUtils schedulingUtils = new SchedulingUtils(getContext());
+        schedulingUtils.stopComplimenting();
         SharedPreferencesUtils.removeValue(mActivity, ProjectConstants.SAVED_NEXT_LAUNCH_MILLISECONDS);
         SharedPreferencesUtils.removeValue(mActivity, ProjectConstants.SAVED_SURPRISE_ENDING_MILLISECONDS);
         setDefaultComponentsValues();
-
     }
 
     private int calculateSurpriseTimeMaxValue(String spinValue) {
@@ -302,17 +300,17 @@ public class ComplimentSetupFragment extends Fragment implements View.OnClickLis
         SharedPreferencesUtils.saveInt(getContext(), SchedulingUtils.RANDOM_VALUE_KEY, period);
 
 
-        //noinspection ConstantConditions
-        startActivity(new Intent(getActivity(), ComplimentActivity.class));
-
+        SchedulingUtils schedulingUtils = new SchedulingUtils(getContext());
+        schedulingUtils.scheduleNextTask();
+        schedulingUtils.launchCompliment();
         mActivity.finish();
     }
 
     private void managePreviouslyChosenValues() {
         mDontDisturb.setChecked(SharedPreferencesUtils.loadBoolean(mActivity, getString(R.string.sp_do_not_disturb), true));
 
-        mSurpriseMeRadio.setChecked(SharedPreferencesUtils.loadBoolean(mActivity, getString(R.string.sp_surprise_me), true));
-        mScheduleRadio.setChecked(SharedPreferencesUtils.loadBoolean(mActivity, getString(R.string.sp_is_scheduled), false));
+        mSurpriseMeRadio.setChecked(SharedPreferencesUtils.loadBoolean(mActivity, getString(R.string.sp_surprise_me), false));
+        mScheduleRadio.setChecked(SharedPreferencesUtils.loadBoolean(mActivity, getString(R.string.sp_is_scheduled), true));
 
         mStartTime.setText(SharedPreferencesUtils.loadString(mActivity, getString(R.string.sp_start_time), getString(R.string.default_start_time)));
         mEndTime.setText(SharedPreferencesUtils.loadString(mActivity, getString(R.string.sp_end_time), getString(R.string.default_end_time)));

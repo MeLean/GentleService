@@ -53,11 +53,6 @@ public class ComplimentActivity extends AppCompatActivity implements View.OnClic
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-        if (getIntent() != null && getIntent().hasExtra(ProjectConstants.JUST_SHOW_COMPLIMENT)){
-
-        }
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
             setShowWhenLocked(true);
             setTurnScreenOn(true);
@@ -93,6 +88,10 @@ public class ComplimentActivity extends AppCompatActivity implements View.OnClic
         }
 
         launchCompliment(savedInstanceState);
+    }
+
+    private boolean isJustShowCompliment(Object intent, boolean b) {
+        return intent != null && b;
     }
 
     @Override
@@ -241,7 +240,7 @@ public class ComplimentActivity extends AppCompatActivity implements View.OnClic
     private void makeHeartBeatVibrate() {
         Object getVibrator = this.getSystemService(Context.VIBRATOR_SERVICE);
         boolean isVibratorOn = SharedPreferencesUtils.loadBoolean(this, ProjectConstants.SAVED_VIBRATION_STATUS, true);
-        if (getVibrator != null && isVibratorOn) {
+        if (isJustShowCompliment(getVibrator, isVibratorOn)) {
             mVibrator = (Vibrator) getVibrator;
             long[] heartBeatPattern = {0, 100, 250, 125, 700, 100, 250, 125};//old {0,100,50,125,600,100,50,125,600,100,50,125}; //heartbeat interval constants
             mVibrator.vibrate(heartBeatPattern, -1);
