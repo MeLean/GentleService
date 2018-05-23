@@ -11,6 +11,6 @@ public class GentleServices extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        FirebaseMessaging.getInstance().subscribeToTopic(Locale.getDefault().toString());
+        FirebaseMessaging.getInstance().subscribeToTopic("language_"+Locale.getDefault().toString());
     }
 }

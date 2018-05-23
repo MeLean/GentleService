@@ -18,7 +18,7 @@ public class JobProvider extends JobService {
 
     @Override
     public boolean onStartJob(JobParameters job) {
-        Log.d("AppDebug", "onStartJob at " + new Date());
+        //Log.d("AppDebug", "onStartJob at " + new Date());
         launchTaskAsync = new LaunchTaskAsync(getApplicationContext(), (b) ->{
             jobFinished(job, !b);
             startNextJob(getApplicationContext());
@@ -30,8 +30,7 @@ public class JobProvider extends JobService {
 
     @Override
     public boolean onStopJob(JobParameters job) {
-        Log.d("AppDebug", "onStopJob at " + new Date());
-        startNextJob(getApplicationContext());
+        //Log.d("AppDebug", "onStopJob at " + new Date());
         return false; // Answers the question: "Should this job be retried?"
     }
 
@@ -69,7 +68,7 @@ public class JobProvider extends JobService {
     }
 
     private static void startNextJob(Context context) {
-        Log.d("AppDebug","startNextJob at" + new Date());
+        //Log.d("AppDebug","startNextJob at" + new Date());
         SchedulingUtils schedulingUtils = new SchedulingUtils(context);
         schedulingUtils.scheduleNextTask();
     }

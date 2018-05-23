@@ -11,7 +11,7 @@ public class GentleSystemActionReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
-        Log.d("AppDebug", "GentleSystemActionReceiver got action:" + action);
+        //Log.d("AppDebug", "GentleSystemActionReceiver got action:" + action);
 
 /*        if (action != null && action.equalsIgnoreCase(ACTION_START_COMPLIMENT)) {
 

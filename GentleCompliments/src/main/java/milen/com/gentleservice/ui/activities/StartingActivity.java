@@ -1,5 +1,6 @@
 package milen.com.gentleservice.ui.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
@@ -37,6 +38,13 @@ public class StartingActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (getIntent().getExtras() != null) {
+            if("milen.com.gentleservice".equals(getIntent().getExtras().getString("collapse_key"))){
+                startActivity(new Intent(this, ComplimentActivity.class));
+                this.finish();
+            }
+        }
 
         setContentView(R.layout.activity_starting);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -144,16 +152,5 @@ public class StartingActivity extends AppCompatActivity
         }else{
             setTitle(getString(R.string.app_name));
         }
-    }
-
-    public void showFireDate(View view) {
-        Toast.makeText(StartingActivity.this,
-                "should fire at:" +
-                        new Date(
-                                SharedPreferencesUtils.loadLong(StartingActivity.this,
-                                        SchedulingUtils.SHOULD_FIRE_KEY,
-                                        0)
-                        ),
-                Toast.LENGTH_SHORT).show();
     }
 }

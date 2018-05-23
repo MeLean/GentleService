@@ -34,7 +34,7 @@ public class SchedulingUtils {
     public static final String FIRE_AFTER_KEY = "waiting_key_fire";
     public static final String RANDOM_VALUE_KEY = "random_key_fire";
 
-    public static final String SHOULD_FIRE_KEY = "should_fire_key";
+    private static final String SHOULD_FIRE_KEY = "should_fire_key";
 
     private static final int ONE_DAY = 86400000; //default value one day
     private Context mContext;
@@ -61,7 +61,7 @@ public class SchedulingUtils {
         if (period > 0 && currentRandom > 0 && nextRandom > 0) {
             int timeUntilPeriodIsEnded = period - currentRandom;
 
-            Log.d("AppDebug", " timeUntilPeriodIsEnded " + timeUntilPeriodIsEnded + " nextRandom " + nextRandom);
+            //Log.d("AppDebug", " timeUntilPeriodIsEnded " + timeUntilPeriodIsEnded + " nextRandom " + nextRandom);
             int time = timeUntilPeriodIsEnded + nextRandom;
             return time > 0 ? time : (time * -1);
         }
@@ -79,7 +79,7 @@ public class SchedulingUtils {
     public static class InputValidator {
         public static String validate(Context context, String enteredInt) {
             //time constants should be in minutes
-            int MINIMUM_WAITING_TIME = 1; //todo an hour
+            int MINIMUM_WAITING_TIME = 60; //an hour
             int MAX_WAITING_TIME = 10080; //a week
             try {
                 int inputNum = (Integer.parseInt(String.valueOf(enteredInt)));
@@ -118,7 +118,7 @@ public class SchedulingUtils {
         int fireAfter = period;
         int currentRandom = SharedPreferencesUtils.loadInt(mContext, SchedulingUtils.RANDOM_VALUE_KEY, -1);
 
-        int nextRandom = -1;
+        int nextRandom;
         if (type == SchedulingUtils.SURPRISE) {
             nextRandom = generateRandomMinutes(period);
             fireAfter = calculateNextFireAfter(period, currentRandom, nextRandom);
@@ -129,14 +129,14 @@ public class SchedulingUtils {
         Long shouldFire = (fireAfter * 1000) + System.currentTimeMillis();
         SharedPreferencesUtils.saveLong(mContext, SchedulingUtils.SHOULD_FIRE_KEY, shouldFire);
 
-        Log.d("AppDebug", "startNewJob extras at:" + new Date(System.currentTimeMillis()) +
+        /*Log.d("AppDebug", "startNewJob extras at:" + new Date(System.currentTimeMillis()) +
                 "\ntype: " + type +
                 " period: " + period +
                 " fire after: " + fireAfter +
                 " cur random: " + currentRandom +
                 " next random: " + nextRandom +
                 " SHOULD_FIRE " + new SimpleDateFormat("yyyy MM dd HH:mm:ss", Locale.getDefault()).format(shouldFire)
-        );
+        );*/
 
          Job.Builder jobBuilder = dispatcher.newJobBuilder()
                 // the JobService that will be called

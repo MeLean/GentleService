@@ -1,9 +1,9 @@
 package milen.com.gentleservice.utils;
 
-import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 
@@ -30,27 +30,40 @@ public class AppNotificationManager {
         return (int)(System.currentTimeMillis() / 1000);
     }
 
-    private static void addNotificationOnPane(Context context, String message, PendingIntent resultPendingIntent) {
 
-        NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(context, context.getString(R.string.default_notification_channel_id))
-                        .setSmallIcon(R.mipmap.ic_launcher)
-                        .setContentTitle(context.getString(R.string.app_name))
-                        .setContentText(message)
-                        .setAutoCancel(true)
-                        .setWhen(System.currentTimeMillis())
-                        .setPriority(NotificationCompat.PRIORITY_HIGH)
-                        .setTimeoutAfter(Long.MAX_VALUE)
-                        //set no defaults values
-                        .setDefaults(0)
-                        .setContentIntent(resultPendingIntent)
-                        //set gourp
-                        .setGroup(GENTLE_COMPLIMENTS_GROUP)
-                        // Sets remove after click
-                        .setAutoCancel(true)
-                        .setStyle(new NotificationCompat.BigTextStyle()
-                                .bigText(message));
-        
+    private static void addNotificationOnPane(Context context, String message, PendingIntent resultPendingIntent) {
+        NotificationCompat.Builder mBuilder;
+
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            // Do something for lollipop and above versions
+            mBuilder = new NotificationCompat
+                    .Builder(context, context.getString(R.string.default_notification_channel_id))
+                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setContentTitle(context.getString(R.string.app_name))
+                    .setContentText(message)
+                    .setAutoCancel(true)
+                    .setWhen(System.currentTimeMillis())
+                    .setPriority(NotificationCompat.PRIORITY_HIGH)
+                    .setTimeoutAfter(Long.MAX_VALUE)
+                    //set no defaults values
+                    .setDefaults(0)
+                    .setContentIntent(resultPendingIntent)
+                    //set gourp
+                    .setGroup(GENTLE_COMPLIMENTS_GROUP)
+                    // Sets remove after click
+                    .setAutoCancel(true)
+                    .setStyle(new NotificationCompat.BigTextStyle()
+                            .bigText(message));
+        } else{
+            // do something for phones running an SDK before lollipop
+            //noinspection deprecation
+            mBuilder = new NotificationCompat.Builder(context)
+                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setContentTitle(context.getString(R.string.app_name))
+                    .setContentText(message)
+                    .setContentIntent(resultPendingIntent)
+                    .setAutoCancel(true);
+        }
 
         // Gets an instance of the AppNotificationManager service
         NotificationManagerCompat mNotifyMgr = NotificationManagerCompat.from(context);
